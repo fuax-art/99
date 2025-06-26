@@ -3,22 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Particle Playground</title>
+    <title>Sensory Syntax</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        /* Brand Colors - Edit these to match your brand */
-        :root {
-            --primary-color: #00ff00;
-            --secondary-color: #ff0080;
-            --accent-color: #fff200;
-            --bg-dark: #0f0f23;
-            --bg-light: #430c33;
-            --text-light: #FF0080;
-            --text-dim: #30272b;
-            --border-color: #00eeff;
-            --success-color: #00ff00;
-            --warning-color: #fff200;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -26,806 +13,982 @@
         }
 
         body {
-            font-family: 'VCR OSD Mono', monospace;
-            background: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
-            color: var(--text-light);
+            font-family: 'VHS', monospace;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
             overflow: hidden;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
             height: 100vh;
         }
 
-        #canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            cursor: crosshair;
+        #container canvas {
+            height: 100vh;
         }
 
         #controls {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 320px;
-            height: 100vh;
-            background: rgba(15, 15, 35, 0.95);
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 15px;
+            border-radius: 10px;
             backdrop-filter: blur(10px);
-            border-left: 1px solid var(--border-color);
-            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 50vh;
             overflow-y: auto;
-            transition: transform 0.3s ease;
-            padding: 20px;
+            width: 280px;
+            z-index: 1000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
         #controls.hidden {
-            transform: translateX(100%);
-        }
-
-        .toggle-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            right: auto;
-            z-index: 11;
-            background: var(--primary-color);
-            color: rgb(0, 204, 255);
-            border: none;
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .toggle-btn:hover {
-            background: var(--secondary-color);
-            transform: scale(1.1);
-        }
-
-        .section {
-            margin-bottom: 25px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-
-        .section h3 {
-            color: var(--accent-color);
-            margin-bottom: 15px;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transform: translateX(300px);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .control-group {
-            margin-bottom: 15px;
+ margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+ overflow: hidden;
+        }
+
+ .control-group-header {
+ cursor: pointer;
+ padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+ }
+
+        .control-group h3 {
+            color: #4CAF50; /* Example accent color */
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+ display: inline-block; /* Allow space for icon */
+ margin-right: 10px; /* Space between text and icon */
+        }
+
+ .control-group-header span {
+ float: right; /* Align icon to the right */
+            transition: transform 0.3s ease;
+ }
+
+ .control-group-header.collapsed span {
+ transform: rotate(-90deg);
+ }
+        .control-item {
+            margin-bottom: 5px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            color: var(--text-dim);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            font-size: 11px;
+            color: #ccc;
         }
+
+ .control-group-body {
+ padding: 10px;
+            transition: max-height 0.5s ease-in-out; /* Smooth collapse animation */
+ overflow: hidden;
+ }
 
         input[type="range"] {
             width: 100%;
-            height: 6px;
-            background: var(--border-color);
-            outline: none;
-            border-radius: 3px;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--primary-color);
-            cursor: pointer;
-            border-radius: 50%;
+            margin-bottom: 5px;
         }
 
         input[type="color"] {
             width: 100%;
-            height: 40px;
+            height: 30px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
         }
 
-        select, button {
+        select {
             width: 100%;
-            padding: 8px 12px;
-            background: var(--bg-light);
-            color: var(--text-light);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
             cursor: pointer;
-            font-size: 14px;
+        }
+
+        select option {
+            background: #333;
+            color: white;
         }
 
         button {
-            background: var(--primary-color);
-            transition: background 0.3s ease;
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
         }
 
         button:hover {
-            background: var(--secondary-color);
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        input[type="checkbox"] {
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid var(--border-color);
-            border-radius: 3px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        input[type="checkbox"]:checked {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        input[type="checkbox"]:checked::after {
-            content: '✓';
-            position: absolute;
-            top: -2px;
-            left: 2px;
-            color: white;
-            font-size: 14px;
+            transform: translateY(-2px);
         }
 
         .value-display {
-            display: inline-block;
-            background: var(--bg-dark);
-            padding: 2px 6px;
-            border-radius: 3px;
             font-size: 11px;
-            min-width: 30px;
-            text-align: center;
+            color: #aaa;
+            text-align: right;
         }
 
-        #audioStatus {
-            padding: 8px;
-            text-align: center;
-            border-radius: 4px;
+        #stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 5px;
             font-size: 12px;
-            margin-top: 10px;
+            color: #ccc;
         }
 
-        .audio-active {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success-color);
+        .toggle-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
-        .audio-inactive {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning-color);
+        .toggle-controls:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.05);
         }
 
         @media (max-width: 768px) {
             #controls {
-                width: 100%;
-                height: auto;
+                width: calc(100vw - 40px);
                 max-height: 60vh;
                 top: auto;
-                bottom: 0;
-                transform: translateY(100%);
-                border-left: none;
-                border-top: 1px solid var(--border-color);
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
             }
-
+            
             #controls.hidden {
                 transform: translateY(100%);
             }
-
-            #controls:not(.hidden) {
-                transform: translateY(0);
-            }
-
-            .toggle-btn {
-                left: 20px;
-                right: auto;
-                bottom: 20px;
+            
+            .toggle-controls {
                 top: auto;
+                bottom: calc(60vh + 40px);
             }
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    
-    <button class="toggle-btn" id="toggleBtn">⚙️</button>
-    
-    <div id="controls">
-        <div class="section">
-            <h3>Particle Settings</h3>
-            
+    <div id="container">
+        <button class="toggle-controls" onclick="toggleControls()" title="Toggle Controls">⚙️</button>
+        
+        <div id="controls">
             <div class="control-group">
-                <label>Particle Count: <span class="value-display" id="countValue">100</span></label>
-                <input type="range" id="particleCount" min="10" max="500" value="100">
-            </div>
-            
-            <div class="control-group">
-                <label>Speed: <span class="value-display" id="speedValue">2</span></label>
-                <input type="range" id="speed" min="0.1" max="10" step="0.1" value="2">
-            </div>
-            
-            <div class="control-group">
-                <label>Size: <span class="value-display" id="sizeValue">3</span></label>
-                <input type="range" id="size" min="1" max="20" value="3">
-            </div>
-            
-            <div class="control-group">
-                <label>Trail Length: <span class="value-display" id="trailValue">10</span></label>
-                <input type="range" id="trailLength" min="0" max="50" value="10">
-            </div>
-            
-            <div class="control-group">
-                <label>Color</label>
-                <input type="color" id="particleColor" value="#6366f1">
-            </div>
-            
-            <div class="control-group">
-                <label>Shape</label>
-                <select id="particleShape">
-                    <option value="circle">Circle</option>
-                    <option value="square">Square</option>
-                    <option value="triangle">Triangle</option>
-                    <option value="star">Star</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Mouse Interaction</h3>
-            
-            <div class="control-group">
-                <label>Interaction Mode</label>
-                <select id="mouseMode">
-                    <option value="attract">Attract</option>
-                    <option value="repel">Repel</option>
-                    <option value="orbit">Orbit</option>
-                    <option value="launch">Attract then Launch</option>
-                    <option value="vortex">Vortex</option>
-                    <option value="none">None</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label>Interaction Strength: <span class="value-display" id="forceValue">50</span></label>
-                <input type="range" id="interactionForce" min="10" max="200" value="50">
-            </div>
-            
-            <div class="control-group">
-                <label>Interaction Radius: <span class="value-display" id="radiusValue">100</span></label>
-                <input type="range" id="interactionRadius" min="50" max="300" value="100">
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Environment</h3>
-            
-            <div class="control-group">
-                <label>Gravity: <span class="value-display" id="gravityValue">0</span></label>
-                <input type="range" id="gravity" min="-0.02" max="0.02" step="0.001" value="0">
-            </div>
-            
-            <div class="control-group">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="bounceWalls" checked>
-                    <label for="bounceWalls">Bounce off walls</label>
+ <div class="control-group-header">
+ <h3>Interaction</h3>
+ <span>▼</span>
+ </div>
+ <div class="control-group-body">
+ <div class="control-item">
+ <label>Click Burst Size</label>
+                    <input type="range" id="burstSize" min="10" max="200" value="50" step="10">
+                    <div class="value-display" id="burstSizeValue">50</div>
+                </div>
+ <div class="control-item">
+                    <label>Drag Trail Density</label>
+                    <input type="range" id="trailDensity" min="5" max="50" value="20" step="5">
+                    <div class="value-display" id="trailDensityValue">20</div>
                 </div>
             </div>
-            
+            </div>
+
             <div class="control-group">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="wrapAround">
-                    <label for="wrapAround">Wrap around edges</label>
+                <div class="control-group-header">
+ <h3>Emission</h3>
+ <span>▼</span>
+ </div>
+                <div class="control-item">
+ <label>Particle Count</label>
+                    <input type="range" id="particleCount" min="100" max="10000" value="1000" step="100">
+                    <div class="value-display" id="particleCountValue">1000</div>
+                </div>
+ <div class="control-group-body">
+                    <label>Emission Rate</label>
+                    <input type="range" id="emissionRate" min="1" max="100" value="50" step="1">
+                    <div class="value-display" id="emissionRateValue">50/s</div>
                 </div>
             </div>
-            
+
             <div class="control-group">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="waterMode">
-                    <label for="waterMode">Water Environment</label>
+ <div class="control-group-header">
+ <h3>Physics</h3>
+ <span>▼</span>
+ </div>
+ <div class="control-group-body">
+ <div class="control-item">
+                    <label>Gravity</label>
+                    <input type="range" id="gravity" min="-2" max="2" value="-0.01" step="0.001">
+                    <div class="value-display" id="gravityValue">-0.01</div>
+                </div>
+ <div class="control-item">
+                    <label>Initial Speed</label>
+                    <input type="range" id="initialSpeed" min="0" max="5" value="2" step="0.1">
+                    <div class="value-display" id="initialSpeedValue">2</div>
+                </div>
+ <div class="control-item">
+                    <label>Spread Angle</label>
+                    <input type="range" id="spreadAngle" min="0" max="360" value="45" step="1">
+                    <div class="value-display" id="spreadAngleValue">45°</div>
+                </div>
+ <div class="control-item">
+                    <label>Air Resistance</label>
+                    <input type="range" id="airResistance" min="0" max="0.1" value="0.01" step="0.001">
+                    <div class="value-display" id="airResistanceValue">0.01</div>
+                </div>
+ </div>
+            </div>
+
+            <div class="control-group">
+ <div class="control-group-header">
+ <h3>Appearance</h3>
+ <span>▼</span>
+ </div>
+ <div class="control-group-body">
+ <div class="control-item">
+                    <label>Start Color</label>
+                    <input type="color" id="startColor" value="#ff4444">
+                </div>
+ <div class="control-item">
+                    <label>End Color</label>
+                    <input type="color" id="endColor" value="#4444ff">
+                </div>
+ <div class="control-item">
+                    <label>Size</label>
+                    <input type="range" id="particleSize" min="0.1" max="10" value="2" step="0.1">
+                    <div class="value-display" id="particleSizeValue">2</div>
+                </div>
+ <div class="control-item">
+                    <label>Size Variation</label>
+                    <input type="range" id="sizeVariation" min="0" max="5" value="1" step="0.1">
+                    <div class="value-display" id="sizeVariationValue">1</div>
+                </div>
+ <div class="control-item">
+                    <label>Opacity</label>
+                    <input type="range" id="opacity" min="0" max="1" value="0.8" step="0.1">
+                    <div class="value-display" id="opacityValue">0.8</div>
+                </div>
+ </div>
+            </div>
+ 
+
+            <div class="control-group">
+ <div class="control-group-header">
+ <h3>Behavior</h3>
+ <span>▼</span>
+ </div>
+ <div class="control-group-body">
+ <div class="control-item">
+                    <label>Lifespan</label>
+                    <input type="range" id="lifespan" min="1" max="20" value="5" step="0.5">
+                    <div class="value-display" id="lifespanValue">5s</div>
+                </div>
+ <div class="control-item">
+                    <label>Turbulence</label>
+                    <input type="range" id="turbulence" min="0" max="2" value="0.1" step="0.01">
+                    <div class="value-display" id="turbulenceValue">0.1</div>
+                </div>
+ <div class="control-item">
+                    <label>Shape</label>
+                    <select id="particleShape">
+                        <option value="point">Point</option>
+                        <option value="sphere">Sphere</option>
+                        <option value="cube">Cube</option>
+                    </select>
+                </div>
+                <div class="control-item">
+ <label>Blend Mode</label>
+                    <select id="blendMode">
+                        <option value="normal">Normal</option>
+                        <option value="additive">Additive</option>
+                        <option value="Burn">Burn</option>
+                        <option value="Dodge">Dodge</option>
+                    </select>
                 </div>
             </div>
-            
+
             <div class="control-group">
-                <label>Friction: <span class="value-display" id="frictionValue">0.99</span></label>
-                <input type="range" id="friction" min="0.9" max="1" step="0.001" value="0.99">
+                <div class="control-group-header">
+                <h3>Environment</h3>
+                <span>▼</span>
+            </div>
+            <div class="control-group-body">
+                <div class="control-item">
+                    <label>Wind X</label>
+                    <input type="range" id="windX" min="-2" max="2" value="0" step="0.01">
+                    <div class="value-display" id="windXValue">0</div>
+                </div>
+                <div class="control-item">
+                    <label>Wind Y</label>
+                    <input type="range" id="windY" min="-2" max="2" value="0" step="0.01">
+                    <div class="value-display" id="windYValue">0</div>
+                </div>
+                <div class="control-item">
+                    <label>Wind Z</label>
+                    <input type="range" id="windZ" min="-2" max="2" value="0" step="0.01">
+                    <div class="value-display" id="windZValue">0</div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <button onclick="resetToDefaults()">Reset to Defaults</button>
+                <button onclick="toggleAnimation()" id="animationButton">Pause</button>
             </div>
         </div>
 
-        <div class="section">
-            <h3>Audio Reactive</h3>
-            
-            <div class="control-group">
-                <button id="audioToggle">Enable Audio</button>
-                <div id="audioStatus" class="audio-inactive">Audio Inactive</div>
-            </div>
-            
-            <div class="control-group">
-                <label>Audio Sensitivity: <span class="value-display" id="audioSensValue">50</span></label>
-                <input type="range" id="audioSensitivity" min="1" max="100" value="50">
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Presets</h3>
-            <button onclick="loadPreset('fireworks')">🎆 Fireworks</button>
-            <button onclick="loadPreset('galaxy')">🌌 Galaxy</button>
-            <button onclick="loadPreset('snow')">❄️ Snow</button>
-            <button onclick="loadPreset('ocean')">🌊 Ocean</button>
+        <div id="stats">
+            <div>Active Particles: <span id="activeParticles">0</span></div>
+            <div>FPS: <span id="fps">60</span></div>
         </div>
     </div>
 
     <script>
-        class Particle {
-            constructor(x, y) {
-                this.x = x || Math.random() * canvas.width;
-                this.y = y || Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 4;
-                this.vy = (Math.random() - 0.5) * 4;
-                this.life = 1;
-                this.maxLife = Math.random() * 200 + 100;
-                this.trail = [];
-                this.age = 0;
-            }
-
-            update() {
-                this.age++;
-                
-                // Mouse interaction
-                if (mouseX !== null && mouseY !== null) {
-                    const dx = mouseX - this.x;
-                    const dy = mouseY - this.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < settings.interactionRadius) {
-                        const force = settings.interactionForce / distance;
-                        const angle = Math.atan2(dy, dx);
-                        
-                        switch (settings.mouseMode) {
-                            case 'attract':
-                                this.vx += Math.cos(angle) * force * 0.01;
-                                this.vy += Math.sin(angle) * force * 0.01;
-                                break;
-                            case 'repel':
-                                this.vx -= Math.cos(angle) * force * 0.01;
-                                this.vy -= Math.sin(angle) * force * 0.01;
-                                break;
-                            case 'orbit':
-                                this.vx += -Math.sin(angle) * force * 0.01;
-                                this.vy += Math.cos(angle) * force * 0.01;
-                                break;
-                            case 'launch':
-                                if (distance < 50) {
-                                    this.vx -= Math.cos(angle) * force * 0.1;
-                                    this.vy -= Math.sin(angle) * force * 0.1;
-                                } else {
-                                    this.vx += Math.cos(angle) * force * 0.01;
-                                    this.vy += Math.sin(angle) * force * 0.01;
-                                }
-                                break;
-                            case 'vortex':
-                                const vortexForce = force * 0.02;
-                                this.vx += -Math.sin(angle) * vortexForce + Math.cos(angle) * vortexForce * 0.1;
-                                this.vy += Math.cos(angle) * vortexForce + Math.sin(angle) * vortexForce * 0.1;
-                                break;
-                        }
-                    }
-                }
-
-                // Audio reactivity
-                if (audioData && settings.audioActive) {
-                    const audioInfluence = audioData.reduce((a, b) => a + b, 0) / audioData.length;
-                    const audioFactor = (audioInfluence / 255) * (settings.audioSensitivity / 50);
-                    
-                    this.vx += (Math.random() - 0.5) * audioFactor;
-                    this.vy += (Math.random() - 0.5) * audioFactor;
-                }
-
-                // Apply gravity
-                this.vy += settings.gravity;
-
-                // Water environment
-                if (settings.waterMode) {
-                    this.vx *= 0.98;
-                    this.vy *= 0.98;
-                    this.vy += Math.sin(this.age * 0.01) * 0.1;
-                }
-
-                // Update position
-                this.x += this.vx * settings.speed;
-                this.y += this.vy * settings.speed;
-
-                // Apply friction
-                this.vx *= settings.friction;
-                this.vy *= settings.friction;
-
-                // Boundary handling
-                if (settings.bounceWalls) {
-                    if (this.x <= settings.size || this.x >= canvas.width - settings.size) {
-                        this.vx *= -0.8;
-                        this.x = Math.max(settings.size, Math.min(canvas.width - settings.size, this.x));
-                    }
-                    if (this.y <= settings.size || this.y >= canvas.height - settings.size) {
-                        this.vy *= -0.8;
-                        this.y = Math.max(settings.size, Math.min(canvas.height - settings.size, this.y));
-                    }
-                } else if (settings.wrapAround) {
-                    if (this.x < 0) this.x = canvas.width;
-                    if (this.x > canvas.width) this.x = 0;
-                    if (this.y < 0) this.y = canvas.height;
-                    if (this.y > canvas.height) this.y = 0;
-                }
-
-                // Update trail
-                if (settings.trailLength > 0) {
-                    this.trail.push({ x: this.x, y: this.y });
-                    if (this.trail.length > settings.trailLength) {
-                        this.trail.shift();
-                    }
-                }
-            }
-
-            draw() {
-                ctx.save();
-                
-                // Draw trail
-                if (this.trail.length > 1) {
-                    for (let i = 0; i < this.trail.length - 1; i++) {
-                        const alpha = i / this.trail.length;
-                        ctx.globalAlpha = alpha * 0.5;
-                        ctx.strokeStyle = settings.color;
-                        ctx.lineWidth = settings.size * alpha;
-                        ctx.beginPath();
-                        ctx.moveTo(this.trail[i].x, this.trail[i].y);
-                        ctx.lineTo(this.trail[i + 1].x, this.trail[i + 1].y);
-                        ctx.stroke();
-                    }
-                }
-
-                // Draw particle
-                ctx.globalAlpha = 1;
-                ctx.fillStyle = settings.color;
-                
-                switch (settings.shape) {
-                    case 'circle':
-                        ctx.beginPath();
-                        ctx.arc(this.x, this.y, settings.size, 0, Math.PI * 2);
-                        ctx.fill();
-                        break;
-                    case 'square':
-                        ctx.fillRect(this.x - settings.size, this.y - settings.size, settings.size * 2, settings.size * 2);
-                        break;
-                    case 'triangle':
-                        ctx.beginPath();
-                        ctx.moveTo(this.x, this.y - settings.size);
-                        ctx.lineTo(this.x - settings.size, this.y + settings.size);
-                        ctx.lineTo(this.x + settings.size, this.y + settings.size);
-                        ctx.closePath();
-                        ctx.fill();
-                        break;
-                    case 'star':
-                        this.drawStar(this.x, this.y, settings.size);
-                        break;
-                }
-                
-                ctx.restore();
-            }
-
-            drawStar(x, y, radius) {
-                ctx.beginPath();
-                for (let i = 0; i < 10; i++) {
-                    const angle = (i * Math.PI) / 5;
-                    const r = i % 2 === 0 ? radius : radius * 0.5;
-                    const px = x + Math.cos(angle) * r;
-                    const py = y + Math.sin(angle) * r;
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                }
-                ctx.closePath();
-                ctx.fill();
-            }
-        }
-
-        // Canvas setup
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let mouseX = null, mouseY = null;
-        let audioContext, analyser, microphone, audioData;
-
-        // Settings
-        const settings = {
-            particleCount: 420,
-            speed: 5,
-            size: 1,
-            trailLength: 10,
-            color: '#00ee00',
-            shape: 'circle',
-            mouseMode: 'attract then launch',
-            interactionForce: 150,
-            interactionRadius: 100,
-            gravity: -0.1,
-            bounceWalls: true,
-            wrapAround: false,
-            waterMode: false,
-            friction: 1,
-            audioActive: false,
-            audioSensitivity: 50
+        // Global variables
+        let scene, camera, renderer, particles, particleSystem, emitter;
+        let animationId;
+        let isAnimating = true;
+        let controlsVisible = true;
+        
+        // Particle system parameters
+        let particleParams = {
+            count: 1000,
+            emissionRate: 50,
+            gravity: -0.01,
+            initialSpeed: 2,
+            spreadAngle: 45,
+            airResistance: 0.01,
+            startColor: new THREE.Color(0xff4444),
+            endColor: new THREE.Color(0x4444ff),
+            size: 2,
+            sizeVariation: 1,
+            opacity: 0.8,
+            lifespan: 5,
+            turbulence: 0.1,
+            shape: 'point',
+            blendMode: 'normal',
+            windX: 0,
+            windY: 0,
+            windZ: 0,
+            burstSize: 50,
+            trailDensity: 20
         };
 
-        function resizeCanvas() {
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        // Particle class
+        class Particle {
+            constructor(position, velocity) {
+                this.position = position.clone();
+                this.velocity = velocity.clone();
+                this.life = particleParams.lifespan;
+                this.maxLife = particleParams.lifespan;
+                this.size = particleParams.size + (Math.random() - 0.5) * particleParams.sizeVariation;
+                this.turbulenceOffset = Math.random() * 1000;
+            }
 
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < settings.particleCount; i++) {
-                particles.push(new Particle());
+            update(deltaTime) {
+                // Apply gravity
+                this.velocity.y += particleParams.gravity * deltaTime;
+                
+                // Apply air resistance
+                this.velocity.multiplyScalar(1 - particleParams.airResistance * deltaTime);
+                
+                // Apply wind
+                this.velocity.x += particleParams.windX * deltaTime;
+                this.velocity.y += particleParams.windY * deltaTime;
+                this.velocity.z += particleParams.windZ * deltaTime;
+                
+                // Apply turbulence
+                const time = Date.now() * 0.001;
+                const turbulence = particleParams.turbulence;
+                this.velocity.x += Math.sin(time + this.turbulenceOffset) * turbulence * deltaTime;
+                this.velocity.z += Math.cos(time + this.turbulenceOffset * 1.1) * turbulence * deltaTime;
+                
+                // Update position
+                this.position.add(this.velocity.clone().multiplyScalar(deltaTime));
+                
+                // Update life
+                this.life -= deltaTime;
+                
+                return this.life > 0;
+            }
+
+            getLifeRatio() {
+                return this.life / this.maxLife;
             }
         }
+
+        // Particle system class
+        class ParticleSystem {
+            constructor() {
+                this.particles = [];
+                this.geometry = new THREE.BufferGeometry();
+                this.positions = new Float32Array(particleParams.count * 3);
+                this.colors = new Float32Array(particleParams.count * 3);
+                this.sizes = new Float32Array(particleParams.count);
+                this.alphas = new Float32Array(particleParams.count);
+                
+                this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
+                this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
+                this.geometry.setAttribute('size', new THREE.BufferAttribute(this.sizes, 1));
+                this.geometry.setAttribute('alpha', new THREE.BufferAttribute(this.alphas, 1));
+                
+                this.material = new THREE.ShaderMaterial({
+                    uniforms: {
+                        pointTexture: { value: this.createParticleTexture() }
+                    },
+                    vertexShader: `
+                        attribute float size;
+                        attribute float alpha;
+                        varying float vAlpha;
+                        varying vec3 vColor;
+                        
+                        void main() {
+                            vAlpha = alpha;
+                            vColor = color;
+                            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                            gl_PointSize = size * (300.0 / -mvPosition.z);
+ gl_Position = projectionMatrix * mvPosition;
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform sampler2D pointTexture;
+                        varying float vAlpha;
+                        varying vec3 vColor;
+                        
+                        void main() {
+                            gl_FragColor = vec4(vColor, vAlpha);
+                            gl_FragColor = gl_FragColor * texture2D(pointTexture, gl_PointCoord);
+                        }
+                    `,
+                    blending: THREE.AdditiveBlending,
+                    depthTest: false,
+                    transparent: true,
+                    vertexColors: true
+                });
+                
+                this.points = new THREE.Points(this.geometry, this.material);
+                scene.add(this.points);
+                
+                this.emissionTimer = 0;
+            }
+
+            createParticleTexture() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+                const context = canvas.getContext('2d');
+                
+                const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
+                gradient.addColorStop(0, 'rgba(255,255,255,1)');
+                gradient.addColorStop(0.5, 'rgba(255,255,255,0.5)');
+                gradient.addColorStop(1, 'rgba(255,255,255,0)');
+                
+                context.fillStyle = gradient;
+                context.fillRect(0, 0, 64, 64);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                return texture;
+            }
+
+            emit(count, position = new THREE.Vector3(0, 0, 0)) {
+                for (let i = 0; i < count; i++) {
+                    if (this.particles.length >= particleParams.count) break;
+                    
+                    const angle = (Math.random() - 0.5) * particleParams.spreadAngle * Math.PI / 180;
+                    const elevation = (Math.random() - 0.5) * particleParams.spreadAngle * Math.PI / 180;
+                    
+                    const velocity = new THREE.Vector3(
+                        Math.sin(angle) * Math.cos(elevation),
+                        Math.sin(elevation),
+                        Math.cos(angle) * Math.cos(elevation)
+                    ).multiplyScalar(particleParams.initialSpeed * (0.5 + Math.random() * 0.5));
+                    
+                    this.particles.push(new Particle(position, velocity));
+                }
+            }
+
+            update(deltaTime) {
+                // Emit new particles
+                this.emissionTimer += deltaTime;
+                const emissionInterval = 1 / particleParams.emissionRate;
+                
+                while (this.emissionTimer >= emissionInterval && this.particles.length < particleParams.count) {
+                    this.emit(1);
+                    this.emissionTimer -= emissionInterval;
+                }
+                
+                // Update existing particles
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    if (!this.particles[i].update(deltaTime)) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+                
+                // Update geometry
+                this.updateGeometry();
+            }
+
+            updateGeometry() {
+                const positions = this.geometry.attributes.position.array;
+                const colors = this.geometry.attributes.color.array;
+                const sizes = this.geometry.attributes.size.array;
+                const alphas = this.geometry.attributes.alpha.array;
+                
+                for (let i = 0; i < particleParams.count; i++) {
+                    if (i < this.particles.length) {
+                        const particle = this.particles[i];
+                        const lifeRatio = particle.getLifeRatio();
+                        
+                        positions[i * 3] = particle.position.x;
+                        positions[i * 3 + 1] = particle.position.y;
+                        positions[i * 3 + 2] = particle.position.z;
+                        
+                        // Interpolate color
+                        const color = particleParams.startColor.clone().lerp(particleParams.endColor, 1 - lifeRatio);
+                        colors[i * 3] = color.r;
+                        colors[i * 3 + 1] = color.g;
+                        colors[i * 3 + 2] = color.b;
+                        
+                        sizes[i] = particle.size * lifeRatio;
+                        alphas[i] = particleParams.opacity * lifeRatio;
+                    } else {
+                        // Hide unused particles
+                        positions[i * 3] = 0;
+                        positions[i * 3 + 1] = 0;
+                        positions[i * 3 + 2] = 0;
+                        alphas[i] = 0;
+                        sizes[i] = 0;
+                    }
+                }
+                
+                this.geometry.attributes.position.needsUpdate = true;
+                this.geometry.attributes.color.needsUpdate = true;
+                this.geometry.attributes.size.needsUpdate = true;
+                this.geometry.attributes.alpha.needsUpdate = true;
+            }
+
+            updateBlendMode() {
+                const blendModes = {
+                    'normal': THREE.NormalBlending,
+                    'additive': THREE.AdditiveBlending,
+                    'multiply': THREE.MultiplyBlending
+                };
+                this.material.blending = blendModes[particleParams.blendMode];
+            }
+        }
+
+        // Initialize Three.js scene
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000011);
+            
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 5, 15);
+            camera.lookAt(0, 0, 0);
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('container').appendChild(renderer.domElement);
+            
+            // Particle system
+            particleSystem = new ParticleSystem();
+            
+            // Controls
+            setupControls();
+            
+            // Start animation
+            animate();
+            
+            // Mouse interaction
+            setupMouseInteraction();
+        }
+
+        function setupControls() {
+            const controls = document.querySelectorAll('input, select');
+            
+            controls.forEach(control => {
+                control.addEventListener('input', (e) => {
+                    updateParameter(e.target.id, e.target.value, e.target.type);
+                });
+                
+                // Initialize value displays
+                if (control.type === 'range') {
+                    updateValueDisplay(control.id, control.value);
+                }
+            });
+
+            // Setup collapsible headers
+            document.querySelectorAll('.control-group-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const body = header.nextElementSibling;
+                    header.classList.toggle('collapsed');
+                    if (header.classList.contains('collapsed')) {
+                        body.style.maxHeight = '0';
+                    } else {
+                        // Calculate height needed for content
+ body.style.maxHeight = body.scrollHeight + 'px';
+                    }
+                });
+            });
+        }
+
+        function updateParameter(id, value, type) {
+            const numValue = type === 'color' ? value : parseFloat(value);
+            
+            switch(id) {
+                case 'particleCount':
+                    particleParams.count = parseInt(value);
+                    updateValueDisplay(id, value);
+                    break;
+                case 'emissionRate':
+                    particleParams.emissionRate = numValue;
+                    updateValueDisplay(id, value + '/s');
+                    break;
+                case 'gravity':
+                    particleParams.gravity = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'initialSpeed':
+                    particleParams.initialSpeed = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'spreadAngle':
+                    particleParams.spreadAngle = numValue;
+                    updateValueDisplay(id, value + '°');
+                    break;
+                case 'airResistance':
+                    particleParams.airResistance = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'startColor':
+                    particleParams.startColor = new THREE.Color(value);
+                    break;
+                case 'endColor':
+                    particleParams.endColor = new THREE.Color(value);
+                    break;
+                case 'particleSize':
+                    particleParams.size = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'sizeVariation':
+                    particleParams.sizeVariation = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'opacity':
+                    particleParams.opacity = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'lifespan':
+                    particleParams.lifespan = numValue;
+                    updateValueDisplay(id, value + 's');
+                    break;
+                case 'turbulence':
+                    particleParams.turbulence = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'particleShape':
+                    particleParams.shape = value;
+                    break;
+                case 'blendMode':
+                    particleParams.blendMode = value;
+                    particleSystem.updateBlendMode();
+                    break;
+                case 'windX':
+                    particleParams.windX = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'windY':
+                    particleParams.windY = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'windZ':
+                    particleParams.windZ = numValue;
+                    updateValueDisplay(id, value);
+                    break;
+                case 'burstSize':
+                    particleParams.burstSize = parseInt(value);
+                    updateValueDisplay(id, value);
+                    break;
+                case 'trailDensity':
+                    particleParams.trailDensity = parseInt(value);
+                    updateValueDisplay(id, value);
+                    break;
+            }
+        }
+
+        function updateValueDisplay(id, value) {
+            const display = document.getElementById(id + 'Value');
+            if (display) {
+                display.textContent = value;
+            }
+        }
+
+        function setupMouseInteraction() {
+            let mouseX = 0, mouseY = 0;
+            let targetCameraX = 0, targetCameraY = 5;
+            let isMouseDown = false;
+            let lastEmissionTime = 0;
+            
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            
+            // Convert screen coordinates to 3D world position
+            function getWorldPosition(clientX, clientY) {
+                mouse.x = (clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+                
+                raycaster.setFromCamera(mouse, camera);
+                
+                // Create an invisible plane to intersect with
+                const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+                const intersectPoint = new THREE.Vector3();
+                raycaster.ray.intersectPlane(plane, intersectPoint);
+                
+                return intersectPoint;
+            }
+            
+            // Emit particles at specific position
+            function emitAtPosition(worldPos) {
+                const currentTime = Date.now();
+                if (currentTime - lastEmissionTime > 50) { // Throttle emissions
+                    const burstCount = Math.min(particleParams.trailDensity, particleParams.emissionRate);
+                    particleSystem.emit(burstCount, worldPos);
+                    lastEmissionTime = currentTime;
+                }
+            }
+            
+            // Mouse events
+            document.addEventListener('mousemove', (event) => {
+                if (!event.target.closest('#controls')) {
+                    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+                    
+                    targetCameraX = mouseX * 10;
+                    targetCameraY = mouseY * 10 + 5;
+                    
+                    // Emit particles while dragging
+                    if (isMouseDown) {
+                        const worldPos = getWorldPosition(event.clientX, event.clientY);
+                        emitAtPosition(worldPos);
+                    }
+                }
+            });
+            
+            document.addEventListener('mousedown', (event) => {
+                if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
+                    isMouseDown = true;
+                    const worldPos = getWorldPosition(event.clientX, event.clientY);
+                    emitAtPosition(worldPos);
+                    event.preventDefault();
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isMouseDown = false;
+            });
+            
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
+                    const worldPos = getWorldPosition(event.clientX, event.clientY);
+                    particleSystem.emit(particleParams.burstSize, worldPos);
+                }
+            });
+            
+            // Touch events for mobile
+            document.addEventListener('touchstart', (event) => {
+                if (!event.target.closest('#controls')) {
+                    const touch = event.touches[0];
+                    const worldPos = getWorldPosition(touch.clientX, touch.clientY);
+                    particleSystem.emit(particleParams.burstSize, worldPos);
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchmove', (event) => {
+                if (!event.target.closest('#controls')) {
+                    const touch = event.touches[0];
+                    const worldPos = getWorldPosition(touch.clientX, touch.clientY);
+                    emitAtPosition(worldPos);
+                    
+                    // Update camera based on touch position
+                    mouseX = (touch.clientX / window.innerWidth) * 2 - 1;
+                    mouseY = -(touch.clientY / window.innerHeight) * 2 + 1;
+                    targetCameraX = mouseX * 10;
+                    targetCameraY = mouseY * 10 + 5;
+                    
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Multi-touch support
+            document.addEventListener('touchstart', (event) => {
+                if (!event.target.closest('#controls') && event.touches.length > 1) {
+                    // Emit particles at all touch points
+                    for (let i = 0; i < Math.min(event.touches.length, 5); i++) {
+                        const touch = event.touches[i];
+                        const worldPos = getWorldPosition(touch.clientX, touch.clientY);
+                        particleSystem.emit(particleParams.burstSize / 2, worldPos);
+                    }
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Smooth camera movement
+            function updateCamera() {
+                camera.position.x += (targetCameraX - camera.position.x) * 0.05;
+                camera.position.y += (targetCameraY - camera.position.y) * 0.05;
+                camera.lookAt(0, 0, 0);
+            }
+            
+            // Add to animation loop
+            const originalAnimate = animate;
+            animate = function() {
+                updateCamera();
+                originalAnimate();
+            };
+        }
+
+        // Animation loop
+        let lastTime = 0;
+        let frameCount = 0;
+        let fpsTimer = 0;
 
         function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!isAnimating) return;
             
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-
-            // Adjust particle count
-            while (particles.length < settings.particleCount) {
-                particles.push(new Particle());
+            animationId = requestAnimationFrame(animate);
+            
+            const currentTime = performance.now();
+            const deltaTime = (currentTime - lastTime) / 1000;
+            lastTime = currentTime;
+            
+            // Update particle system
+            if (particleSystem) {
+                particleSystem.update(deltaTime);
             }
-            while (particles.length > settings.particleCount) {
-                particles.pop();
+            
+            // Update stats
+            frameCount++;
+            fpsTimer += deltaTime;
+            
+            if (fpsTimer >= 1) {
+                document.getElementById('fps').textContent = Math.round(frameCount / fpsTimer);
+                document.getElementById('activeParticles').textContent = particleSystem ? particleSystem.particles.length : 0;
+                frameCount = 0;
+                fpsTimer = 0;
             }
-
-            requestAnimationFrame(animate);
+            
+            // Render
+            renderer.render(scene, camera);
         }
 
-        // Audio setup
-        async function initAudio() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                microphone = audioContext.createMediaStreamSource(stream);
-                
-                analyser.fftSize = 256;
-                const bufferLength = analyser.frequencyBinCount;
-                audioData = new Uint8Array(bufferLength);
-                
-                microphone.connect(analyser);
-                settings.audioActive = true;
-                
-                document.getElementById('audioStatus').textContent = 'Audio Active';
-                document.getElementById('audioStatus').className = 'audio-active';
-                document.getElementById('audioToggle').textContent = 'Disable Audio';
-                
-                function updateAudioData() {
-                    if (settings.audioActive) {
-                        analyser.getByteFrequencyData(audioData);
-                        requestAnimationFrame(updateAudioData);
-                    }
-                }
-                updateAudioData();
-                
-            } catch (error) {
-                console.error('Error accessing microphone:', error);
-                let msg = 'Audio Access Denied';
-                if (window.isSecureContext === false || location.protocol !== 'https:') {
-                    msg = 'Audio requires HTTPS. GitHub Pages supports HTTPS by default.';
-                } else if (error && (error.name === 'NotAllowedError' || error.name === 'SecurityError')) {
-                    msg = 'Microphone access was blocked. Please allow microphone access in your browser settings.';
-                } else if (error && error.name === 'NotFoundError') {
-                    msg = 'No microphone found. Please connect a microphone.';
-                }
-                document.getElementById('audioStatus').textContent = msg;
-                document.getElementById('audioStatus').className = 'audio-inactive';
-            }
-        }
-
-        // Event listeners
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            mouseX = e.clientX - rect.left;
-            mouseY = e.clientY - rect.top;
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            mouseX = e.touches[0].clientX - rect.left;
-            mouseY = e.touches[0].clientY - rect.top;
-        });
-
-        canvas.addEventListener('mouseleave', () => {
-            mouseX = null;
-            mouseY = null;
-        });
-
-        // Controls
-        document.getElementById('toggleBtn').addEventListener('click', () => {
-            document.getElementById('controls').classList.toggle('hidden');
-        });
-
-        // Update settings based on controls
-        function updateSettings() {
-            const controls = {
-                particleCount: 'particleCount',
-                speed: 'speed',
-                size: 'size',
-                trailLength: 'trailLength',
-                color: 'particleColor',
-                shape: 'particleShape',
-                mouseMode: 'mouseMode',
-                interactionForce: 'interactionForce',
-                interactionRadius: 'interactionRadius',
-                gravity: 'gravity',
-                bounceWalls: 'bounceWalls',
-                wrapAround: 'wrapAround',
-                waterMode: 'waterMode',
-                friction: 'friction',
-                audioSensitivity: 'audioSensitivity'
-            };
-
-            Object.keys(controls).forEach(setting => {
-                const element = document.getElementById(controls[setting]);
-                if (element.type === 'checkbox') {
-                    element.addEventListener('change', () => {
-                        settings[setting] = element.checked;
-                    });
-                } else if (element.type === 'color') {
-                    element.addEventListener('change', () => {
-                        settings.color = element.value;
-                    });
-                } else {
-                    element.addEventListener('input', () => {
-                        settings[setting] = element.type === 'range' ? parseFloat(element.value) : element.value;
-                        
-                        // Update value displays
-                        const valueDisplays = {
-                            particleCount: 'countValue',
-                            speed: 'speedValue',
-                            size: 'sizeValue',
-                            trailLength: 'trailValue',
-                            interactionForce: 'forceValue',
-                            interactionRadius: 'radiusValue',
-                            gravity: 'gravityValue',
-                            friction: 'frictionValue',
-                            audioSensitivity: 'audioSensValue'
-                        };
-                        
-                        if (valueDisplays[setting]) {
-                            document.getElementById(valueDisplays[setting]).textContent = element.value;
-                        }
-                    });
-                }
-            });
-        }
-
-        // Audio toggle
-        document.getElementById('audioToggle').addEventListener('click', () => {
-            if (!settings.audioActive) {
-                initAudio();
+        // Utility functions
+        function toggleControls() {
+            const controls = document.getElementById('controls');
+            controlsVisible = !controlsVisible;
+            
+            if (controlsVisible) {
+                controls.classList.remove('hidden');
             } else {
-                settings.audioActive = false;
-                if (audioContext) {
-                    audioContext.close();
-                }
-                document.getElementById('audioStatus').textContent = 'Audio Inactive';
-                document.getElementById('audioStatus').className = 'audio-inactive';
-                document.getElementById('audioToggle').textContent = 'Enable Audio';
+                controls.classList.add('hidden');
             }
-        });
+        }
 
-        // Presets
-        function loadPreset(preset) {
-            const presets = {
-                fireworks: {
-                    particleCount: 200,
-                    speed: 5,
-                    size: 2,
-                    trailLength: 20,
-                    color: '#ff6b6b',
-                    shape: 'star',
-                    mouseMode: 'launch',
-                    gravity: 0.1,
-                    bounceWalls: true,
-                    friction: 0.95
-                },
-                galaxy: {
-                    particleCount: 500,
-                    speed: 1,
-                    size: 1,
-                    trailLength: 30,
-                    color: '#a78bfa',
-                    shape: 'circle',
-                    mouseMode: 'vortex',
-                    gravity: -0.05,
-                    wrapAround: true,
-                    bounceWalls: false,
-                    friction: 0.5
-                },
-                snow: {
-                    particleCount: 2150,
-                    speed: 0.5,
-                    size: 7,
-                    trailLength: 0,
-                    color: '#ffffff',
-                    shape: 'circle',
-                    mouseMode: 'none',
-                    gravity: 0.02,
-                    bounceWalls: false,
-                    wrapAround: true,
-                    friction: 0.99
-                },
-                ocean: {
-                    particleCount: 100,
-                    speed: 1.5,
-                    size: 5,
-                    trailLength: 15,
-                    color: '#06b6d4',
-                    shape: 'circle',
-                    mouseMode: 'attract',
-                    gravity: -0.05,
-                    waterMode: true,
-                    friction: 0.45
+        function toggleAnimation() {
+            isAnimating = !isAnimating;
+            const button = document.getElementById('animationButton');
+            
+            if (isAnimating) {
+                button.textContent = 'Pause';
+                lastTime = performance.now();
+                animate();
+            } else {
+                button.textContent = 'Play';
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
                 }
-            };
+            }
+        }
 
-            const config = presets[preset];
-            Object.keys(config).forEach(key => {
-                settings[key] = config[key];
-                const element = document.getElementById(key) || 
-                               document.getElementById(key === 'color' ? 'particleColor' : key) ||
-                               document.getElementById(key === 'shape' ? 'particleShape' : key) ||
-                               document.getElementById(key === 'mouseMode' ? 'mouseMode' : key);
-                
-                if (element) {
-                    if (element.type === 'checkbox') {
-                        element.checked = config[key];
-                    } else {
-                        element.value = config[key];
-                    }
-                    element.dispatchEvent(new Event('input'));
-                }
+        function resetToDefaults() {
+            document.getElementById('particleCount').value = 1000;
+            document.getElementById('emissionRate').value = 50;
+            document.getElementById('gravity').value = -0.01;
+            document.getElementById('initialSpeed').value = 2;
+            document.getElementById('spreadAngle').value = 45;
+            document.getElementById('airResistance').value = 0.01;
+            document.getElementById('startColor').value = '#ff4444';
+            document.getElementById('endColor').value = '#4444ff';
+            document.getElementById('particleSize').value = 2;
+            document.getElementById('sizeVariation').value = 1;
+            document.getElementById('opacity').value = 0.8;
+            document.getElementById('lifespan').value = 5;
+            document.getElementById('turbulence').value = 0.1;
+            document.getElementById('particleShape').value = 'point';
+            document.getElementById('blendMode').value = 'normal';
+            document.getElementById('windX').value = 0;
+            document.getElementById('windY').value = 0;
+            document.getElementById('windZ').value = 0;
+            document.getElementById('burstSize').value = 50;
+            document.getElementById('trailDensity').value = 20;
+            
+            // Trigger updates
+            document.querySelectorAll('input, select').forEach(control => {
+                control.dispatchEvent(new Event('input'));
             });
         }
 
-        // Initialize
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-        initParticles();
-        updateSettings();
-        animate();
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            // Re-calculate max-height for collapsible sections on resize
+            document.querySelectorAll('.control-group-header:not(.collapsed)').forEach(header => {
+                const body = header.nextElementSibling;
+                if (body) {
+                    body.style.maxHeight = body.scrollHeight + 'px';
+                }
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize the app
+        init();
     </script>
 </body>
 </html>
