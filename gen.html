@@ -3,929 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ink Creature NFT Generator</title>
+    <title>Ink Blob Creature NFT Generator</title>
     <style>
         body {
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             font-family: 'Arial', sans-serif;
             color: white;
-            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #container { /* This is now the canvas container */
+            width: 100vw;
+            height: 100vh;
+        }
+        #ui-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300px; /* Adjust width as needed */
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            z-index: 100;
+            background-color: red; /* Debug: Added background color */
+            border: 2px solid yellow; /* Debug: Added border */
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            text-align: center;
-            color: #00ff88;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
-        
-        .generator-panel {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            justify-content: center;
+        .control-group h3 {
+            margin: 0 0 10px 0;
+            color: #ff6b6b;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         button {
-            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
             color: white;
-            font-weight: bold;
+            padding: 12px 24px;
+            margin: 5px;
+            border-radius: 25px;
             cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.5);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
         
-        .canvas-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
+        .trait-display {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
         }
         
-        canvas {
-            border: 3px solid #00ff88;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
-            background: #0a0a0a;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .stat-item {
-            background: rgba(255, 107, 53, 0.1);
+        .trait-item {
+            margin: 3px 0;
             padding: 15px;
             border-radius: 10px;
-            border-left: 4px solid #ff6b35;
-        }
-        
-        .stat-label {
-            font-size: 0.9em;
-            color: #ccc;
-            margin-bottom: 5px;
-        }
-        
-        .stat-value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #ff6b35;
-        }
-        
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        .gallery-item {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .gallery-item:hover {
-            border-color: #00ff88;
-            transform: scale(1.05);
-        }
-        
-        .gallery-item canvas {
-            border: 1px solid #333;
-            border-radius: 8px;
-        }
-        
-        .collection-title {
-            color: #00ff88;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
         }
     </style>
+    <script src="main_threejs_inky.js" type="module"></script>
 </head>
+
 <body>
-    <div class="container">
-        <h1>🎨 INK CREATURES NFT GENERATOR 🎨</h1>
-        
-        <div class="generator-panel">
-            <div class="controls">
-                <button onclick="generateCreature()">Generate New Creature</button>
-                <button onclick="generateCollection()">Generate Collection (10)</button>
-                <button onclick="downloadCurrent()">Download Current</button>
-                <button onclick="clearGallery()">Clear Gallery</button>
-            </div>
-            
-            <div class="canvas-container">
-                <canvas id="mainCanvas" width="400" height="400"></canvas>
-            </div>
-            
-            <div class="stats" id="stats">
-                <!-- Stats will be populated here -->
-            </div>
-        </div>
-        
-        <div class="collection-title">🖼️ Generated Collection</div>
-        <div class="gallery" id="gallery">
-            <!-- Generated creatures will appear here -->
-        </div>
-    </div>
-
-    <script>
-        const canvas = document.getElementById('mainCanvas');
-        const ctx = canvas.getContext('2d');
-        let currentCreature = null;
-        let creatureCounter = 0;
-        let galleryCreatures = [];
-
-        // Trait arrays
-        const bodyTypes = ['blob', 'humanoid', 'squat', 'tall', 'wide'];
-        const poses = ['standing', 'crouching', 'leaning', 'arms_up', 'peace_sign'];
-        const clothingTypes = ['hoodie', 'jacket', 'vest', 'oversized_tee', 'bomber'];
-        const accessories = ['spray_can', 'marker', 'cap', 'chains', 'mask'];
-        const backgrounds = ['alley', 'wall', 'street', 'abstract', 'minimal'];
-        const inkEffects = ['drip', 'splatter', 'smoke', 'melt', 'flow'];
-        const eyeTypes = ['round', 'large', 'glowing', 'hollow', 'compound'];
-        const colors = {
-            primary: ['#2d3436', '#636e72', '#74b9ff', '#0984e3', '#00b894'],
-            secondary: ['#ff6b35', '#f7931e', '#fdcb6e', '#e84393', '#fd79a8'],
-            accent: ['#00ff88', '#55efc4', '#81ecec', '#a29bfe', '#6c5ce7']
-        };
-
-        class InkCreature {
-            constructor() {
-                this.traits = this.generateTraits();
-                this.position = { x: 200, y: 200 };
-                this.inkParticles = [];
-                this.generateInkParticles();
-            }
-
-            generateTraits() {
-                return {
-                    bodyType: this.randomChoice(bodyTypes),
-                    pose: this.randomChoice(poses),
-                    clothing: this.randomChoice(clothingTypes),
-                    accessory: this.randomChoice(accessories),
-                    background: this.randomChoice(backgrounds),
-                    inkEffect: this.randomChoice(inkEffects),
-                    eyeType: this.randomChoice(eyeTypes),
-                    primaryColor: this.randomChoice(colors.primary),
-                    secondaryColor: this.randomChoice(colors.secondary),
-                    accentColor: this.randomChoice(colors.accent),
-                    size: 0.8 + Math.random() * 0.4,
-                    inkiness: 0.5 + Math.random() * 0.5
-                };
-            }
-
-            randomChoice(array) {
-                return array[Math.floor(Math.random() * array.length)];
-            }
-
-            generateInkParticles() {
-                this.inkParticles = [];
-                const particleCount = 15 + Math.floor(Math.random() * 20);
-                for (let i = 0; i < particleCount; i++) {
-                    this.inkParticles.push({
-                        x: this.position.x + (Math.random() - 0.5) * 100,
-                        y: this.position.y + (Math.random() - 0.5) * 100,
-                        size: 2 + Math.random() * 8,
-                        opacity: 0.3 + Math.random() * 0.4,
-                        speed: Math.random() * 2
-                    });
-                }
-            }
-
-            draw(ctx) {
-                ctx.save();
-                
-                // Draw background
-                this.drawBackground(ctx);
-                
-                // Draw ink effects
-                this.drawInkEffects(ctx);
-                
-                // Draw main body
-                this.drawBody(ctx);
-                
-                // Draw clothing
-                this.drawClothing(ctx);
-                
-                // Draw face
-                this.drawFace(ctx);
-                
-                // Draw accessories
-                this.drawAccessories(ctx);
-                
-                // Draw final ink overlay
-                this.drawInkOverlay(ctx);
-                
-                ctx.restore();
-            }
-
-            drawBackground(ctx) {
-                const { background, primaryColor, accentColor } = this.traits;
-                
-                // Create gradient background
-                const gradient = ctx.createRadialGradient(200, 200, 0, 200, 200, 300);
-                gradient.addColorStop(0, primaryColor + '40');
-                gradient.addColorStop(1, '#000000');
-                
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, 400, 400);
-                
-                // Add background elements
-                if (background === 'alley') {
-                    this.drawAlleyBackground(ctx);
-                } else if (background === 'wall') {
-                    this.drawWallBackground(ctx);
-                } else if (background === 'street') {
-                    this.drawStreetBackground(ctx);
-                }
-            }
-
-            drawAlleyBackground(ctx) {
-                // Draw brick wall texture
-                ctx.fillStyle = '#2d3436';
-                for (let y = 0; y < 400; y += 30) {
-                    for (let x = 0; x < 400; x += 60) {
-                        ctx.fillRect(x + (y % 60), y, 55, 25);
-                    }
-                }
-                
-                // Add some graffiti tags
-                ctx.fillStyle = this.traits.accentColor + '60';
-                ctx.font = 'bold 20px Arial';
-                ctx.fillText('VOID', 50, 100);
-                ctx.fillText('INK', 300, 300);
-            }
-
-            drawWallBackground(ctx) {
-                // Simple wall with some texture
-                ctx.fillStyle = '#636e72';
-                ctx.fillRect(0, 0, 400, 400);
-                
-                // Add vertical streaks
-                for (let i = 0; i < 10; i++) {
-                    ctx.fillStyle = '#2d3436' + '30';
-                    ctx.fillRect(i * 40, 0, 2, 400);
-                }
-            }
-
-            drawStreetBackground(ctx) {
-                // Asphalt texture
-                ctx.fillStyle = '#2d3436';
-                ctx.fillRect(0, 350, 400, 50);
-                
-                // Add some scattered debris
-                for (let i = 0; i < 5; i++) {
-                    ctx.fillStyle = '#636e72';
-                    ctx.beginPath();
-                    ctx.arc(Math.random() * 400, 350 + Math.random() * 40, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            drawBody(ctx) {
-                const { bodyType, size, primaryColor, inkiness } = this.traits;
-                const { x, y } = this.position;
-                
-                ctx.fillStyle = primaryColor;
-                ctx.save();
-                ctx.scale(size, size);
-                
-                // Create organic blob shape
-                ctx.beginPath();
-                if (bodyType === 'blob') {
-                    this.drawBlobBody(ctx, x/size, y/size);
-                } else if (bodyType === 'humanoid') {
-                    this.drawHumanoidBody(ctx, x/size, y/size);
-                } else if (bodyType === 'squat') {
-                    this.drawSquatBody(ctx, x/size, y/size);
-                } else if (bodyType === 'tall') {
-                    this.drawTallBody(ctx, x/size, y/size);
-                } else {
-                    this.drawWideBody(ctx, x/size, y/size);
-                }
-                
-                ctx.fill();
-                
-                // Add body shading
-                ctx.fillStyle = '#000000' + '40';
-                ctx.fill();
-                
-                ctx.restore();
-            }
-
-            drawBlobBody(ctx, x, y) {
-                // Organic blob shape with curves
-                ctx.moveTo(x - 40, y - 60);
-                ctx.bezierCurveTo(x - 70, y - 40, x - 70, y + 40, x - 40, y + 60);
-                ctx.bezierCurveTo(x - 20, y + 80, x + 20, y + 80, x + 40, y + 60);
-                ctx.bezierCurveTo(x + 70, y + 40, x + 70, y - 40, x + 40, y - 60);
-                ctx.bezierCurveTo(x + 20, y - 80, x - 20, y - 80, x - 40, y - 60);
-                ctx.closePath();
-            }
-
-            drawHumanoidBody(ctx, x, y) {
-                // More structured humanoid shape
-                ctx.ellipse(x, y - 20, 35, 50, 0, 0, Math.PI * 2); // torso
-                ctx.moveTo(x, y + 30);
-                ctx.ellipse(x - 20, y + 50, 12, 30, 0, 0, Math.PI * 2); // left leg
-                ctx.ellipse(x + 20, y + 50, 12, 30, 0, 0, Math.PI * 2); // right leg
-            }
-
-            drawSquatBody(ctx, x, y) {
-                // Short and wide
-                ctx.ellipse(x, y, 50, 35, 0, 0, Math.PI * 2);
-            }
-
-            drawTallBody(ctx, x, y) {
-                // Tall and narrow
-                ctx.ellipse(x, y, 25, 70, 0, 0, Math.PI * 2);
-            }
-
-            drawWideBody(ctx, x, y) {
-                // Wide and short
-                ctx.ellipse(x, y, 60, 30, 0, 0, Math.PI * 2);
-            }
-
-            drawClothing(ctx) {
-                const { clothing, secondaryColor, pose } = this.traits;
-                const { x, y } = this.position;
-                
-                ctx.fillStyle = secondaryColor;
-                
-                if (clothing === 'hoodie') {
-                    this.drawHoodie(ctx, x, y);
-                } else if (clothing === 'jacket') {
-                    this.drawJacket(ctx, x, y);
-                } else if (clothing === 'vest') {
-                    this.drawVest(ctx, x, y);
-                } else if (clothing === 'bomber') {
-                    this.drawBomber(ctx, x, y);
-                }
-            }
-
-            drawHoodie(ctx, x, y) {
-                // Hoodie shape
-                ctx.beginPath();
-                ctx.ellipse(x, y - 10, 45, 55, 0, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Hood
-                ctx.beginPath();
-                ctx.arc(x, y - 50, 30, 0, Math.PI, true);
-                ctx.fill();
-                
-                // Hoodie strings
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(x - 10, y - 30);
-                ctx.lineTo(x - 5, y - 15);
-                ctx.moveTo(x + 10, y - 30);
-                ctx.lineTo(x + 5, y - 15);
-                ctx.stroke();
-            }
-
-            drawJacket(ctx, x, y) {
-                // Jacket with zipper
-                ctx.beginPath();
-                ctx.ellipse(x, y - 10, 40, 50, 0, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Zipper
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(x, y - 40);
-                ctx.lineTo(x, y + 20);
-                ctx.stroke();
-            }
-
-            drawVest(ctx, x, y) {
-                // Sleeveless vest
-                ctx.beginPath();
-                ctx.ellipse(x, y - 10, 35, 45, 0, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            drawBomber(ctx, x, y) {
-                // Bomber jacket with ribbed cuffs
-                ctx.beginPath();
-                ctx.ellipse(x, y - 10, 45, 50, 0, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Ribbed cuffs
-                ctx.fillStyle = this.traits.primaryColor;
-                ctx.fillRect(x - 45, y + 15, 90, 8);
-                ctx.fillRect(x - 45, y - 45, 90, 8);
-            }
-
-            drawFace(ctx) {
-                const { eyeType, accentColor, pose } = this.traits;
-                const { x, y } = this.position;
-                
-                // Draw eyes based on type
-                if (eyeType === 'round') {
-                    this.drawRoundEyes(ctx, x, y);
-                } else if (eyeType === 'large') {
-                    this.drawLargeEyes(ctx, x, y);
-                } else if (eyeType === 'glowing') {
-                    this.drawGlowingEyes(ctx, x, y);
-                } else if (eyeType === 'hollow') {
-                    this.drawHollowEyes(ctx, x, y);
-                } else {
-                    this.drawCompoundEyes(ctx, x, y);
-                }
-                
-                // Add simple mouth occasionally
-                if (Math.random() > 0.7) {
-                    this.drawMouth(ctx, x, y);
-                }
-            }
-
-            drawRoundEyes(ctx, x, y) {
-                // Simple round eyes
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(x - 15, y - 30, 8, 0, Math.PI * 2);
-                ctx.arc(x + 15, y - 30, 8, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Pupils
-                ctx.fillStyle = '#000000';
-                ctx.beginPath();
-                ctx.arc(x - 15, y - 30, 4, 0, Math.PI * 2);
-                ctx.arc(x + 15, y - 30, 4, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            drawLargeEyes(ctx, x, y) {
-                // Large cartoon eyes
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(x - 20, y - 35, 15, 0, Math.PI * 2);
-                ctx.arc(x + 20, y - 35, 15, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.fillStyle = '#000000';
-                ctx.beginPath();
-                ctx.arc(x - 20, y - 35, 8, 0, Math.PI * 2);
-                ctx.arc(x + 20, y - 35, 8, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            drawGlowingEyes(ctx, x, y) {
-                // Glowing effect
-                ctx.shadowColor = this.traits.accentColor;
-                ctx.shadowBlur = 20;
-                ctx.fillStyle = this.traits.accentColor;
-                ctx.beginPath();
-                ctx.arc(x - 15, y - 30, 10, 0, Math.PI * 2);
-                ctx.arc(x + 15, y - 30, 10, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-            }
-
-            drawHollowEyes(ctx, x, y) {
-                // Hollow/empty eyes
-                ctx.fillStyle = '#000000';
-                ctx.beginPath();
-                ctx.arc(x - 15, y - 30, 12, 0, Math.PI * 2);
-                ctx.arc(x + 15, y - 30, 12, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Inner glow
-                ctx.fillStyle = this.traits.accentColor + '60';
-                ctx.beginPath();
-                ctx.arc(x - 15, y - 30, 6, 0, Math.PI * 2);
-                ctx.arc(x + 15, y - 30, 6, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            drawCompoundEyes(ctx, x, y) {
-                // Multiple small circles like compound eyes
-                const positions = [
-                    [-20, -35], [-15, -30], [-10, -35],
-                    [20, -35], [15, -30], [10, -35]
-                ];
-                
-                ctx.fillStyle = this.traits.accentColor;
-                positions.forEach(([offsetX, offsetY]) => {
-                    ctx.beginPath();
-                    ctx.arc(x + offsetX, y + offsetY, 4, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-            }
-
-            drawMouth(ctx, x, y) {
-                // Simple mouth
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(x, y - 10, 8, 0, Math.PI);
-                ctx.stroke();
-            }
-
-            drawAccessories(ctx) {
-                const { accessory, accentColor } = this.traits;
-                const { x, y } = this.position;
-                
-                if (accessory === 'spray_can') {
-                    this.drawSprayCan(ctx, x + 40, y + 20);
-                } else if (accessory === 'marker') {
-                    this.drawMarker(ctx, x - 40, y + 10);
-                } else if (accessory === 'cap') {
-                    this.drawCap(ctx, x, y - 60);
-                } else if (accessory === 'chains') {
-                    this.drawChains(ctx, x, y - 20);
-                } else if (accessory === 'mask') {
-                    this.drawGasMask(ctx, x, y - 25);
-                }
-            }
-
-            drawSprayCan(ctx, x, y) {
-                // Spray can
-                ctx.fillStyle = this.traits.secondaryColor;
-                ctx.fillRect(x - 8, y - 20, 16, 40);
-                
-                // Spray cap
-                ctx.fillStyle = '#000000';
-                ctx.fillRect(x - 6, y - 25, 12, 8);
-                
-                // Spray effect
-                ctx.fillStyle = this.traits.accentColor + '60';
-                for (let i = 0; i < 5; i++) {
-                    ctx.beginPath();
-                    ctx.arc(x + 15 + i * 5, y - 20 + Math.random() * 10, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            drawMarker(ctx, x, y) {
-                // Marker
-                ctx.fillStyle = this.traits.accentColor;
-                ctx.fillRect(x - 3, y - 15, 6, 30);
-                
-                // Tip
-                ctx.fillStyle = '#000000';
-                ctx.fillRect(x - 2, y + 15, 4, 5);
-            }
-
-            drawCap(ctx, x, y) {
-                // Baseball cap
-                ctx.fillStyle = this.traits.secondaryColor;
-                ctx.beginPath();
-                ctx.ellipse(x, y, 25, 15, 0, 0, Math.PI, true);
-                ctx.fill();
-                
-                // Visor
-                ctx.beginPath();
-                ctx.ellipse(x, y + 5, 30, 8, 0, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            drawChains(ctx, x, y) {
-                // Chain necklace
-                ctx.strokeStyle = '#ffd700';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.arc(x, y, 25, 0, Math.PI * 2);
-                ctx.stroke();
-                
-                // Chain links
-                for (let i = 0; i < 8; i++) {
-                    const angle = (i / 8) * Math.PI * 2;
-                    const linkX = x + Math.cos(angle) * 25;
-                    const linkY = y + Math.sin(angle) * 25;
-                    ctx.beginPath();
-                    ctx.arc(linkX, linkY, 2, 0, Math.PI * 2);
-                    ctx.stroke();
-                }
-            }
-
-            drawGasMask(ctx, x, y) {
-                // Gas mask like in reference
-                ctx.fillStyle = '#2d3436';
-                ctx.beginPath();
-                ctx.ellipse(x, y, 30, 25, 0, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Filter canisters
-                ctx.fillStyle = '#636e72';
-                ctx.beginPath();
-                ctx.ellipse(x - 25, y + 10, 8, 12, 0, 0, Math.PI * 2);
-                ctx.ellipse(x + 25, y + 10, 8, 12, 0, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Eye holes
-                ctx.fillStyle = '#000000';
-                ctx.beginPath();
-                ctx.arc(x - 10, y - 5, 8, 0, Math.PI * 2);
-                ctx.arc(x + 10, y - 5, 8, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Glowing eyes inside
-                ctx.fillStyle = this.traits.accentColor;
-                ctx.beginPath();
-                ctx.arc(x - 10, y - 5, 4, 0, Math.PI * 2);
-                ctx.arc(x + 10, y - 5, 4, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            drawInkEffects(ctx) {
-                const { inkEffect, inkiness } = this.traits;
-                
-                // Draw ink particles
-                this.inkParticles.forEach(particle => {
-                    ctx.fillStyle = `rgba(0, 0, 0, ${particle.opacity * inkiness})`;
-                    ctx.beginPath();
-                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-                
-                if (inkEffect === 'drip') {
-                    this.drawDripEffect(ctx);
-                } else if (inkEffect === 'splatter') {
-                    this.drawSplatterEffect(ctx);
-                } else if (inkEffect === 'smoke') {
-                    this.drawSmokeEffect(ctx);
-                } else if (inkEffect === 'melt') {
-                    this.drawMeltEffect(ctx);
-                } else if (inkEffect === 'flow') {
-                    this.drawFlowEffect(ctx);
-                }
-            }
-
-            drawDripEffect(ctx) {
-                const { x, y } = this.position;
-                
-                // Dripping ink
-                for (let i = 0; i < 3; i++) {
-                    const dripX = x + (Math.random() - 0.5) * 80;
-                    const dripLength = 20 + Math.random() * 40;
-                    
-                    ctx.fillStyle = `rgba(0, 0, 0, ${0.6 * this.traits.inkiness})`;
-                    ctx.fillRect(dripX - 2, y + 60, 4, dripLength);
-                    
-                    // Drip blob at bottom
-                    ctx.beginPath();
-                    ctx.arc(dripX, y + 60 + dripLength, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            drawSplatterEffect(ctx) {
-                const { x, y } = this.position;
-                
-                // Ink splatters around creature
-                for (let i = 0; i < 8; i++) {
-                    const splatterX = x + (Math.random() - 0.5) * 150;
-                    const splatterY = y + (Math.random() - 0.5) * 150;
-                    const size = 3 + Math.random() * 8;
-                    
-                    ctx.fillStyle = `rgba(0, 0, 0, ${0.4 * this.traits.inkiness})`;
-                    ctx.beginPath();
-                    ctx.arc(splatterX, splatterY, size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            drawSmokeEffect(ctx) {
-                const { x, y } = this.position;
-                
-                // Smoky wisps
-                for (let i = 0; i < 5; i++) {
-                    const smokeX = x + (Math.random() - 0.5) * 60;
-                    const smokeY = y - 80 - i * 15;
-                    
-                    ctx.fillStyle = `rgba(100, 100, 100, ${0.3 * this.traits.inkiness})`;
-                    ctx.beginPath();
-                    ctx.ellipse(smokeX, smokeY, 8 + i * 2, 12 + i * 3, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-drawMeltEffect(ctx) {
-                const { x, y } = this.position;
-                
-                // Melting effect with flowing lines
-                for (let i = 0; i < 4; i++) {
-                    const meltX = x + (Math.random() - 0.5) * 60;
-                    const meltStartY = y + 40;
-                    const meltEndY = y + 80 + Math.random() * 60;
-                    
-                    ctx.strokeStyle = `rgba(0, 0, 0, ${0.5 * this.traits.inkiness})`;
-                    ctx.lineWidth = 2 + Math.random() * 3;
-                    ctx.beginPath();
-                    ctx.moveTo(meltX, meltStartY);
-                    ctx.quadraticCurveTo(
-                        meltX + (Math.random() - 0.5) * 20,
-                        meltStartY + (meltEndY - meltStartY) / 2,
-                        meltX + (Math.random() - 0.5) * 10,
-                        meltEndY
-                    );
-                    ctx.stroke();
-                }
-            }
-
-            drawFlowEffect(ctx) {
-                const { x, y } = this.position;
-                
-                // Flowing ink streams
-                for (let i = 0; i < 3; i++) {
-                    const angle = (i / 3) * Math.PI * 2;
-                    const startX = x + Math.cos(angle) * 50;
-                    const startY = y + Math.sin(angle) * 50;
-                    const endX = x + Math.cos(angle) * 100;
-                    const endY = y + Math.sin(angle) * 100;
-                    
-                    ctx.strokeStyle = `rgba(0, 0, 0, ${0.4 * this.traits.inkiness})`;
-                    ctx.lineWidth = 3;
-                    ctx.beginPath();
-                    ctx.moveTo(startX, startY);
-                    ctx.bezierCurveTo(
-                        startX + Math.random() * 20,
-                        startY + Math.random() * 20,
-                        endX + Math.random() * 20,
-                        endY + Math.random() * 20,
-                        endX,
-                        endY
-                    );
-                    ctx.stroke();
-                }
-            }
-
-            drawInkOverlay(ctx) {
-                // Final ink overlay for extra grunge
-                const { inkiness } = this.traits;
-                
-                // Random ink spots
-                for (let i = 0; i < 10; i++) {
-                    const spotX = Math.random() * 400;
-                    const spotY = Math.random() * 400;
-                    const size = 1 + Math.random() * 4;
-                    
-                    ctx.fillStyle = `rgba(0, 0, 0, ${0.2 * inkiness})`;
-                    ctx.beginPath();
-                    ctx.arc(spotX, spotY, size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-        }
-
-        function generateCreature() {
-            currentCreature = new InkCreature();
-            creatureCounter++;
-            drawCreature();
-            updateStats();
-        }
-
-        function drawCreature() {
-            ctx.clearRect(0, 0, 400, 400);
-            if (currentCreature) {
-                currentCreature.draw(ctx);
-            }
-        }
-
-        function updateStats() {
-            if (!currentCreature) return;
-            
-            const stats = document.getElementById('stats');
-            const traits = currentCreature.traits;
-            
-            stats.innerHTML = `
-                <div class="stat-item">
-                    <div class="stat-label">Body Type</div>
-                    <div class="stat-value">${traits.bodyType}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Pose</div>
-                    <div class="stat-value">${traits.pose}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Clothing</div>
-                    <div class="stat-value">${traits.clothing}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Accessory</div>
-                    <div class="stat-value">${traits.accessory}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Background</div>
-                    <div class="stat-value">${traits.background}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Ink Effect</div>
-                    <div class="stat-value">${traits.inkEffect}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Eye Type</div>
-                    <div class="stat-value">${traits.eyeType}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Creature #</div>
-                    <div class="stat-value">${creatureCounter}</div>
-                </div>
-            `;
-        }
-
-        function generateCollection() {
-            const gallery = document.getElementById('gallery');
-            
-            for (let i = 0; i < 10; i++) {
-                setTimeout(() => {
-                    const creature = new InkCreature();
-                    creatureCounter++;
-                    
-                    // Create thumbnail canvas
-                    const thumbnailCanvas = document.createElement('canvas');
-                    thumbnailCanvas.width = 120;
-                    thumbnailCanvas.height = 120;
-                    const thumbnailCtx = thumbnailCanvas.getContext('2d');
-                    
-                    // Scale and draw creature
-                    thumbnailCtx.scale(0.3, 0.3);
-                    creature.draw(thumbnailCtx);
-                    
-                    // Create gallery item
-                    const galleryItem = document.createElement('div');
-                    galleryItem.className = 'gallery-item';
-                    galleryItem.innerHTML = `
-                        ${thumbnailCanvas.outerHTML}
-                        <div style="margin-top: 10px; font-size: 0.9em; color: #ccc;">
-                            Creature #${creatureCounter}
-                        </div>
-                        <div style="font-size: 0.8em; color: #999;">
-                            ${creature.traits.bodyType} • ${creature.traits.inkEffect}
-                        </div>
-                    `;
-                    
-                    // Add click handler to view creature
-                    galleryItem.onclick = () => {
-                        currentCreature = creature;
-                        drawCreature();
-                        updateStats();
-                    };
-                    
-                    gallery.appendChild(galleryItem);
-                    galleryCreatures.push(creature);
-                }, i * 200); // Stagger the generation
-            }
-        }
-
-        function downloadCurrent() {
-            if (!currentCreature) {
-                alert('Generate a creature first!');
-                return;
-            }
-            
-            // Create download link
-            const link = document.createElement('a');
-            link.download = `ink-creature-${creatureCounter}.png`;
-            link.href = canvas.toDataURL();
-            link.click();
-        }
-
-        function clearGallery() {
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
-            galleryCreatures = [];
-        }
-
-        // Generate initial creature
-        generateCreature();
-    </script>
+ <div id="container">
+ <!-- Three.js canvas will be appended here -->
+ </div>
+ <div id="ui-panel">
+ <div id="controls">
+ <div class="control-group">
+ <h3>🎨 Ink Blob Generator</h3>
+ <button id="generateCreatureButton">Generate New Creature</button>
+ <button id="exportNFTButton">Export NFT</button>
+ <button id="randomizeAllButton">Randomize All</button>
+ </div>
+ <div class="control-group">
+ <h3>⚡ Quick Actions</h3>
+ <button id="changeBackgroundButton">Change Scene</button>
+ <button id="toggleAnimationButton">Toggle Animation</button>
+ </div>
+ <div class="trait-display" id="traits">
+ <div class="trait-item">Click "Generate New Creature" to start!</div>
+ </div>
+ </div>
+ <div id="info">
+ <strong>Ink Blob Creatures</strong><br>
+ Urban Art Collection<br>
+ Use mouse to rotate view
+ </div>
+ </div>
 </body>
 </html>
