@@ -36,13 +36,13 @@
             background: rgba(0, 0, 0, 0.85);
             padding: 15px;
             border-radius: 10px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px 10px 13px rgb(255, 0, 217));
+            border: 3px solid rgba(255, 0, 166, 0.415);
             max-height: 50vh;
             overflow-y: auto;
             width: 280px;
             z-index: 1000;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition: transform 0.9s ease, opacity 0.3s ease;
         }
 
         #controls.hidden {
@@ -53,15 +53,15 @@
 
         .control-group {
  margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 3px solid rgba(235, 5, 170, 0.338);
             border-radius: 8px;
  overflow: hidden;
         }
 
  .control-group-header {
- cursor: pointer;
- padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
+ cursor: crosshair;
+ padding: 13px;
+            background: rgba(3, 194, 237, 0.337);
  }
 
         .control-group h3 {
@@ -76,7 +76,7 @@
 
  .control-group-header span {
  float: right; /* Align icon to the right */
-            transition: transform 0.3s ease;
+            transition: transform 0.9s ease;
  }
 
  .control-group-header.collapsed span {
@@ -89,13 +89,13 @@
         label {
             display: block;
             margin-bottom: 3px;
-            font-size: 11px;
-            color: #c26f0c;
+            font-size: 13px;
+            color: #995400;
         }
 
  .control-group-body {
  padding: 10px;
-            transition: max-height 0.5s ease-in-out; /* Smooth collapse animation */
+            transition: max-height 0.9s ease-in-out; /* Smooth collapse animation */
  overflow: hidden;
  }
 
@@ -109,7 +109,7 @@
             height: 30px;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
+            cursor: crosshair;
         }
 
         select {
@@ -118,13 +118,13 @@
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 5px;
-            color: white;
-            cursor: pointer;
+            color: rgb(0, 255, 251);
+            cursor: crosshair;
         }
 
         select option {
-            background: #fdfdfd;
-            color: white;
+            background: #ff00cc7b;
+            color: rgb(0, 0, 0);
         }
 
         button {
@@ -133,51 +133,52 @@
             background: linear-gradient(45deg, #000000, #006568);
             border: none;
             border-radius: 5px;
-            color: white;
-            cursor: pointer;
+            color: rgb(0, 225, 255);
+            cursor: crosshair;
             font-weight: bold;
-            transition: transform 0.2s;
+            transition: transform 0.9s;
         }
 
         button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
         }
 
         .value-display {
-            font-size: 11px;
+            font-size: 13px;
             color: #c26f0c;
             text-align: right;
         }
 
         #stats {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 0px;
+            right: 0px;
             background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
+            padding: 9px;
             border-radius: 5px;
-            font-size: 12px;
-            color: #c26f0c;
+            font-size: 13px;
+            color: #00eeff;
         }
 
         .toggle-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 13;
+            right: 0;
+            background: rgba(0, 229, 255, 0.64);
+            border: 1px solid rgba(255, 0, 221, 0.2);
+            color: rgb(221, 255, 0);
+            padding: 3px 10px;
+            cursor: cell;
+            border-radius: 9px;
+            font-size: 13px;
+            transition: all 0.9s ease;
+            backdrop-filter: drop-shadow(8px 8px 10px rgb(255, 0, 153));
         }
 
         .toggle-controls:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: scale(1.05);
+           filter: invert 100% ;
+           background: rgba(0, 255, 247, 0.9);
+            transform: scale(1.05)
+            
         }
 
         @media (max-width: 768px) {
@@ -214,13 +215,13 @@
  <div class="control-group-body">
  <div class="control-item">
  <label>Click Burst Size</label>
-                    <input type="range" id="burstSize" min="10" max="200" value="50" step="10">
-                    <div class="value-display" id="burstSizeValue">50</div>
+                    <input type="range" id="burstSize" min="10" max="200" value="99" step="9">
+                    <div class="value-display" id="burstSizeValue">99</div>
                 </div>
  <div class="control-item">
                     <label>Drag Trail Density</label>
-                    <input type="range" id="trailDensity" min="5" max="50" value="20" step="5">
-                    <div class="value-display" id="trailDensityValue">20</div>
+                    <input type="range" id="trailDensity" min="5" max="50" value="33" step="1">
+                    <div class="value-display" id="trailDensityValue">33</div>
                 </div>
             </div>
             </div>
@@ -232,13 +233,13 @@
  </div>
                 <div class="control-item">
  <label>Particle Count</label>
-                    <input type="range" id="particleCount" min="100" max="10000" value="1000" step="100">
-                    <div class="value-display" id="particleCountValue">1000</div>
+                    <input type="range" id="particleCount" min="100" max="10000" value="3399" step="25">
+                    <div class="value-display" id="particleCountValue">3399</div>
                 </div>
  <div class="control-group-body">
                     <label>Emission Rate</label>
-                    <input type="range" id="emissionRate" min="1" max="100" value="50" step="1">
-                    <div class="value-display" id="emissionRateValue">50/s</div>
+                    <input type="range" id="emissionRate" min="1" max="100" value="69" step="1">
+                    <div class="value-display" id="emissionRateValue">69/s</div>
                 </div>
             </div>
 
@@ -250,23 +251,23 @@
  <div class="control-group-body">
  <div class="control-item">
                     <label>Gravity</label>
-                    <input type="range" id="gravity" min="-2" max="2" value="-0.01" step="0.001">
-                    <div class="value-display" id="gravityValue">-0.01</div>
+                    <input type="range" id="gravity" min="-2" max="2" value="-1.00" step="0.001">
+                    <div class="value-display" id="gravityValue">-1.00</div>
                 </div>
  <div class="control-item">
                     <label>Initial Speed</label>
-                    <input type="range" id="initialSpeed" min="0" max="5" value="2" step="0.1">
-                    <div class="value-display" id="initialSpeedValue">2</div>
+                    <input type="range" id="initialSpeed" min="0" max="5" value="3" step="0.1">
+                    <div class="value-display" id="initialSpeedValue">3</div>
                 </div>
  <div class="control-item">
                     <label>Spread Angle</label>
-                    <input type="range" id="spreadAngle" min="0" max="360" value="45" step="1">
-                    <div class="value-display" id="spreadAngleValue">45°</div>
+                    <input type="range" id="spreadAngle" min="0" max="360" value="180" step="1">
+                    <div class="value-display" id="spreadAngleValue">133</div>
                 </div>
  <div class="control-item">
                     <label>Air Resistance</label>
-                    <input type="range" id="airResistance" min="0" max="0.1" value="0.01" step="0.001">
-                    <div class="value-display" id="airResistanceValue">0.01</div>
+                    <input type="range" id="airResistance" min="0" max="0.1" value="0.1" step="0.001">
+                    <div class="value-display" id="airResistanceValue">0.1</div>
                 </div>
  </div>
             </div>
@@ -279,26 +280,26 @@
  <div class="control-group-body">
  <div class="control-item">
                     <label>Start Color</label>
-                    <input type="color" id="startColor" value="#ff4444">
+                    <input type="color" id="startColor" value="#00f3ff">
                 </div>
  <div class="control-item">
                     <label>End Color</label>
-                    <input type="color" id="endColor" value="#4444ff">
+                    <input type="color" id="endColor" value="#fff300">
                 </div>
  <div class="control-item">
                     <label>Size</label>
-                    <input type="range" id="particleSize" min="0.1" max="10" value="2" step="0.1">
-                    <div class="value-display" id="particleSizeValue">2</div>
+                    <input type="range" id="particleSize" min="0.1" max="10" value="3.9" step="0.1">
+                    <div class="value-display" id="particleSizeValue">3.9</div>
                 </div>
  <div class="control-item">
                     <label>Size Variation</label>
-                    <input type="range" id="sizeVariation" min="0" max="5" value="1" step="0.1">
-                    <div class="value-display" id="sizeVariationValue">1</div>
+                    <input type="range" id="sizeVariation" min="0" max="5" value="3.5" step="0.1">
+                    <div class="value-display" id="sizeVariationValue">3.5</div>
                 </div>
  <div class="control-item">
                     <label>Opacity</label>
-                    <input type="range" id="opacity" min="0" max="1" value="0.8" step="0.1">
-                    <div class="value-display" id="opacityValue">0.8</div>
+                    <input type="range" id="opacity" min="0" max="1" value="0.3" step="0.1">
+                    <div class="value-display" id="opacityValue">0.3</div>
                 </div>
  </div>
             </div>
@@ -312,20 +313,21 @@
  <div class="control-group-body">
  <div class="control-item">
                     <label>Lifespan</label>
-                    <input type="range" id="lifespan" min="1" max="20" value="5" step="0.5">
-                    <div class="value-display" id="lifespanValue">5s</div>
+                    <input type="range" id="lifespan" min="1" max="20" value="9" step="0.5">
+                    <div class="value-display" id="lifespanValue">9s</div>
                 </div>
  <div class="control-item">
                     <label>Turbulence</label>
-                    <input type="range" id="turbulence" min="0" max="2" value="0.1" step="0.01">
-                    <div class="value-display" id="turbulenceValue">0.1</div>
+                    <input type="range" id="turbulence" min="0" max="2" value="1.3" step="0.01">
+                    <div class="value-display" id="turbulenceValue">1.3</div>
                 </div>
  <div class="control-item">
                     <label>Shape</label>
                     <select id="particleShape">
+                        <option value="cube">Cube</option>
                         <option value="point">Point</option>
                         <option value="sphere">Sphere</option>
-                        <option value="cube">Cube</option>
+                        
                     </select>
                 </div>
                 <div class="control-item">
@@ -333,8 +335,8 @@
                     <select id="blendMode">
                         <option value="normal">Normal</option>
                         <option value="additive">Additive</option>
-                        <option value="Burn">Burn</option>
-                        <option value="Dodge">Dodge</option>
+                        <option value="multiply">Multiply</option>
+                        <option value="subtactive">Subtract</option>
                     </select>
                 </div>
             </div>
@@ -347,18 +349,18 @@
             <div class="control-group-body">
                 <div class="control-item">
                     <label>Wind X</label>
-                    <input type="range" id="windX" min="-2" max="2" value="0" step="0.01">
-                    <div class="value-display" id="windXValue">0</div>
+                    <input type="range" id="windX" min="-3" max="3" value="-1.5" step="0.01">
+                    <div class="value-display" id="windXValue">-1.5</div>
                 </div>
                 <div class="control-item">
                     <label>Wind Y</label>
-                    <input type="range" id="windY" min="-2" max="2" value="0" step="0.01">
-                    <div class="value-display" id="windYValue">0</div>
+                    <input type="range" id="windY" min="-3" max="3" value="1.5" step="0.01">
+                    <div class="value-display" id="windYValue">1.5</div>
                 </div>
                 <div class="control-item">
                     <label>Wind Z</label>
-                    <input type="range" id="windZ" min="-2" max="2" value="0" step="0.01">
-                    <div class="value-display" id="windZValue">0</div>
+                    <input type="range" id="windZ" min="-3" max="3" value="1" step="0.01">
+                    <div class="value-display" id="windZValue">1</div>
                 </div>
             </div>
 
@@ -384,25 +386,25 @@
         // Particle system parameters
         let particleParams = {
             count: 1000,
-            emissionRate: 50,
-            gravity: -0.01,
-            initialSpeed: 2,
-            spreadAngle: 45,
-            airResistance: 0.01,
-            startColor: new THREE.Color(0xff4444),
-            endColor: new THREE.Color(0x4444ff),
-            size: 2,
-            sizeVariation: 1,
-            opacity: 0.8,
-            lifespan: 5,
-            turbulence: 0.1,
-            shape: 'point',
-            blendMode: 'normal',
-            windX: 0,
-            windY: 0,
-            windZ: 0,
-            burstSize: 50,
-            trailDensity: 20
+            emissionRate: 69,
+            gravity: -1,
+            initialSpeed:3,
+            spreadAngle: 133,
+            airResistance: 0.1,
+            startColor: new THREE.Color(0x00f3ff),
+            endColor: new THREE.Color(0xfff300),
+            size: 0.5,
+            sizeVariation: 3,
+            opacity: 0.3,
+            lifespan: 9,
+            turbulence: 1.3,
+            shape: 'cube',
+            blendMode: 'subtrective',
+            windX: -1.5,
+            windY: 1.5,
+            windZ: 1,
+            burstSize: 99,
+            trailDensity: 33
         };
 
         // Particle class
@@ -602,7 +604,8 @@
                 const blendModes = {
                     'normal': THREE.NormalBlending,
                     'additive': THREE.AdditiveBlending,
-                    'multiply': THREE.MultiplyBlending
+                    'multiply': THREE.MultiplyBlending,
+                    'subtractive': THREE.SubtractiveBlending
                 };
                 this.material.blending = blendModes[particleParams.blendMode];
             }
@@ -831,16 +834,16 @@
             
             // Touch events for mobile
             document.addEventListener('touchstart', (event) => {
-                if (!event.target.closest('#controls')) {
-                    const touch = event.touches[0];
-                    const worldPos = getWorldPosition(touch.clientX, touch.clientY);
+ if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
+ const touch = event.touches[0];
+ const worldPos = getWorldPosition(touch.clientX, touch.clientY);
                     particleSystem.emit(particleParams.burstSize, worldPos);
                     event.preventDefault();
                 }
             }, { passive: false });
             
             document.addEventListener('touchmove', (event) => {
-                if (!event.target.closest('#controls')) {
+                if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
                     const touch = event.touches[0];
                     const worldPos = getWorldPosition(touch.clientX, touch.clientY);
                     emitAtPosition(worldPos);
@@ -946,26 +949,26 @@
         }
 
         function resetToDefaults() {
-            document.getElementById('particleCount').value = 1000;
-            document.getElementById('emissionRate').value = 50;
-            document.getElementById('gravity').value = -0.01;
-            document.getElementById('initialSpeed').value = 2;
-            document.getElementById('spreadAngle').value = 45;
-            document.getElementById('airResistance').value = 0.01;
-            document.getElementById('startColor').value = '#ff4444';
-            document.getElementById('endColor').value = '#4444ff';
-            document.getElementById('particleSize').value = 2;
-            document.getElementById('sizeVariation').value = 1;
-            document.getElementById('opacity').value = 0.8;
-            document.getElementById('lifespan').value = 5;
-            document.getElementById('turbulence').value = 0.1;
-            document.getElementById('particleShape').value = 'point';
-            document.getElementById('blendMode').value = 'normal';
-            document.getElementById('windX').value = 0;
-            document.getElementById('windY').value = 0;
-            document.getElementById('windZ').value = 0;
-            document.getElementById('burstSize').value = 50;
-            document.getElementById('trailDensity').value = 20;
+            document.getElementById('particleCount').value = 3399;
+            document.getElementById('emissionRate').value = 69;
+            document.getElementById('gravity').value = -1;
+            document.getElementById('initialSpeed').value = 3;
+            document.getElementById('spreadAngle').value = 133;
+            document.getElementById('airResistance').value = 0.1;
+            document.getElementById('startColor').value = '#00f3ff';
+            document.getElementById('endColor').value = '#fff300';
+            document.getElementById('particleSize').value = 3.9;
+            document.getElementById('sizeVariation').value = 3.5;
+            document.getElementById('opacity').value = 0.3;
+            document.getElementById('lifespan').value = 9;
+            document.getElementById('turbulence').value = 1.3;
+            document.getElementById('particleShape').value = 'cube';
+            document.getElementById('blendMode').value = 'subtactive';
+            document.getElementById('windX').value = -1.5;
+            document.getElementById('windY').value = 1.5;
+            document.getElementById('windZ').value = 1;
+            document.getElementById('burstSize').value = 99;
+            document.getElementById('trailDensity').value = 33;
             
             // Trigger updates
             document.querySelectorAll('input, select').forEach(control => {
