@@ -200,12 +200,31 @@
                 bottom: calc(60vh + 40px);
             }
         }
+        #control-notification {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 1001;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+
     </style>
 </head>
 <body>
     <div id="container">
         <button class="toggle-controls" onclick="toggleControls()" title="Toggle Controls">⚙️</button>
         
+        <div id="control-notification">
+            Click/Tap for Burst, Drag for Trail, Two-finger Drag for Camera
+        </div>
+
         <div id="controls">
             <div class="control-group">
  <div class="control-group-header">
@@ -762,129 +781,173 @@
         }
 
         function setupMouseInteraction() {
-            let mouseX = 0, mouseY = 0;
-            let targetCameraX = 0, targetCameraY = 5;
-            let isMouseDown = false;
+            let isDragging = false;
             let lastEmissionTime = 0;
-            
+            let previousMouseX = 0, previousMouseY = 0;
+            let cameraRotationX = 0, cameraRotationY = 0;
+            let touchStartTime = 0;
+
             const raycaster = new THREE.Raycaster();
             const mouse = new THREE.Vector2();
-            
+
             // Convert screen coordinates to 3D world position
             function getWorldPosition(clientX, clientY) {
                 mouse.x = (clientX / window.innerWidth) * 2 - 1;
                 mouse.y = -(clientY / window.innerHeight) * 2 + 1;
-                
+
                 raycaster.setFromCamera(mouse, camera);
-                
+
                 // Create an invisible plane to intersect with
                 const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
                 const intersectPoint = new THREE.Vector3();
                 raycaster.ray.intersectPlane(plane, intersectPoint);
-                
+
                 return intersectPoint;
             }
-            
+
             // Emit particles at specific position
             function emitAtPosition(worldPos) {
                 const currentTime = Date.now();
-                if (currentTime - lastEmissionTime > 50) { // Throttle emissions
+                // Throttle emissions to avoid overwhelming the system
+                if (currentTime - lastEmissionTime > 50) {
                     const burstCount = Math.min(particleParams.trailDensity, particleParams.emissionRate);
-                    particleSystem.emit(burstCount, worldPos);
+                    if (particleSystem) {
+                        particleSystem.emit(burstCount, worldPos);
+                    }
                     lastEmissionTime = currentTime;
                 }
             }
-            
+
             // Mouse events
             document.addEventListener('mousemove', (event) => {
-                if (!event.target.closest('#controls')) {
-                    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-                    
-                    targetCameraX = mouseX * 10;
-                    targetCameraY = mouseY * 10 + 5;
-                    
-                    // Emit particles while dragging
-                    if (isMouseDown) {
+                if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
+                    if (isDragging) {
                         const worldPos = getWorldPosition(event.clientX, event.clientY);
                         emitAtPosition(worldPos);
                     }
                 }
             });
-            
+
             document.addEventListener('mousedown', (event) => {
                 if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
-                    isMouseDown = true;
-                    const worldPos = getWorldPosition(event.clientX, event.clientY);
-                    emitAtPosition(worldPos);
-                    event.preventDefault();
+                    isDragging = true;
+                    previousMouseX = event.clientX;
+                    previousMouseY = event.clientY;
+                    touchStartTime = Date.now(); // Use touchStartTime for mouse clicks too
+                    event.preventDefault(); // Prevent default to avoid dragging issues
                 }
             });
-            
+
             document.addEventListener('mouseup', () => {
-                isMouseDown = false;
-            });
-            
-            document.addEventListener('click', (event) => {
-                if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
-                    const worldPos = getWorldPosition(event.clientX, event.clientY);
-                    particleSystem.emit(particleParams.burstSize, worldPos);
+                if (isDragging) {
+                    isDragging = false;
+                    // Detect click/tap based on duration
+                    if (Date.now() - touchStartTime < 300) { // Adjust threshold as needed
+                        const worldPos = getWorldPosition(previousMouseX, previousMouseY);
+                         if (particleSystem) {
+                            particleSystem.emit(particleParams.burstSize, worldPos);
+                        }
+                    }
                 }
             });
-            
-            // Touch events for mobile
+
+             // No need for a separate click event listener now that we handle click detection in mouseup/touchend
+            // document.addEventListener('click', (event) => {
+            //     if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
+            //         // Only burst if not dragging (to distinguish click from drag)
+            //         if (!isDragging) {
+            //             const worldPos = getWorldPosition(event.clientX, event.clientY);
+            //             if (particleSystem) {
+            //                 particleSystem.emit(particleParams.burstSize, worldPos);
+            //             }
+            //         }
+            //     }
+            // });
+
+
+            // Touch events for mobile and touchpads
             document.addEventListener('touchstart', (event) => {
- if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
- const touch = event.touches[0];
- const worldPos = getWorldPosition(touch.clientX, touch.clientY);
-                    particleSystem.emit(particleParams.burstSize, worldPos);
-                    event.preventDefault();
+                if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
+                    if (event.touches.length === 1) { // Single touch for drag or tap
+                        isDragging = true;
+                        previousMouseX = event.touches[0].clientX;
+                        previousMouseY = event.touches[0].clientY;
+                        touchStartTime = Date.now(); // Record touch start time for tap detection
+                    } else if (event.touches.length > 1) { // Multi-touch for camera control
+                         // Store starting positions of touches for calculating movement
+                        previousMouseX = event.touches[0].clientX;
+                        previousMouseY = event.touches[0].clientY;
+                         // Prevent default scrolling/zooming
+                         event.preventDefault();
+                    }
                 }
             }, { passive: false });
-            
+
             document.addEventListener('touchmove', (event) => {
                 if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
-                    const touch = event.touches[0];
-                    const worldPos = getWorldPosition(touch.clientX, touch.clientY);
-                    emitAtPosition(worldPos);
-                    
-                    // Update camera based on touch position
-                    mouseX = (touch.clientX / window.innerWidth) * 2 - 1;
-                    mouseY = -(touch.clientY / window.innerHeight) * 2 + 1;
-                    targetCameraX = mouseX * 10;
-                    targetCameraY = mouseY * 10 + 5;
-                    
-                    event.preventDefault();
-                }
-            }, { passive: false });
-            
-            // Multi-touch support
-            document.addEventListener('touchstart', (event) => {
-                if (!event.target.closest('#controls') && event.touches.length > 1) {
-                    // Emit particles at all touch points
-                    for (let i = 0; i < Math.min(event.touches.length, 5); i++) {
-                        const touch = event.touches[i];
+                    if (isDragging && event.touches.length === 1) { // Single touch drag for particle trail
+                        const touch = event.touches[0];
                         const worldPos = getWorldPosition(touch.clientX, touch.clientY);
-                        particleSystem.emit(particleParams.burstSize / 2, worldPos);
+                        emitAtPosition(worldPos);
+
+                        // Update previous touch positions for the next frame
+                        previousMouseX = touch.clientX;
+                        previousMouseY = touch.clientY;
+
+                        event.preventDefault();
+                    } else if (event.touches.length > 1) { // Two-finger drag for camera control
+                         const touch1 = event.touches[0];
+                         // Use the movement of the first touch relative to its previous position
+                         const deltaX = touch1.clientX - previousMouseX;
+                         const deltaY = touch1.clientY - previousMouseY;
+
+                         cameraRotationY += deltaX * 0.005;
+                         cameraRotationX += deltaY * 0.005;
+
+                         // Clamp vertical rotation to prevent flipping
+                         cameraRotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, cameraRotationX));
+
+                         // Update previous touch positions for the next frame
+                         previousMouseX = touch1.clientX;
+                         previousMouseY = touch1.clientY;
+
+                         event.preventDefault(); // Prevent default scrolling/zooming
                     }
-                    event.preventDefault();
                 }
             }, { passive: false });
-            
-            // Smooth camera movement
+
+            document.addEventListener('touchend', (event) => {
+                if (!event.target.closest('#controls') && !event.target.closest('.toggle-controls')) {
+                     if (isDragging && event.touches.length === 0) { // Single touch ended
+                        isDragging = false;
+                        // Detect tap based on duration
+                        if (Date.now() - touchStartTime < 300) { // Adjust threshold as needed
+                             const worldPos = getWorldPosition(previousMouseX, previousMouseY);
+                             if (particleSystem) {
+                                particleSystem.emit(particleParams.burstSize, worldPos);
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Smooth camera movement (This function remains largely the same)
             function updateCamera() {
-                camera.position.x += (targetCameraX - camera.position.x) * 0.05;
-                camera.position.y += (targetCameraY - camera.position.y) * 0.05;
+                const radius = 15; // Maintain a constant distance
+                camera.position.x = radius * Math.sin(cameraRotationY) * Math.cos(cameraRotationX);
+                camera.position.y = radius * Math.sin(cameraRotationX);
+                camera.position.z = radius * Math.cos(cameraRotationY) * Math.cos(cameraRotationX);
                 camera.lookAt(0, 0, 0);
             }
-            
-            // Add to animation loop
-            const originalAnimate = animate;
-            animate = function() {
-                updateCamera();
-                originalAnimate();
-            };
+
+            // Add to animation loop (This part should already be there, ensure updateCamera is called)
+            // const originalAnimate = animate;
+            // animate = function() {
+            //     updateCamera();
+            //     originalAnimate();
+            // };
         }
+
 
         // Animation loop
         let lastTime = 0;
@@ -989,9 +1052,24 @@
             });
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+        window.onload = function() {
+            const notification = document.getElementById('control-notification');
+            if (notification) {
+                // Fade out after 5 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                }, 5000); // 5000 milliseconds = 5 seconds
+
+                // Remove the element after the transition
+                notification.addEventListener('transitionend', () => {
+                    notification.style.display = 'none';
+                });
+            }
+        };
 
         // Initialize the app
         init();
     </script>
 </body>
 </html>
+               
