@@ -7,7 +7,7 @@
 
 body {
     font-family: 'VCR OSD Mono', monospace;
-    background: linear-gradient(135deg, #000000, #006568);
+    background: linear-gradient(165deg, #802b00, #560202);
     color: rgb(0, 242, 255);
     overflow: hidden;
 }
@@ -26,11 +26,11 @@ body {
     position: absolute;
     top: 60px;
     right: 20px;
-    background: rgba(0, 0, 0, 0.85);
+    background: linear-gradient(135deg, #5606884d, #2e2d2e50);
     padding: 15px;
     border-radius: 10px;
     backdrop-filter: blur(10px 10px 13px rgb(255, 0, 217));
-    border: 3px solid rgba(255, 0, 166, 0.415);
+    border: 3px solid rgba(255, 89, 0, 0.479);
     max-height: 50vh;
     overflow-y: auto;
     width: 280px;
@@ -83,7 +83,7 @@ label {
     display: block;
     margin-bottom: 3px;
     font-size: 13px;
-    color: #995400;
+    color: #652000;
 }
 
 .control-group-body {
@@ -161,7 +161,7 @@ button:hover {
     right: 0;
     background: rgba(0, 229, 255, 0.64);
     border: 1px solid rgba(255, 0, 221, 0.2);
-    color: rgb(221, 255, 0);
+    color: rgb(142, 64, 0);
     padding: 3px 10px;
     cursor: cell;
     border-radius: 9px;
@@ -222,8 +222,8 @@ button:hover {
     font-size: 20px;
     z-index: 1002;
     cursor: pointer;
-    background: linear-gradient(45deg, #00f3ff, #fff300);
-    color: #000;
+    background: linear-gradient(45deg, #662c00, #270431);
+    color: #00eaff;
     border: none;
     border-radius: 5px;
     font-weight: bold;
@@ -232,4 +232,12 @@ button:hover {
 
 #startButton:hover {
     transform: translate(-50%, -50%) scale(1.05);
+}
+
+#disableAudioButton {
+    padding: 15px 30px;
+    font-size: 20px;
+    z-index: 1002;
+    font-weight: bold;
+
 }

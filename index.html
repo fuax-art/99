@@ -379,7 +379,7 @@
 </head>
 <body>
     <div id="container">
-        <button class="toggle-controls" onclick="toggleControls()" title="Toggle Controls">⚙️</button>
+        <button class="toggle-controls" onclick="toggleControls()" title="Toggle Controls">First Things First</button>
 
         <div id="controls" class="hidden">
             <div class="control-group">
@@ -455,7 +455,7 @@
                 <div class="control-group-body">
                     <div class="control-item">
                         <label>Start Color</label>
-                        <input type="color" id="startColor" value="#00f3ff">
+                        <input type="color" id="startColor" value="#000000">
                     </div>
                     <div class="control-item">
                         <label>End Color</label>
@@ -510,7 +510,6 @@
                         <select id="blendMode">
                             <option value="normal">Normal</option>
                             <option value="additive">Additive</option>
-                            <option value="multiply">Multiply</option>
                             <option value="subtactive">Subtract</option>
                         </select>
                     </div>
@@ -552,6 +551,9 @@
             </div>
 
             <!-- Add the start button here -->
+
+            <!-- Add the disable audio button here -->
+            <button id="disableAudioButton">Disable Audio</button>
             <button id="startButton">Start Experience</button>
 
         </div>

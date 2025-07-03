@@ -55,6 +55,8 @@ let synthWaveNotes = [
     "C3", "B2", "E2", "C3", "B2", "E2", "F2", "D3", "D3", "D3", "B" */
 ];
 let currentNoteIndex = 0;
+let isAudioEnabled = true;
+
 
 
 
@@ -66,7 +68,7 @@ let particleParams = {
     initialSpeed:3,
     spreadAngle: 133,
     airResistance: 0.1,
-    startColor: new THREE.Color(0x00f3ff),
+    startColor: new THREE.Color(0x000000),
     endColor: new THREE.Color(0xfff300),
     size: 0.5,
     sizeVariation: 3,
@@ -288,7 +290,6 @@ class ParticleSystem {
 async function init() {
     // Scene
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000011);
 
     // Camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -303,6 +304,9 @@ async function init() {
 
     // Particle system
     particleSystem = new ParticleSystem();
+    
+    // Add gradient background sphere
+    scene.add(createGradientSphere());
 
     // Controls
     setupControls();
@@ -318,6 +322,23 @@ async function init() {
         // Initialize Tone.js instruments and effects
         await Tone.start(); // Start audio context here after user click
         console.log('AudioContext started'); // Optional: log to confirm
+        document.getElementById('disableAudioButton').addEventListener('click', async () => {
+            if (isAudioEnabled) {
+                if (Tone.context.state !== 'closed') {
+                    await Tone.context.dispose();
+                    console.log('AudioContext disposed');
+                }
+                isAudioEnabled = false;
+                document.getElementById('disableAudioButton').textContent = 'Enable Audio';
+            } else {
+                // If you want to re-enable audio, you would re-initialize Tone.js here.
+                // For now, we'll just change the text back or leave it as is based on desired behavior.
+                // document.getElementById('disableAudioButton').textContent = 'Disable Audio';
+                // isAudioEnabled = true;
+                // initToneJs(); // You would need a function to re-initialize Tone.js
+            }
+        });
+        
 
         // Create Effects
         reverb = new Tone.Reverb({
@@ -363,6 +384,40 @@ async function init() {
         // Hide the start button after it's clicked
         document.getElementById('startButton').style.display = 'none';
     });
+}
+
+function createGradientSphere() {
+    // 1. Create a Sphere Geometry
+    const sphereGeometry = new THREE.SphereGeometry(500, 100, 100); // Adjust size as needed
+
+    // 2. Create a Gradient Texture
+    const canvas = document.createElement('canvas');
+    canvas.width = 2; // Small width is enough for a linear gradient
+    canvas.height = 128; // Adjust height for smoother gradient
+    const context = canvas.getContext('2d');
+
+    const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#000000'); 
+    gradient.addColorStop(1, '#310342'); 
+    gradient.addColorStop(1, '#0e051c'); 
+
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    const gradientTexture = new THREE.CanvasTexture(canvas);
+    gradientTexture.needsUpdate = true; // Important for canvas textures
+
+    // 3. Create a Material
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+        map: gradientTexture,
+        side: THREE.BackSide, // Render the inside of the sphere
+        depthWrite: false // Important for background objects
+    });
+
+    // 4. Create a Mesh
+    const gradientSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+    return gradientSphere;
 }
 
 
@@ -778,7 +833,7 @@ function resetToDefaults() {
     document.getElementById('initialSpeed').value = 3;
     document.getElementById('spreadAngle').value = 133;
     document.getElementById('airResistance').value = 0.1;
-    document.getElementById('startColor').value = '#00f3ff';
+    document.getElementById('startColor').value = '#000000';
     document.getElementById('endColor').value = '#fff300';
     document.getElementById('particleSize').value = 3.9;
     document.getElementById('sizeVariation').value = 3.5;
