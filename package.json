@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "purgecss": "^7.0.2",
+    "sass": "^1.32.0"
+  },
+  "scripts": {
+    "sass": "sass assets/css/main.sass assets/css/main.min.css --style=compressed",
+    "purgecss": "purgecss --css assets/css/main.min.css --content index.html parallelism/parallelismportfolio.html foggyblog/*.html apps/draw/draw.html whitepaper.html apps/inky_fux/inkblobs.html --output assets/css/",
+    "build": "npm run sass && npm run purgecss"
+  }
+}

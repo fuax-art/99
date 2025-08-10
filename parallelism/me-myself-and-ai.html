@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Parallelism Portfolio of a ParadigmShifter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <style>
+      /* Overlay Styles */
+      .overlay {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 20000;
+        top: 0;
+        left: 0;
+        background: rgba(0,0,0,0.98);
+        overflow-x: hidden;
+        transition: width 0.5s;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+      }
+      .overlay.open {
+        width: 100%;
+      }
+      .overlay .closebtn {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+        font-size: 40px;
+        color: #00FF00;
+        cursor: pointer;
+        z-index: 10001;
+        background: none;
+        border: none;
+      }
+      .overlay-content {
+        margin-top: 100px;
+        text-align: center;
+        color: #00FF00;
+        font-size: 1.2em;
+        max-width: 800px;
+        line-height: 1.6;
+        font-family: 'VCR OSD Mono', monospace;
+        padding: 2em;
+      }
+      @media (max-width: 600px) {
+        .overlay-content { font-size: 1em; padding: 1em; }
+        .overlay .closebtn { font-size: 30px; right: 20px; }
+      }
+    </style>
+  </head>
+  <body class="is-preload">
+
+    <!-- About Me Overlay (always at top-level, not inside wrapper) -->
+    <div id="myNav" class="overlay">
+      <button class="closebtn" onclick="closeNav()">&times;</button>
+      <div class="overlay-content">
+        <p>
+          Forever unfinished Artworx is a dynamic and forward-thinking art enterprise that combines creativity with technology.<br>
+          Our objective, led by Remington Braninburg, a passionate artist and entrepreneur, is to create exclusive, high-quality work that excites and captivates audiences.<br>
+          We sell exceptional original art prints, t-shirts, stickers, and other imaginative undertakings online demonstrating our distinct style.<br>
+          Our art reflects our passion for urban street art and graffiti, as well as our roots in the 80s & 90s scene, and we are steadfast in pushing the limits of what is possible.<br>
+          Hand-painted modern contemporary and digital abstraction bring cyberpunk futures into your world.<br>
+          <br>
+          &Dagger; A paradigm Shifting polymath. Stationary Timewalker. Scientific magic wielder. A perfect imperfection. &Dagger;<br>
+          Bi-Polar and ADD is my super power. Just a question of which one of me is for the hour? Father, Fighter, Artist, Poet, Convict, Addict? Whiskey neat or a whiskey sour?
+        </p>
+      </div>
+    </div>
+
+    <div id="wrapper">
+
+      <!-- About Me Overlay Trigger -->
+      <span style="font-size:33px; cursor:pointer; color:#FF0080; margin:1em 0; display:inline-block;" onclick="openNav()">
+        <i class="fa-solid fa-ghost fa-beat"></i> About Me
+      </span>
+
+      <!-- Main Gallery Section -->
+      <section id="main">
+        <div class="items">
+          <div class="item intro span-2">
+            <h1>Parallelism</h1>
+            <p>Portfolio of a Paradigm Shifter</p>
+          </div>
+          <!-- Repeat this article for each artwork -->
+          <article class="item thumb span-1">
+            <h2>Synthwave Synrise</h2>
+            <a href="images/fulls/01.jpg" class="image"><img src="images/thumbs/01.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-2">
+            <h2>Dualitas</h2>
+            <a href="images/fulls/02.jpg" class="image"><img src="images/thumbs/02.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-1">
+            <h2>Sacred Moon</h2>
+            <a href="images/fulls/03.jpg" class="image"><img src="images/thumbs/03.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-1">
+            <h2>Elysium</h2>
+            <a href="images/fulls/04.jpg" class="image"><img src="images/thumbs/04.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-3">
+            <h2>Primo Tag</h2>
+            <a href="images/fulls/05.jpg" class="image"><img src="images/thumbs/05.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-1">
+            <h2>The Palette</h2>
+            <a href="images/fulls/06.jpg" class="image"><img src="images/thumbs/06.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-2">
+            <h2>Aitch-Too-Oh</h2>
+            <a href="images/fulls/07.jpg" class="image"><img src="images/thumbs/07.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-2">
+            <h2>Astro Man</h2>
+            <a href="images/fulls/08.jpg" class="image"><img src="images/thumbs/08.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-1">
+            <h2>Transmission</h2>
+            <a href="images/fulls/09.jpg" class="image"><img src="images/thumbs/09.webp" alt="" loading="lazy"></a>
+          </article>
+          <article class="item thumb span-1">
+            <h2>Purple Haze</h2>
+            <a href="images/fulls/10.jpg" class="image"><img src="images/thumbs/10.webp" alt="" loading="lazy"></a>
+          </article>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <section id="footer">
+        <section>
+          <p>Forever Unfinished Artworx creates out of <strong>Faux Fox Foundry</strong><br>where neon and grit combine to create rebellion</p>
+        </section>
+        <section>
+          <ul class="icons">
+            <li><a href="https://x.com/fuartworx" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="https://Instagram.com/fuartworx/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="buymeacoffee.com/nine.t9" class="fa-solid fa-cup-togo"></a><span class="label">Dribbble</span></a></li>
+            <li><a href="foreverunfinishedartworx@gmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+          </ul>
+          <p>This is ParallelismPortfolio, a responsive portfolio site by Nine. you may use this code for free for personal
+            and commercial use under the <a href="http://html5up.net/license">Creative Commons Attribution</a> license.</p>
+          <ul class="copyright">
+            <li>&copy; FUAX</li> <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+          </ul>
+        </section>
+      </section>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      function openNav() {
+        document.getElementById("myNav").classList.add("open");
+      }
+      function closeNav() {
+        document.getElementById("myNav").classList.remove("open");
+      }
+    </script>
+    <script src="assets/js/jquery.min.js" defer></script>
+    <script src="assets/js/jquery.poptrox.min.js" defer></script>
+    <script src="assets/js/browser.min.js" defer></script>
+    <script src="assets/js/breakpoints.min.js" defer></script>
+    <script src="assets/js/util.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
+  </body>
+</html>
