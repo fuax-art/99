@@ -995,7 +995,7 @@ body {
   width: 150px;
   height: 75px;
   text-decoration: none;
-  color: #fff;
+  color: #960801;
   border: 10px solid #588b87;
   background-position: center;
   background-size: cover;
@@ -1017,7 +1017,7 @@ body {
   position: absolute;
   bottom: -38px;
   left: 10px;
-  font-size: 8px;
+  font-size: 13pxpx;
   text-transform: uppercase;
   transition: bottom 0.25s ease-in-out, left 0.25s ease-in-out;
 }
