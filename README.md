@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# ForeverUnfinishedArtworx.github.io
-
 ## My artist portfolio and landing page for ForeverUnfinishedArtworx
 
 > Started with a neat template called global & proceeded to make it my own.   
@@ -9,4 +6,4 @@
 Instagram: http://instagram.com/foreverunfinishedartworx
 =======
 I started this project just to learn. nothing teaches quite as well as failure. so nearly a year and a half after the catalyst, here i am. an homage to all the one like this before me that helped me deal with my adhd before we even truly knew what it was.
->>>>>>> 7710b8e (first commit)
+

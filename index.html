@@ -1,288 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<<<<<<< HEAD:particle1.html
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>Remington Braninburg |The Chaos Artist| <br> Please be Patient Artist is undergoing major Renovations</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'VCR', 'Arial Black', sans-serif;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(255, 0, 150, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-                linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 600px;
-            padding: 40px 20px;
-            text-align: center;
-            background: 
-                linear-gradient(45deg, rgba(255, 0, 150, 0.05) 0%, rgba(0, 255, 255, 0.05) 100%),
-                rgba(0, 0, 0, 0.8);
-            border-radius: 0;
-            border: 2px solid #00ffff;
-            box-shadow: 
-                0 0 20px rgba(0, 255, 255, 0.3),
-                inset 0 0 20px rgba(255, 0, 150, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                90deg,
-                transparent,
-                transparent 98px,
-                rgba(0, 255, 255, 0.03) 100px
-            );
-            animation: scanlines 8s linear infinite;
-        }
-        
-        @keyframes scanlines {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #ff0096, #00ffff, #ff0096, #00ffff);
-            background-size: 400% 400%;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: neonGlow 3s ease-in-out infinite alternate;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: 900;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-            position: relative;
-            z-index: 1;
-        }
-        
-        @keyframes neonGlow {
-            0% { 
-                background-position: 0% 50%;
-                filter: brightness(1);
-            }
-            100% { 
-                background-position: 100% 50%;
-                filter: brightness(1.2);
-            }
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            margin-bottom: 30px;
-            color: #00ffff;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: bold;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .construction-notice {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border: 1px solid #ff0096;
-            margin-bottom: 30px;
-            border-left: 4px solid #ff0096;
-            box-shadow: 0 0 15px rgba(255, 0, 150, 0.3);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .countdown {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .countdown-item {
-            text-align: center;
-            background: rgba(0, 255, 255, 0.1);
-            border: 1px solid #00ffff;
-            padding: 10px 15px;
-            min-width: 60px;
-        }
-        
-        .countdown-item span {
-            display: block;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #00ffff;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
-        
-        .countdown-item label {
-            font-size: 0.7rem;
-            color: #ff0096;
-            letter-spacing: 1px;
-            font-weight: bold;
-        }
-        
-        .apps-section {
-            margin: 40px 0;
-        }
-        
-        .apps-section h2 {
-            color: #ff0096;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 900;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .app-links {
-            display: grid;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .app-link {
-            display: block;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid #00ffff;
-            text-decoration: none;
-            color: #ffffff;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .app-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .app-link:hover::before {
-            left: 100%;
-        }
-        
-        .app-link:hover {
-            background: rgba(0, 255, 255, 0.1);
-            border-color: #ff0096;
-            transform: translateX(5px);
-            box-shadow: 0 0 15px rgba(255, 0, 150, 0.3);
-        }
-        
-        .contact-section {
-            border-top: 1px solid #00ffff;
-            padding-top: 30px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .contact-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .contact-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #ff0096, #00ffff);
-            text-decoration: none;
-            color: #000000;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .contact-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, #00ffff, #ff0096);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .contact-link:hover::before {
-            opacity: 1;
-        }
-        
-        .contact-link:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-        }
-        
-        .contact-link span,
-        .contact-link {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .emoji {
-            font-size: 1.2rem;
-        }
-        
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .contact-links {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .contact-link {
-                width: 200px;
-                justify-content: center;
-            }
-        }
-    </style>
-=======
   <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -310,12 +28,11 @@
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/nav.css">
->>>>>>> 41bf8b8 (making it function one way or another):index.html
 </head>
 <body>
     <div id="navBar">
-        <a href="apps/inky_fux/inkblobs.html">NFT machina</a>
-        <a href="apps/particle1/particle1.html">A Paradigm of Peculiar Particles</a>
+        <a href="inky_fux/main_threejs_inky.html">NFT machina</a>
+        <a href="particles.html">Sensory Syntax</a>
         <a href="whitepaper.html">Whitepaper</a>
         <a href="draw.html">BombTheWalls</a>
         <a href="https://fuax-art.github.io/WTF/" class="new-page-link">The Open Book</a>
@@ -327,7 +44,7 @@
   <!-- End Google Tag Manager (noscript) -->
  notification for small viewports and landscape oriented smartphones -->
 <div class="device-notification" >
-<a class="device-notification--logo" href="https://foreverunfinishedartworx.square.site/" class= "new-page-link" target="_blank
+<a class="device-notification--logo" href="https://foreverunfinishedartworx.printful.me/" class= "new-page-link" target="_blank
 ">
     <img src="assets/img/FUAXFACEREDEYES.png" alt="FUArtworx">
     <p>ForeverUnfinishedArtworx</p>
@@ -353,7 +70,7 @@
             <li class="is-active"><span>Mi Casa</span></li>
             <li><span>BagofTricks</span></li>
             <li><span>Wait,What</span></li>
-            <li><span>Some Stuff I do</span></li>
+            <li><span>HowToFindMe</span></li>
             <li><span>WhatCanIDoYou4</span></li>
           </ul>
         </nav>
@@ -377,10 +94,10 @@
                 </div>
                 <div class="intro--options">
                   <a href=  "" class= "new-page-link" target="_blank">
-                    <h3>Welcome to the Chaos</h3>
-                    <p>Consider yourself Warned, this is what me, myself and ai come up with in our free time, I am not here to make you feel comfortable. Society does not like to look here. No age restrictions but if you don't have a palette for the hard stuff maybe just don't look here.</p>
+                    <h3>Digital Takeover</h3>
+                    <p>Are you ready? My A.I. assistant told me what is coming. Lets talk about what style you would like your digital clone to be.</p><p> NFTs | Custom Boot-able Flash Drives & MORE</p>
                   </a>
-                  <a href="https://foreverunfinishedartworx.square.site/" class= "new-page-link" target="_blank">
+                  <a href="https://foreverunfinishedartworx.printful.me/" class= "new-page-link" target="_blank">
                     <h3>Merch </h3>
                     <p>Shirts | Hats | Hoodies | Stickers</p>
                   </a>
@@ -416,7 +133,7 @@
                     </a>
                   </li>
                   <li class="slider--item slider--item-right">
-                    <a href="https://foreverunfinishedartworx.square.site/" class= "new-page-link" target="_blank">
+                    <a href="https://foreverunfinishedartworx.printful.me/" class= "new-page-link" target="_blank">
                       <div class="slider--item-image">
                         <img src="assets/img/merch.png" alt="Merch">
                       </div>
@@ -469,7 +186,7 @@
                     </svg>
                   </span>
                 </a>
-                <img src="assets/img/about-visual.png" alt="My Story" style="cursor:crosshair;">
+                <img src="assets/img/about-visual.png" alt="My Story" style="cursor:pointer;">
                 <!-- EASTER EGG MODAL: Hidden YouTube video and NFT claim, revealed by clicking the image above -->
 <div id="about-egg-modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); align-items:center; justify-content:center;">
   <div style="background:#222; border-radius:16px; max-width:95vw; width:600px; margin:auto; padding:2em 1em; box-shadow:0 8px 32px #000a; position:relative; display:flex; flex-direction:column; align-items:center;">
@@ -589,7 +306,7 @@
 </script>
               </div>
               <div class="about--options">
-                <a href="https://foreverunfinishedartworx.square.site/" class="new-page-link" target="_blank">
+                <a href="https://foreverunfinishedartworx.printful.me/" class="new-page-link" target="_blank">
                   <h3>And the <br>Losers<br> Win Again</h3>
                 </a>
                 <a href="https://www.youtube.com/watch?v=h3rmmgqqJNs" class="new-page-link" target="_blank">
@@ -605,30 +322,15 @@
             <div class="contact">
               <div class="contact--lockup">
                 <div class="modal">
-        <h2 class="section-title">Interactive Applications</h2>
-                  
-                <p>Explore our interactive applications that blend art and technology. From digital drawing tools to particle simulations, these apps are designed to inspire creativity and innovation.</p>
-  
-    
-                <a href="apps/draw/draw.html" class="new-page-link" target="_blank">Design and Draw</a>
-                
-                <a href="apps/particle1/particle1.html" class="new-page-link" target="_blank">Play with Particles</a>
-           
-                <a href="apps/inky_fux/inkblobs.html" class="new-page-link" target="_blank">Make your own 3D NFT</a>
-                </div>  
-                <div class="modal--information"><h3>Other things I can do</h3>
+                  <div class="modal--information"><h3>mail us</h3>
+                    <p>like to kick it old school? <br> SWEET! <br> Send a self addressed envelope with a Postcard of your choosing to Port Lockroy Post Office, Antarctica. <br>you'll hear back from someone.<br> I mean eventually.  </p>
+                    <a href="mailto:foreverunfinishedartworx@gmail.com"> Or if you prefer to hear back this decade <br>tap here<br> instead of waiting on the penguins</a>
+                    <a href="tel:+18052689085">Or there is always smoke signals <br> I heard  it's making a comeback?</a>
+                  </div>
                   <ul class="modal--options">
-                   <li class="icon solid fa-code">Write some code</li>
-                   <li class="icon solid fa-cubes">Stack small boxes</li>
-                   <li class="icon solid fa-book">Read books and stuff</li>
-                   <li href="buymeacoffee.com/nine.t9" class="icon solid fa-coffee">Drink much coffee</li>
-                   <li class="icon solid fa-bolt">Go Fast</li>
-                   <li class="icon solid fa-users">Shadow clone technique</li>
-                   <li class="icon solid fa-user-astronaut">Space Guy shit</li>
-                   <li class="icon solid fa-hand-middle-finger">Give Zero</li>
                     <li><a href="https://www.x.com/FUArtworx" class="new-page-link" target="_blank">Tweeter</a></li>
                     <li><a href="https://www.instagram.com/fuartworx/" class="new-page-link" target="_blank">Instagram</a></li>
-                    <li><a href="https://foreverunfinishedartworx.square.site/" class="new-page-link" target="_blank">Print and Merch Shop</a></li>
+                    <li><a href="https://foreverunfinishedartworx.printful.me/" class="new-page-link" target="_blank">Print and Merch Shop</a></li>
                     <li><a href="mailto:foreverunfinishedartworx@gmail.com">Contact Us</a></li>
                   </ul>
                 </div>
@@ -740,197 +442,3 @@
 <script src="assets/js/functions-min.js"></script>
 </body>
 </html>
-=======
-    <title>A Paradigm of Peculiar Particles</title>
-    <!-- Link to your style.css file -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Link to Three.js and Tone.js libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-</head>
-<body>
-    <div id="container">
-        <button class="toggle-controls" onclick="toggleControls()" title="Toggle Controls">First Things First</button>
-
-        <div id="controls" class="hidden">
-            <div class="control-group">
-                <div class="control-group-header">
-                    <h3>Interaction</h3>
-                    <span>▼</span>
-                </div>
-                <div class="control-group-body">
-                    <div class="control-item">
-                        <label>Click Burst Size</label>
-                        <input type="range" id="burstSize" min="10" max="200" value="99" step="9">
-                        <div class="value-display" id="burstSizeValue">99</div>
-                    </div>
-                    <div class="control-item">
-                        <label>Drag Trail Density</label>
-                        <input type="range" id="trailDensity" min="5" max="50" value="33" step="1">
-                        <div class="value-display" id="trailDensityValue">33</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <div class="control-group-header">
-                    <h3>Emission</h3>
-                    <span>▼</span>
-                </div>
-                <div class="control-item">
-                    <label>Particle Count</label>
-                    <input type="range" id="particleCount" min="100" max="10000" value="3399" step="25">
-                    <div class="value-display" id="particleCountValue">3399</div>
-                </div>
-                <div class="control-group-body">
-                    <label>Emission Rate</label>
-                    <input type="range" id="emissionRate" min="1" max="100" value="69" step="1">
-                    <div class="value-display" id="emissionRateValue">69/s</div>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <div class="control-group-header">
-                    <h3>Physics</h3>
-                    <span>▼</span>
-                </div>
-                <div class="control-group-body">
-                    <div class="control-item">
-                        <label>Gravity</label>
-                        <input type="range" id="gravity" min="-2" max="2" value="-1.00" step="0.001">
-                        <div class="value-display" id="gravityValue">-1.00</div>
-                    </div>
-                    <div class="control-item">
-                        <label>Initial Speed</label>
-                        <input type="range" id="initialSpeed" min="0" max="5" value="3" step="0.1">
-                        <div class="value-display" id="initialSpeedValue">3</div>
-                    </div>
-                    <div class="control-item">
-                        <label>Spread Angle</label>
-                        <input type="range" id="spreadAngle" min="0" max="360" value="180" step="1">
-                        <div class="value-display" id="spreadAngleValue">133</div>
-                    </div>
-                    <div class="control-item">
-                        <label>Air Resistance</label>
-                        <input type="range" id="airResistance" min="0" max="0.1" value="0.1" step="0.001">
-                        <div class="value-display" id="airResistanceValue">0.1</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <div class="control-group-header">
-                    <h3>Appearance</h3>
-                    <span>▼</span>
-                </div>
-                <div class="control-group-body">
-                    <div class="control-item">
-                        <label>Start Color</label>
-                        <input type="color" id="startColor" value="#000000">
-                    </div>
-                    <div class="control-item">
-                        <label>End Color</label>
-                        <input type="color" id="endColor" value="#fff300">
-                    </div>
-                    <div class="control-item">
-                        <label>Size</label>
-                        <input type="range" id="particleSize" min="0.1" max="10" value="3.9" step="0.1">
-                        <div class="value-display" id="particleSizeValue">3.9</div>
-                    </div>
-                    <div class="control-item">
-                        <label>Size Variation</label>
-                        <input type="range" id="sizeVariation" min="0" max="5" value="3.5" step="0.1">
-                        <div class="value-display" id="sizeVariationValue">3.5</div>
-                    </div>
-                    <div class="control-item">
-                        <label>Opacity</label>
-                        <input type="range" id="opacity" min="0" max="1" value="0.3" step="0.1">
-                        <div class="value-display" id="opacityValue">0.3</div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="control-group">
-                <div class="control-group-header">
-                    <h3>Behavior</h3>
-                    <span>▼</span>
-                </div>
-                <div class="control-group-body">
-                    <div class="control-item">
-                        <label>Lifespan</label>
-                        <input type="range" id="lifespan" min="1" max="20" value="9" step="0.5">
-                        <div class="value-display" id="lifespanValue">9s</div>
-                    </div>
-                    <div class="control-item">
-                        <label>Turbulence</label>
-                        <input type="range" id="turbulence" min="0" max="2" value="1.3" step="0.01">
-                        <div class="value-display" id="turbulenceValue">1.3</div>
-                    </div>
-                    <div class="control-item">
-                        <label>Shape</label>
-                        <select id="particleShape">
-                            <option value="cube">Cube</option>
-                            <option value="point">Point</option>
-                            <option value="sphere">Sphere</option>
-
-                        </select>
-                    </div>
-                    <div class="control-item">
-                        <label>Blend Mode</label>
-                        <select id="blendMode">
-                            <option value="normal">Normal</option>
-                            <option value="additive">Additive</option>
-                            <option value="subtactive">Subtract</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <div class="control-group-header">
-                        <h3>Environment</h3>
-                        <span>▼</span>
-                    </div>
-                    <div class="control-group-body">
-                        <div class="control-item">
-                            <label>Wind X</label>
-                            <input type="range" id="windX" min="-3" max="3" value="-1.5" step="0.01">
-                            <div class="value-display" id="windXValue">-1.5</div>
-                        </div>
-                        <div class="control-item">
-                            <label>Wind Y</label>
-                            <input type="range" id="windY" min="-3" max="3" value="1.5" step="0.01">
-                            <div class="value-display" id="windYValue">1.5</div>
-                        </div>
-                        <div class="control-item">
-                            <label>Wind Z</label>
-                            <input type="range" id="windZ" min="-3" max="3" value="1" step="0.01">
-                            <div class="value-display" id="windZValue">1</div>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <button onclick="resetToDefaults()">Reset to Defaults</button>
-                        <button onclick="toggleAnimation()" id="animationButton">Pause</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="stats">
-                <div>Active Particles: <span id="activeParticles">0</span></div>
-                <div>FPS: <span id="fps">60</span></div>
-            </div>
-
-            <!-- Add the start button here -->
-
-            <!-- Add the disable audio button here -->
-            <button id="disableAudioButton">Disable Audio</button>
-            <button id="startButton">Start Experience</button>
-
-        </div>
-
-        <!-- Link to your main.js file -->
-        <script src="main.js"></script>
-    </body>
-    </html>
->>>>>>> 7710b8e (first commit)
