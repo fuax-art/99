@@ -18,9 +18,7 @@
     "editor.cursorSmoothCaretAnimation": "on",
     "IDX.aI.enableInlineCompletion": true,
     "IDX.aI.enableCodebaseIndexing": true
-=======
     "IDX.aI.enableInlineCompletion": true,
     "IDX.aI.enableCodebaseIndexing": true,
     "liveServer.settings.port": 5501
->>>>>>> 7710b8e (first commit)
 }
