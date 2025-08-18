@@ -215,13 +215,13 @@ button:hover {
 /* Style for the start button */
 #startButton {
     position: absolute;
-    top: 50%;
+    top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 15px 30px;
-    font-size: 20px;
+    font-size: 9px;
     z-index: 1002;
-    cursor: pointer;
+    cursor: crosshair;
     background: linear-gradient(45deg, #662c00, #270431);
     color: #00eaff;
     border: none;
