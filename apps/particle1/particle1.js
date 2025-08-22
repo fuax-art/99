@@ -59,8 +59,8 @@ let particleParams = {
     initialSpeed:3,
     spreadAngle: 133,
     airResistance: 0.1,
-    startColor: new THREE.Color(0x000000),
-    endColor: new THREE.Color(0xfff300),
+    startColor: new THREE.Color(0x0606b8),
+    endColor: new THREE.Color(0xFAFA07),
     size: 0.5,
     sizeVariation: 3,
     opacity: 0.3,
@@ -865,8 +865,8 @@ function resetToDefaults() {
     document.getElementById('initialSpeed').value = 3;
     document.getElementById('spreadAngle').value = 133;
     document.getElementById('airResistance').value = 0.1;
-    document.getElementById('startColor').value = '#000000';
-    document.getElementById('endColor').value = '#fff300';
+    document.getElementById('startColor').value = '#0606B8';
+    document.getElementById('endColor').value = '#FAFA07';
     document.getElementById('particleSize').value = 3.9;
     document.getElementById('sizeVariation').value = 3.5;
     document.getElementById('opacity').value = 0.3;
