@@ -11,34 +11,49 @@ let distortion;
 let reverb; // Declare reverb globally
 let feedbackDelay; // Declare feedbackDelay globally
 
-// Sound progression configurations
-const soundProgressions = {
-    progression1: [
-        "C4", "E4", "G4", "B4", "C5", // C Major chord and scale notes
-        "G3", "B3", "D4", "G4", // G Major chord and scale notes
-        "A3", "C4", "E4", "A4", // A minor chord and scale notes (can sound a bit more reflective)
-        "F3", "A3", "C4", "F4", // F Major chord and scale notes
-        "D4", "F4", "A4", "C5", // D minor chord and scale notes
-        "E4", "G4", "B4", "D5", // E minor chord and scale notes
-        "C4", "G4", "E5", "C5", // More spaced out notes for ambience
-        "G3", "D4", "A4", "E5"  // More spaced out notes for ambience
-    ],
-    progression2: [
-        "C4", "G4", "A4", "F4", // Classic I-V-vi-IV progression, uplifting and familiar
-        "Dm4", "Am4", "Em4", "G4" // Adds a bit more melancholy and movement
-    ],
-    progression3: [
-        "A3", "E3", "C4", "G3", // A minor feel with a descending bassline, more introspective
-        "F3", "C4", "G4", "D4" // Opens up a bit, hinting at a brighter resolution but staying grounded
-    ],
-    progression4: [
-        "D4", "A4", "B4", "G4", // A strong starting point, slightly dramatic
-        "Em4", "G4", "C5", "A4" // Builds intensity and then resolves with a wider interval
-    ]
-};
+let synthWaveNotes = [
+    "C4", "E4", "G4", "B4", "C5", // C Major chord and scale notes
+    "G3", "B3", "D4", "G4", // G Major chord and scale notes
+    "A3", "C4", "E4", "A4", // A minor chord and scale notes (can sound a bit more reflective)
+    "F3", "A3", "C4", "F4", // F Major chord and scale notes
+    "D4", "F4", "A4", "C5", // D minor chord and scale notes
+    "E4", "G4", "B4", "D5", // E minor chord and scale notes
+    "C4", "G4", "E5", "C5", // More spaced out notes for ambience
+    "G3", "D4", "A4", "E5"  // More spaced out notes for ambience
 
-let currentProgression = 'progression1';
-let synthWaveNotes = soundProgressions[currentProgression];
+
+
+/*synthWaveProgression2 = 
+    "C4", "G4", "A4", "F4", // Classic I-V-vi-IV progression, uplifting and familiar
+    "Dm4", "Am4", "Em4", "G4" // Adds a bit more melancholy and movement
+// This progression is bright and slightly emotional, good for a driving or cruising feel.
+
+
+/*synthWaveProgression3 = 
+    "A3", "E3", "C4", "G3", // A minor feel with a descending bassline, more introspective
+    "F3", "C4", "G4", "D4" // Opens up a bit, hinting at a brighter resolution but staying grounded
+// This progression has a more reflective and slightly melancholic feel, suitable for nighttime or atmospheric sections.
+
+
+ /*synthWaveProgression4 = 
+    "D4", "A4", "B4", "G4", // A strong starting point, slightly dramatic
+    "Em4", "G4", "C5", "A4" // Builds intensity and then resolves with a wider interval
+// This progression is more powerful and energetic, good for building tension or a climactic moment.
+
+/*synthWaveProgression5 = 
+   "D3", "B2", "A#2", "B2", "D#3", "B2", "A#2", "B2", spooky vibe
+    "D3", "B2", "A#2", "B2", "D#3", "B2", "A#2", "B2",
+    "D3", "B2", "A#2", "B2", "D#3", "B2", "A#2", "B2",
+    "G2", "E3", "D#3", "E3", "G#3", "E3", "D#3", "E3",
+    "G2", "E3", "D#3", "E3", "G#3", "E3", "D#3", "E3",
+    "G2", "E3", "D#3", "E3", "G#3", "E3", "D#3", "E3",
+    "C3", "B2", "E2", "C3", "B2", "E2", "E2", "E5",
+    "C3", "B2", "E2", "C3", "B2", "E2", "F2", "E4", "E4", "E4",
+    "E4", "C#4", "C4", "C#4", "F4", "C#4", "C4", "C#4",
+    "G3", "F3", "E3", "F3", "G#3", "F3", "E3", "F3",
+    "C3", "B2", "E2", "C3", "B2", "E2", "E2", "E5",
+    "C3", "B2", "E2", "C3", "B2", "E2", "F2", "D3", "D3", "D3", "B" */
+];
 let currentNoteIndex = 0;
 let isAudioEnabled = true;
 
@@ -74,7 +89,6 @@ let particleParams = {
     burstSize: 99,
     trailDensity: 33
 };
-
 // Particle class
 class Particle {
     constructor(position, velocity) {
@@ -310,7 +324,35 @@ async function init() {
     // Mouse interaction (can be set up before audio context, but particle emission will be silent)
     setupMouseInteraction();
 
-    // Add event listener to start button to initialize Tone.js and related audio
+    // Add event listener to // Sound progression configurations
+const soundProgressions = {
+    progression1: [
+        "C4", "E4", "G4", "B4", "C5", // C Major chord and scale notes
+        "G3", "B3", "D4", "G4", // G Major chord and scale notes
+        "A3", "C4", "E4", "A4", // A minor chord and scale notes (can sound a bit more reflective)
+        "F3", "A3", "C4", "F4", // F Major chord and scale notes
+        "D4", "F4", "A4", "C5", // D minor chord and scale notes
+        "E4", "G4", "B4", "D5", // E minor chord and scale notes
+        "C4", "G4", "E5", "C5", // More spaced out notes for ambience
+        "G3", "D4", "A4", "E5"  // More spaced out notes for ambience
+    ],
+    progression2: [
+        "C4", "G4", "A4", "F4", // Classic I-V-vi-IV progression, uplifting and familiar
+        "Dm4", "Am4", "Em4", "G4" // Adds a bit more melancholy and movement
+    ],
+    progression3: [
+        "A3", "E3", "C4", "G3", // A minor feel with a descending bassline, more introspective
+        "F3", "C4", "G4", "D4" // Opens up a bit, hinting at a brighter resolution but staying grounded
+    ],
+    progression4: [
+        "D4", "A4", "B4", "G4", // A strong starting point, slightly dramatic
+        "Em4", "G4", "C5", "A4" // Builds intensity and then resolves with a wider interval
+    ]
+};
+
+
+let currentProgression = 'progression1'; // Default to your original progression
+let synthWaveNotes = soundProgressions[currentProgression]; // start button to initialize Tone.js and related audio
     document.getElementById('startButton').addEventListener('click', async () => {
         // Initialize Tone.js instruments and effects
         await Tone.start(); // Start audio context here after user click
@@ -331,11 +373,7 @@ async function init() {
                 // initToneJs(); // You would need a function to re-initialize Tone.js
             }
         });
-
-        // Add progression selection event listener
-        document.getElementById('progressionSelect').addEventListener('change', (e) => {
-            changeProgression(e.target.value);
-        });
+        
 
         // Create Effects
         reverb = new Tone.Reverb({
@@ -380,6 +418,15 @@ async function init() {
         // Hide the start button after it's clicked
         document.getElementById('startButton').style.display = 'none';
     });
+}
+
+function changeProgression(progressionKey) {
+    if (soundProgressions[progressionKey]) {
+        currentProgression = progressionKey;
+        synthWaveNotes = soundProgressions[progressionKey];
+        currentNoteIndex = 0; // Reset to start of new progression
+        console.log(`Switched to ${progressionKey}`);
+    }
 }
 
 function createGradientSphere() {
@@ -836,7 +883,7 @@ function resetToDefaults() {
     document.getElementById('lifespan').value = 9;
     document.getElementById('turbulence').value = 1.3;
     document.getElementById('particleShape').value = 'cube';
-    document.getElementById('blendMode').value = 'subtactive';
+    document.getElementById('blendMode').value = 'subtractive';
     document.getElementById('windX').value = -1.5;
     document.getElementById('windY').value = 1.5;
     document.getElementById('windZ').value = 1;
