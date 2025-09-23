@@ -1,4 +1,3 @@
-    <script>
         // Global variables
         let scene, camera, renderer, particleSystem;
         let mandalaCanvas, mandalaCtx, threeCanvas;
@@ -818,4 +817,3 @@
         
         // Start the app when page loads
         window.addEventListener('load', init);
-    </script>
