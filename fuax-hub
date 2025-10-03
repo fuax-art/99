@@ -6,7 +6,7 @@
     <title>FUAX - Forever Unfinished Artworx</title>
     <style>
         body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background: #000; color: #fff; }
-        .hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('your-fox-mural.jpg'); background-size: cover; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/img/FUAXFACEREDEYES.PNG.jpg'); background-size: cover; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
         .hero h1 { font-size: 4em; text-shadow: 2px 2px 4px #ff00ff; }
         .hero p { font-size: 1.5em; }
         .gallery { padding: 50px; display: flex; flex-wrap: wrap; justify-content: center; }
@@ -27,13 +27,13 @@
     <section class="gallery">
         <div class="item">
             <img src="placeholder-tee.jpg" alt="No Fox Paws Tee">
-            <h3>No Fox Paws Tee</h3>
-            <a href="https://printful.com/your-link-here" class="buy-btn" target="_blank">Buy Now ($25)</a>
+            <h3>FUAX Bomber</h3>
+            <a href="https://foreverunfinishedartworx.square.site/product/premium-recycled-bomber-jacket/SFSGD5FM7W6XQWRRGFVMDW2O?cs=true&cst=custom" class="buy-btn" target="_blank">Buy Now ($25)</a>
         </div>
         <div class="item">
             <img src="placeholder-print.jpg" alt="Foxfire Poster">
-            <h3>Foxfire Poster</h3>
-            <a href="https://printful.com/your-link-here" class="buy-btn" target="_blank">Buy Now ($35)</a>
+            <h3>Beautiful Chaos Poster</h3>
+            <a href="https://foreverunfinishedartworx.square.site/product/beautiful-chaos-poster/EMKZVMSKKLZS2TV6CTKWFKSB?cp=true&sa=true&sbp=false&q=false" class="buy-btn" target="_blank">Buy Now ($35)</a>
         </div>
         <!-- Add 3 more items similarly -->
     </section>
