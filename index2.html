@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forever Unfinished Artworx</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Arial Black', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            height: 100vh;
+            width: 100vw;
+            touch-action: none;
+        }
+
+        #container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .circle {
+            cursor: pointer;
+            transition: filter 0.3s ease;
+        }
+
+        .circle:hover {
+            filter: drop-shadow(0 0 30px currentColor) drop-shadow(0 0 45px currentColor) brightness(1.2);
+        }
+
+        .circle-text {
+            pointer-events: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            fill: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            transition: opacity 0.3s ease;
+        }
+
+        .particle {
+            pointer-events: none;
+        }
+
+        .particle-burst {
+            animation: burstOut 0.8s ease-out forwards;
+        }
+
+        @keyframes burstOut {
+            0% { 
+                opacity: 1; 
+                transform: translate(0, 0) scale(1);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate(var(--tx), var(--ty)) scale(0.3);
+            }
+        }
+
+        #back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: none;
+        }
+
+        #back-button:hover {
+            background: rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 20px #00ff88;
+        }
+
+        #signature {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #00ff88;
+            font-size: 12px;
+            text-shadow: 0 0 10px #00ff88;
+            font-style: italic;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        #breadcrumb {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00ff88;
+            font-size: 14px;
+            text-shadow: 0 0 10px #00ff88;
+            pointer-events: none;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .circle-text {
+                font-size: 12px;
+            }
+            #back-button {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <button id="back-button">← BACK</button>
+        <div id="breadcrumb"></div>
+        <svg id="canvas"></svg>
+        <div id="signature">Forever Unfinished Artworx</div>
+    </div>
+
+    <script>
+        // Base64 encoded click sound
+        const clickSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBgoOEhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==');
+
+        // HIERARCHICAL DATA STRUCTURE - Customize this to add infinite nested circles!
+        const data = {
+            name: "F U A X",
+            color: "#00ff88",
+            children: [
+                { 
+                    name: "Gallery", 
+                    color: "#ff006e",
+                    children: [
+                        { name: "AI Art", color: "#ff1a7a", children: [] },
+                        { name: "Digital Art", color: "#ff3388", children: [] },
+                        { name: "Physical Art", color: "#ff4d96", children: [] }
+                    ]
+                },
+                { 
+                    name: "Shop", 
+                    color: "#8338ec",
+                    children: [
+                        { name: "Apparel", color: "#9b51ff", children: [] },
+                        { name: "Stickers", color: "#b36aff", children: [] },
+                        { name: "Skateboards", color: "#cb83ff", children: [] }
+                    ]
+                },
+                { 
+                    name: "NFTs", 
+                    color: "#3a86ff",
+                    children: [
+                        { name: "Collection 1", color: "#5299ff", children: [] },
+                        { name: "Collection 2", color: "#6aadff", children: [] },
+                        { name: "Mint New", color: "#82c0ff", children: [] }
+                    ]
+                },
+                { 
+                    name: "Murals", 
+                    color: "#fb5607",
+                    children: [
+                        { name: "Completed", color: "#fc6a22", children: [] },
+                        { name: "In Progress", color: "#fd7e3d", children: [] },
+                        { name: "Commission", color: "#fe9258", children: [] }
+                    ]
+                },
+                { 
+                    name: "Music", 
+                    color: "#ffbe0b",
+                    children: [
+                        { name: "AI Tracks", color: "#ffca2c", children: [] },
+                        { name: "Lyrics", color: "#ffd64d", children: [] },
+                        { name: "Collabs", color: "#ffe26e", children: [] }
+                    ]
+                },
+                { 
+                    name: "Code", 
+                    color: "#00ff88",
+                    children: [
+                        { name: "Projects", color: "#1aff95", children: [] },
+                        { name: "Tools", color: "#33ffa2", children: [] },
+                        { name: "Open Source", color: "#4dffaf", children: [] }
+                    ]
+                },
+                { 
+                    name: "About", 
+                    color: "#06ffa5",
+                    children: [
+                        { name: "Story", color: "#20ffb0", children: [] },
+                        { name: "Philosophy", color: "#3affbb", children: [] },
+                        { name: "Contact", color: "#54ffc6", children: [] }
+                    ]
+                }
+            ]
+        };
+
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let currentNode = data;
+        let navigationStack = [data];
+        
+        const svg = d3.select("#canvas");
+        const backButton = d3.select("#back-button");
+        const breadcrumb = d3.select("#breadcrumb");
+
+        backButton.on("click", navigateBack);
+
+        function updateBreadcrumb() {
+            const path = navigationStack.map(n => n.name).join(" > ");
+            breadcrumb.text(path);
+        }
+
+        function createVisualization(node, animate = true) {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            svg.attr("viewBox", `0 0 ${width} ${height}`);
+
+            const pack = d3.pack()
+                .size([width * 0.85, height * 0.85])
+                .padding(25);
+
+            const root = d3.hierarchy(node)
+                .sum(d => d.children && d.children.length > 0 ? 0 : 1)
+                .sort((a, b) => b.value - a.value);
+
+            pack(root);
+
+            const nodes = root.descendants();
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            // Clear existing
+            svg.selectAll("*").transition().duration(300).style("opacity", 0).remove();
+
+            // Create new circles
+            const g = svg.append("g");
+
+            const circles = g.selectAll(".circle")
+                .data(nodes)
+                .enter()
+                .append("circle")
+                .attr("class", "circle")
+                .attr("cx", d => d.x + (centerX - width * 0.425))
+                .attr("cy", d => d.y + (centerY - height * 0.425))
+                .attr("r", animate ? 0 : d => d.r)
+                .attr("fill", d => d.data.color || "#666")
+                .attr("stroke", d => d.depth === 0 ? "#00ff88" : "none")
+                .attr("stroke-width", d => d.depth === 0 ? 4 : 0)
+                .style("filter", d => `drop-shadow(0 0 ${d.depth === 0 ? 25 : 15}px ${d.data.color})`)
+                .style("opacity", 0)
+                .on("click", function(event, d) {
+                    if (d.data.children && d.data.children.length > 0) {
+                        handleNodeClick(event, d.data);
+                    }
+                });
+
+            const labels = g.selectAll(".circle-text")
+                .data(nodes)
+                .enter()
+                .append("text")
+                .attr("class", "circle-text")
+                .attr("x", d => d.x + (centerX - width * 0.425))
+                .attr("y", d => d.y + (centerY - height * 0.425))
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "middle")
+                .style("font-size", d => {
+                    const baseSize = Math.max(d.r / 3.5, 10);
+                    return d.depth === 0 ? baseSize * 1.5 : baseSize;
+                })
+                .style("opacity", 0)
+                .text(d => d.data.name);
+
+            // Animate in
+            if (animate) {
+                circles.transition()
+                    .duration(600)
+                    .delay((d, i) => i * 30)
+                    .attr("r", d => d.r)
+                    .style("opacity", 1);
+
+                labels.transition()
+                    .duration(600)
+                    .delay((d, i) => i * 30)
+                    .style("opacity", 1);
+            } else {
+                circles.style("opacity", 1);
+                labels.style("opacity", 1);
+            }
+
+            // Update back button visibility
+            if (navigationStack.length > 1) {
+                backButton.style("display", "block");
+            } else {
+                backButton.style("display", "none");
+            }
+
+            updateBreadcrumb();
+        }
+
+        function handleNodeClick(event, nodeData) {
+            event.stopPropagation();
+            
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+
+            // Particle burst
+            const circle = event.target;
+            const cx = parseFloat(circle.getAttribute("cx"));
+            const cy = parseFloat(circle.getAttribute("cy"));
+            createParticleBurst(cx, cy, nodeData.color);
+
+            // Zoom into this node
+            navigationStack.push(nodeData);
+            currentNode = nodeData;
+            
+            setTimeout(() => {
+                createVisualization(nodeData);
+            }, 400);
+        }
+
+        function navigateBack() {
+            if (navigationStack.length > 1) {
+                navigationStack.pop();
+                currentNode = navigationStack[navigationStack.length - 1];
+                createVisualization(currentNode);
+            }
+        }
+
+        function createParticleBurst(x, y, color) {
+            const particleCount = 12;
+
+            for (let i = 0; i < particleCount; i++) {
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const distance = 60 + Math.random() * 40;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                const particle = svg.append("circle")
+                    .attr("class", "particle")
+                    .attr("cx", x)
+                    .attr("cy", y)
+                    .attr("r", 3 + Math.random() * 3)
+                    .attr("fill", color)
+                    .style("--tx", `${tx}px`)
+                    .style("--ty", `${ty}px`)
+                    .attr("opacity", 1);
+
+                particle.classed("particle-burst", true);
+                setTimeout(() => particle.remove(), 800);
+            }
+        }
+
+        // Responsive resize
+        let resizeTimer;
+        window.addEventListener("resize", () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => createVisualization(currentNode, false), 250);
+        });
+
+        // Initialize
+        createVisualization(data);
+    </script>
+<div>
+  <style>.pp-98F4SRH87EXYA{text-align:center;border:none;border-radius:0.25rem;min-width:11.625rem;padding:0 2rem;height:2.625rem;font-weight:bold;background-color:#FFD140;color:#000000;font-family:"Helvetica Neue",Arial,sans-serif;font-size:1rem;line-height:1.25rem;cursor:pointer;}</style>
+  <form action="https://www.paypal.com/ncp/payment/98F4SRH87EXYA" method="post" target="_blank" style="display:inline-grid;justify-items:center;align-content:start;gap:0.5rem;">
+    <input class="pp-98F4SRH87EXYA" type="submit" value="Donate to the chaos" />
+    <img src=https://www.paypalobjects.com/images/Debit_Credit_APM.svg alt="cards" />
+    <section style="font-size: 0.75rem;"> Powered by <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.875rem;vertical-align:middle;"/></section>
+  </form>
+</div>
+
+</body>
+</html>
