@@ -15,7 +15,7 @@
         body {
             overflow: hidden;
             font-family: 'Arial Black', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            background: linear-gradient(135deg, #09384042 0%, #02002b7e 100%);
             height: 100vh;
             width: 100vw;
             touch-action: none;
@@ -35,11 +35,11 @@
 
         .circle {
             cursor: pointer;
-            transition: filter 0.3s ease;
+            transition: filter 0.7s ease;
         }
 
         .circle:hover {
-            filter: drop-shadow(0 0 30px currentColor) drop-shadow(0 0 45px currentColor) brightness(1.2);
+            filter: drop-shadow(0 0 45px currentColor) drop-shadow(0 0 45px currentColor) brightness(1.2);
         }
 
         .circle-text {
@@ -47,9 +47,9 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 2px;
-            fill: white;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-            transition: opacity 0.3s ease;
+            fill: rgba(0, 217, 255, 0.231);
+            text-shadow: 2px 2px 8px rgba(0, 0, 117, 0.158);
+            transition: opacity 0.5s ease;
         }
 
         .particle {
@@ -57,7 +57,7 @@
         }
 
         .particle-burst {
-            animation: burstOut 0.8s ease-out forwards;
+            animation: burstOut 1.5s ease-out forwards;
         }
 
         @keyframes burstOut {
@@ -76,12 +76,12 @@
             top: 20px;
             left: 20px;
             padding: 12px 24px;
-            background: rgba(0, 255, 136, 0.2);
-            border: 2px solid #00ff88;
-            color: #00ff88;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid #00f7ffb2;
+            color: #eaff00;
             font-weight: bold;
             text-transform: uppercase;
-            cursor: pointer;
+            cursor: vertical-text;
             border-radius: 8px;
             font-size: 14px;
             letter-spacing: 1px;
@@ -92,17 +92,17 @@
         }
 
         #back-button:hover {
-            background: rgba(0, 255, 136, 0.4);
-            box-shadow: 0 0 20px #00ff88;
+            background: rgb(0, 200, 255);
+            box-shadow: 0 0 20px #00f7ff4e;
         }
 
         #signature {
             position: absolute;
             bottom: 20px;
             right: 20px;
-            color: #00ff88;
+            color: #eeff00;
             font-size: 12px;
-            text-shadow: 0 0 10px #00ff88;
+            text-shadow: 0 0 10px #000000;
             font-style: italic;
             pointer-events: none;
             z-index: 1000;
@@ -113,9 +113,9 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            color: #00ff88;
+            color: #00fff75e;
             font-size: 14px;
-            text-shadow: 0 0 10px #00ff88;
+            text-shadow: 0 0 10px #000000dd;
             pointer-events: none;
             z-index: 1000;
             text-align: center;
@@ -167,70 +167,70 @@
 
         // HIERARCHICAL DATA STRUCTURE - Customize this to add infinite nested circles!
         const data = {
-            name: "F U A X",
-            color: "#00ff88",
+            name: "",
+            color: "#637b9c",
             children: [
                 { 
                     name: "Gallery", 
-                    color: "#ff006e",
+                    color: "#45556c",
                     children: [
-                        { name: "AI Art", color: "#ff1a7a", children: [] },
-                        { name: "Digital Art", color: "#ff3388", children: [] },
-                        { name: "Physical Art", color: "#ff4d96", children: [] }
+                        { name: "AI Art", color: "#85929E", children: [] },
+                        { name: "Digital Art", color: "#2E4053", children: [] },
+                        { name: "Physical Art", color: "#283747", children: [] }
                     ]
                 },
                 { 
                     name: "Shop", 
-                    color: "#8338ec",
+                    color: "#2e3848",
                     children: [
-                        { name: "Apparel", color: "#9b51ff", children: [] },
-                        { name: "Stickers", color: "#b36aff", children: [] },
-                        { name: "Skateboards", color: "#cb83ff", children: [] }
+                        { name: "Apparel", color: "#482E45", children: [] },
+                        { name: "Stickers", color: "#2E4831", children: [] },
+                        { name: "Skateboards", color: "#2E4548", children: [] }
                     ]
                 },
                 { 
                     name: "NFTs", 
-                    color: "#3a86ff",
+                    color: "#526580",
                     children: [
-                        { name: "Collection 1", color: "#5299ff", children: [] },
-                        { name: "Collection 2", color: "#6aadff", children: [] },
-                        { name: "Mint New", color: "#82c0ff", children: [] }
+                        { name: "Collection 1", color: "#528056", children: [] },
+                        { name: "Collection 2", color: "#806D52", children: [] },
+                        { name: "Mint New", color: "#80527C", children: [] }
                     ]
                 },
                 { 
                     name: "Murals", 
-                    color: "#fb5607",
+                    color: "#8E628A",
                     children: [
-                        { name: "Completed", color: "#fc6a22", children: [] },
-                        { name: "In Progress", color: "#fd7e3d", children: [] },
-                        { name: "Commission", color: "#fe9258", children: [] }
+                        { name: "Completed", color: "#8E7C62", children: [] },
+                        { name: "In Progress", color: "#628E66", children: [] },
+                        { name: "Commission", color: "#62748E", children: [] }
                     ]
                 },
                 { 
                     name: "Music", 
-                    color: "#ffbe0b",
+                    color: "#4F264B",
                     children: [
-                        { name: "AI Tracks", color: "#ffca2c", children: [] },
-                        { name: "Lyrics", color: "#ffd64d", children: [] },
-                        { name: "Collabs", color: "#ffe26e", children: [] }
+                        { name: "AI Tracks", color: "#26364F", children: [] },
+                        { name: "Lyrics", color: "#4F3F26", children: [] },
+                        { name: "Collabs", color: "#264F2A", children: [] }
                     ]
                 },
                 { 
                     name: "Code", 
-                    color: "#00ff88",
+                    color: "#591717",
                     children: [
-                        { name: "Projects", color: "#1aff95", children: [] },
-                        { name: "Tools", color: "#33ffa2", children: [] },
-                        { name: "Open Source", color: "#4dffaf", children: [] }
+                        { name: "Projects", color: "#175959", children: [] },
+                        { name: "Tools", color: "#385917", children: [] },
+                        { name: "Open Source", color: "#381759", children: [] }
                     ]
                 },
                 { 
                     name: "About", 
-                    color: "#06ffa5",
+                    color: "#8A0648",
                     children: [
-                        { name: "Story", color: "#20ffb0", children: [] },
-                        { name: "Philosophy", color: "#3affbb", children: [] },
-                        { name: "Contact", color: "#54ffc6", children: [] }
+                    { name: "Story", color: "#06068A", children: [] },
+                        { name: "Philosophy", color: "#8A8A06", children: [] },
+                        { name: "Contact", color: "#068A48", children: [] }
                     ]
                 }
             ]
