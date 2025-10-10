@@ -1,0 +1,61 @@
+// Mobile Parallax Scrolling Fixes
+// ================================
+
+// Fix section overflow for mobile
+@media (max-width: 767px) {
+  .l-section.section {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+  }
+  
+  .l-viewport {
+    height: 100vh;
+    overflow: visible; // Allow content to be scrollable
+  }
+  
+  // Ensure intro content is scrollable on mobile
+  .intro-content-wrapper {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: visible;
+  }
+  
+  // Fix intro section height
+  .intro {
+    height: auto;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+
+  // Improve touch targets
+  .intro--options > a {
+    padding: 15px;
+    margin-bottom: 15px;
+    touch-action: manipulation;
+  }
+  
+  // Better button touch targets
+  .cta, 
+  .slider--prev, 
+  .slider--next {
+    touch-action: manipulation;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  // Fix container positioning
+  .container {
+    position: relative;
+    min-height: 100vh;
+    overflow: visible;
+  }
+  
+  // Ensure proper touch scrolling
+  .perspective {
+    overflow: visible;
+
+    &:not(.effect-rotate-left--animate) {
+      overflow: visible;
+    }
+  }
+}

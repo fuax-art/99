@@ -28,13 +28,11 @@ $( document ).ready(function() {
           canScroll = true;
         }, 800);
         updateHelper(-1);
-      }
-
     }
+  }
+});
 
-  });
-
-  $('.side-nav li, .outer-nav li').click(function(){
+$('.side-nav li, .outer-nav li').click(function(){
 
     if (!($(this).hasClass('is-active'))) {
 
@@ -66,9 +64,28 @@ $( document ).ready(function() {
   // swipe support for touch devices
   var targetElement = document.getElementById('viewport'),
       mc = new Hammer(targetElement);
-  mc.get('swipe').set({ direction: Hammer.DIRECTION_VERTICAL });
-  mc.on('swipeup swipedown', function(e) {
+  // Configure Hammer for better mobile performance
+mc.get('swipe').set({ 
+  direction: Hammer.DIRECTION_VERTICAL,
+  threshold: 10,
+  velocity: 0.3
+});
 
+// Only handle swipes when nav is not visible and not scrolling within content
+mc.on('swipeup swipedown', function(e) {
+  // Check if user is scrolling within a section
+  var target = e.target;
+  var scrollableParent = $(target).closest('.intro-content-wrapper, .l-section');
+  
+  // Don't trigger parallax if we're scrolling within content
+  if (scrollableParent.length && scrollableParent.scrollTop() > 0) {
+    return;
+  }
+  
+  // Don't interfere with nav
+  if ($('.outer-nav').hasClass('is-vis')) {
+    return;
+  }
     updateHelper(e);
 
   });
@@ -81,7 +98,17 @@ $( document ).ready(function() {
     }
 
   });
+// Improve scroll detection to not conflict with content scrolling
+$(document).on('touchstart', function(e) {
+  var touch = e.originalEvent.touches[0];
+  window.startY = touch.pageY;
+});
 
+$(document).on('touchmove', function(e) {
+  if (!window.startY) return;
+  
+  var touch = e.originalEvent.touches[0];
+  var diffY = window.startY - touch.pageY;
   // determine scroll, swipe, and arrow key direction
   function updateHelper(param) {
 
@@ -115,7 +142,16 @@ $( document ).ready(function() {
     }
 
   }
-
+ // Only prevent default on large movements (parallax navigation)
+  if (Math.abs(diffY) > 50 && !$('.outer-nav').hasClass('is-vis')) {
+    var scrollableParent = $(e.target).closest('.intro-content-wrapper, .l-section');
+    
+    // Don't prevent if we're in scrollable content
+    if (!scrollableParent.length || scrollableParent.scrollTop() === 0) {
+      e.preventDefault();
+    }
+  }
+});
   // sync side and outer navigations
   function updateNavs(nextPos) {
 
@@ -150,8 +186,24 @@ $( document ).ready(function() {
     }
 
   }
+// Detect content vs navigation scrolling
+function isContentScrolling(element) {
+  var $element = $(element);
+  var scrollableParent = $element.closest('.intro-content-wrapper, .about, .work, .contact, .hire');
+  
+  if (scrollableParent.length) {
+    var scrollTop = scrollableParent.scrollTop();
+    var scrollHeight = scrollableParent[0].scrollHeight;
+    var clientHeight = scrollableParent[0].clientHeight;
+    
+    // If there's scrollable content and we're not at the top
+    return scrollHeight > clientHeight && scrollTop > 10;
+  }
+  
+  return false;
+}
 
-  function outerNav() {
+function outerNav() {
 
     $('.header--nav-toggle').click(function(){
 
@@ -275,7 +327,7 @@ $( document ).ready(function() {
 
   workSlider();
   transitionLabels();
-});
+  outerNav();
 
-    outerNav();
+});
 
