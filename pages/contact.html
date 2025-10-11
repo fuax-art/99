@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Forever Unfinished Artworx</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            font-family: 'Arial Black', sans-serif;
+            background: transparent;
+            min-height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #00f7ffb2;
+            border-radius: 16px;
+            padding: 3rem;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 40px rgba(0, 247, 255, 0.2);
+        }
+
+        h1 {
+            color: #eaff00;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(234, 255, 0, 0.5);
+        }
+
+        .subtitle {
+            color: #00fff7;
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .work-request--options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .work-request--options label {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(0, 247, 255, 0.05);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #00fff7;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+
+        .work-request--options label:hover {
+            background: rgba(0, 247, 255, 0.1);
+            border-color: #00f7ff;
+            box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+        }
+
+        .work-request--options input[type="checkbox"] {
+            display: none;
+        }
+
+        .work-request--options input[type="checkbox"]:checked + label {
+            background: rgba(234, 255, 0, 0.15);
+            border-color: #eaff00;
+            color: #eaff00;
+        }
+
+        .work-request--options svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            fill: currentColor;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .work-request--options input[type="checkbox"]:checked + label svg {
+            opacity: 1;
+        }
+
+        .work-request--information {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 247, 255, 0.05);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            border-radius: 8px;
+            color: #00fff7;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #eaff00;
+            box-shadow: 0 0 15px rgba(234, 255, 0, 0.3);
+            background: rgba(234, 255, 0, 0.05);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(0, 255, 247, 0.5);
+        }
+
+        .form-group label {
+            position: absolute;
+            left: 1rem;
+            top: -0.75rem;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0 0.5rem;
+            color: #00fff7;
+            font-size: 0.85rem;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .work-request--send {
+            text-align: center;
+        }
+
+        .work-request--send input[type="submit"] {
+            padding: 1rem 3rem;
+            background: rgba(234, 255, 0, 0.1);
+            border: 2px solid #eaff00;
+            border-radius: 8px;
+            color: #eaff00;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .work-request--send input[type="submit"]:hover {
+            background: #eaff00;
+            color: #000;
+            box-shadow: 0 0 25px rgba(234, 255, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        #back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #00f7ffb2;
+            color: #eaff00;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        #back-button:hover {
+            background: rgb(0, 200, 255);
+            box-shadow: 0 0 20px #00f7ff4e;
+        }
+
+        #signature {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: #eeff00;
+            font-size: 12px;
+            text-shadow: 0 0 10px #000000;
+            font-style: italic;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .work-request--options {
+                grid-template-columns: 1fr;
+            }
+
+            .work-request--send input[type="submit"] {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="vanta-bg"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+    <script>
+        VANTA.GLOBE({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xfeff00,
+            color2: 0x00fff7,
+            backgroundColor: 0x0,
+            size: 1.20,
+            spacing: 15.00
+        })
+    </script>
+
+    <a href="index.html" id="back-button">← Back to Home</a>
+
+    <div class="contact-container">
+        <h1>Let's Collaborate</h1>
+        <p class="subtitle">Select your area of interest and let's create something extraordinary</p>
+
+        <form action="https://formspree.io/f/xbljgkdp" method="POST" class="work-request">
+            <div class="work-request--options">
+                <input id="opt-1" type="checkbox" name="services[]" value="Creative Collaboration">
+                <label for="opt-1">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 111">
+                        <g transform="translate(0.000000,111.000000) scale(0.100000,-0.100000)">
+                            <path d="M950,705L555,310L360,505C253,612,160,700,155,700c-6,0-44-34-85-75l-75-75l278-278L550-5l475,475c261,261,475,480,475,485c0,13-132,145-145,145C1349,1100,1167,922,950,705z"/>
+                        </g>
+                    </svg>
+                    Creative Collaboration
+                </label>
+
+                <input id="opt-2" type="checkbox" name="services[]" value="Graphic Design & Branding">
+                <label for="opt-2">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 111">
+                        <g transform="translate(0.000000,111.000000) scale(0.100000,-0.100000)">
+                            <path d="M950,705L555,310L360,505C253,612,160,700,155,700c-6,0-44-34-85-75l-75-75l278-278L550-5l475,475c261,261,475,480,475,485c0,13-132,145-145,145C1349,1100,1167,922,950,705z"/>
+                        </g>
+                    </svg>
+                    Graphic Design & Branding
+                </label>
+
+                <input id="opt-3" type="checkbox" name="services[]" value="Custom Print & Merchandise">
+                <label for="opt-3">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 111">
+                        <g transform="translate(0.000000,111.000000) scale(0.100000,-0.100000)">
+                            <path d="M950,705L555,310L360,505C253,612,160,700,155,700c-6,0-44-34-85-75l-75-75l278-278L550-5l475,475c261,261,475,480,475,485c0,13-132,145-145,145C1349,1100,1167,922,950,705z"/>
+                        </g>
+                    </svg>
+                    Custom Print & Merchandise
+                </label>
+
+                <input id="opt-4" type="checkbox" name="services[]" value="Mural Commission">
+                <label for="opt-4">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 111">
+                        <g transform="translate(0.000000,111.000000) scale(0.100000,-0.100000)">
+                            <path d="M950,705L555,310L360,505C253,612,160,700,155,700c-6,0-44-34-85-75l-75-75l278-278L550-5l475,475c261,261,475,480,475,485c0,13-132,145-145,145C1349,1100,1167,922,950,705z"/>
+                        </g>
+                    </svg>
+                    Mural Commission
+                </label>
+
+                <input id="opt-5" type="checkbox" name="services[]" value="NFT Development">
+                <label for="opt-5">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 111">
+                        <g transform="translate(0.000000,111.000000) scale(0.100000,-0.100000)">
+                            <path d="M950,705L555,310L360,505C253,612,160,700,155,700c-6,0-44-34-85-75l-75-75l278-278L550-5l475,475c261,261,475,480,475,485c0,13-132,145-145,145C1349,1100,1167,922,950,705z"/>
+                        </g>
+                    </svg>
+                    NFT Development
+                </label>
+
+                <input id="opt-6" type="checkbox" name="services[]" value="Web Development">
+                <label for="opt-6">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 111">
+                        <g transform="translate(0.000000,111.000000) scale(0.100000,-0.100000)">
+                            <path d="M950,705L555,310L360,505C253,612,160,700,155,700c-6,0-44-34-85-75l-75-75l278-278L550-5l475,475c261,261,475,480,475,485c0,13-132,145-145,145C1349,1100,1167,922,950,705z"/>
+                        </g>
+                    </svg>
+                    Web Development
+                </label>
+            </div>
+
+            <div class="work-request--information">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input id="name" type="text" name="name" placeholder="Enter your name" required autocomplete="given-name" spellcheck="false">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" name="email" placeholder="your.email@example.com" required autocomplete="email" spellcheck="false">
+                </div>
+                <div class="form-group">
+                    <label for="message">Project Details</label>
+                    <input id="message" type="text" name="message" placeholder="Tell me about your project or inquiry" style="padding-bottom: 3rem;" autocomplete="off" spellcheck="false">
+                </div>
+            </div>
+
+            <div class="work-request--send">
+                <input type="submit" value="Send Inquiry">
+            </div>
+        </form>
+    </div>
+
+    <div id="signature">Forever Unfinished Artworx</div>
+</body>
+</html>

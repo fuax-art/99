@@ -15,10 +15,16 @@
         body {
             overflow: hidden;
             font-family: 'Arial Black', sans-serif;
-            background: linear-gradient(135deg, #09384042 0%, #02002b7e 100%);
+            background: transparent;
             height: 100vh;
             width: 100vw;
             touch-action: none;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
         }
 
         #container {
@@ -63,11 +69,9 @@
         @keyframes burstOut {
             0% { 
                 opacity: 1; 
-                transform: translate(0, 0) scale(1);
             }
             100% { 
                 opacity: 0; 
-                transform: translate(var(--tx), var(--ty)) scale(0.3);
             }
         }
 
@@ -81,7 +85,7 @@
             color: #eaff00;
             font-weight: bold;
             text-transform: uppercase;
-            cursor: vertical-text;
+            cursor: cell;
             border-radius: 8px;
             font-size: 14px;
             letter-spacing: 1px;
@@ -133,7 +137,7 @@
     </style>
 </head>
 <body>
-    <div id="vanta-bg" class="fixed inset-0 -z-10 opacity-20"></div>
+    <div id="vanta-bg"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
     <script>
@@ -162,10 +166,8 @@
     </div>
 
     <script>
-        // Base64 encoded click sound
         const clickSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBgoOEhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==');
 
-        // HIERARCHICAL DATA STRUCTURE - Customize this to add infinite nested circles!
         const data = {
             name: "",
             color: "#637b9c",
@@ -174,63 +176,63 @@
                     name: "Gallery", 
                     color: "#45556c",
                     children: [
-                        { name: "AI Art", color: "#85929E", children: [] },
-                        { name: "Digital Art", color: "#2E4053", children: [] },
-                        { name: "Physical Art", color: "#283747", children: [] }
+                        { name: "AI Art", color: "#85929E", url: "https://example.com/ai-art", children: [] },
+                        { name: "Digital Art", color: "#2E4053", url: "https://example.com/digital", children: [] },
+                        { name: "Physical Art", color: "#283747", url: "https://example.com/physical", children: [] }
                     ]
                 },
                 { 
                     name: "Shop", 
                     color: "#2e3848",
                     children: [
-                        { name: "Apparel", color: "#482E45", children: [] },
-                        { name: "Stickers", color: "#2E4831", children: [] },
-                        { name: "Skateboards", color: "#2E4548", children: [] }
+                        { name: "Apparel", color: "#482E45", url: "https://example.com/apparel", children: [] },
+                        { name: "Stickers", color: "#2E4831", url: "https://example.com/stickers", children: [] },
+                        { name: "Skateboards", color: "#2E4548", url: "https://example.com/skateboards", children: [] }
                     ]
                 },
                 { 
                     name: "NFTs", 
                     color: "#526580",
                     children: [
-                        { name: "Collection 1", color: "#528056", children: [] },
-                        { name: "Collection 2", color: "#806D52", children: [] },
-                        { name: "Mint New", color: "#80527C", children: [] }
+                        { name: "Collection 1", color: "#528056", url: "https://opensea.io/collection/your-collection", children: [] },
+                        { name: "Collection 2", color: "#806D52", url: "https://opensea.io/collection/your-collection-2", children: [] },
+                        { name: "Mint New", color: "#80527C", url: "https://example.com/mint", children: [] }
                     ]
                 },
                 { 
                     name: "Murals", 
                     color: "#8E628A",
                     children: [
-                        { name: "Completed", color: "#8E7C62", children: [] },
-                        { name: "In Progress", color: "#628E66", children: [] },
-                        { name: "Commission", color: "#62748E", children: [] }
+                        { name: "Completed", color: "#8E7C62", url: "https://example.com/completed-murals", children: [] },
+                        { name: "In Progress", color: "#628E66", url: "https://example.com/wip-murals", children: [] },
+                        { name: "Commission", color: "#62748E", url: "https://example.com/commission", children: [] }
                     ]
                 },
                 { 
                     name: "Music", 
                     color: "#4F264B",
                     children: [
-                        { name: "AI Tracks", color: "#26364F", children: [] },
-                        { name: "Lyrics", color: "#4F3F26", children: [] },
-                        { name: "Collabs", color: "#264F2A", children: [] }
+                        { name: "AI Tracks", color: "#26364F", url: "https://soundcloud.com/your-profile", children: [] },
+                        { name: "Lyrics", color: "#4F3F26", url: "https://example.com/lyrics", children: [] },
+                        { name: "Collabs", color: "#264F2A", url: "https://example.com/collabs", children: [] }
                     ]
                 },
                 { 
                     name: "Code", 
                     color: "#591717",
                     children: [
-                        { name: "Projects", color: "#175959", children: [] },
-                        { name: "Tools", color: "#385917", children: [] },
-                        { name: "Open Source", color: "#381759", children: [] }
+                        { name: "Projects", color: "#175959", url: "https://github.com/your-username", children: [] },
+                        { name: "Tools", color: "#385917", url: "https://example.com/tools", children: [] },
+                        { name: "Open Source", color: "#381759", url: "https://github.com/your-username", children: [] }
                     ]
                 },
                 { 
                     name: "About", 
                     color: "#8A0648",
                     children: [
-                    { name: "Story", color: "#06068A", children: [] },
-                        { name: "Philosophy", color: "#8A8A06", children: [] },
-                        { name: "Contact", color: "#068A48", children: [] }
+                    { name: "Story", color: "#06068A", url: "pages/about.html", children: [] },
+                        { name: "Whitepaper", color: "#8A8A06", url: "pages/whitepaper.html", children: [] },
+                        { name: "Contact", color: "#068A48", url: "pages/contact.html", children: [] }
                     ]
                 }
             ]
@@ -271,10 +273,8 @@
             const centerX = width / 2;
             const centerY = height / 2;
 
-            // Clear existing
             svg.selectAll("*").transition().duration(300).style("opacity", 0).remove();
 
-            // Create new circles
             const g = svg.append("g");
 
             const circles = g.selectAll(".circle")
@@ -293,6 +293,17 @@
                 .on("click", function(event, d) {
                     if (d.data.children && d.data.children.length > 0) {
                         handleNodeClick(event, d.data);
+                    } else if (d.data.url) {
+                        // If it's a leaf node with a URL, open it
+                        clickSound.currentTime = 0;
+                        clickSound.play().catch(() => {});
+                        const circle = event.target;
+                        const cx = parseFloat(circle.getAttribute("cx"));
+                        const cy = parseFloat(circle.getAttribute("cy"));
+                        createParticleBurst(cx, cy, d.data.color);
+                        setTimeout(() => {
+                            window.open(d.data.url, '_blank');
+                        }, 300);
                     }
                 });
 
@@ -312,7 +323,6 @@
                 .style("opacity", 0)
                 .text(d => d.data.name);
 
-            // Animate in
             if (animate) {
                 circles.transition()
                     .duration(600)
@@ -329,7 +339,6 @@
                 labels.style("opacity", 1);
             }
 
-            // Update back button visibility
             if (navigationStack.length > 1) {
                 backButton.style("display", "block");
             } else {
@@ -345,13 +354,11 @@
             clickSound.currentTime = 0;
             clickSound.play().catch(() => {});
 
-            // Particle burst
             const circle = event.target;
             const cx = parseFloat(circle.getAttribute("cx"));
             const cy = parseFloat(circle.getAttribute("cy"));
             createParticleBurst(cx, cy, nodeData.color);
 
-            // Zoom into this node
             navigationStack.push(nodeData);
             currentNode = nodeData;
             
@@ -368,12 +375,30 @@
             }
         }
 
+        function invertColor(hex) {
+            // Remove # if present
+            hex = hex.replace('#', '');
+            
+            // Convert to RGB
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            
+            // Invert
+            const invR = (255 - r).toString(16).padStart(2, '0');
+            const invG = (255 - g).toString(16).padStart(2, '0');
+            const invB = (255 - b).toString(16).padStart(2, '0');
+            
+            return `#${invR}${invG}${invB}`;
+        }
+
         function createParticleBurst(x, y, color) {
-            const particleCount = 12;
+            const particleCount = 24;
+            const invertedColor = invertColor(color);
 
             for (let i = 0; i < particleCount; i++) {
-                const angle = (Math.PI * 2 * i) / particleCount;
-                const distance = 60 + Math.random() * 40;
+                const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.3;
+                const distance = 80 + Math.random() * 80;
                 const tx = Math.cos(angle) * distance;
                 const ty = Math.sin(angle) * distance;
 
@@ -381,25 +406,30 @@
                     .attr("class", "particle")
                     .attr("cx", x)
                     .attr("cy", y)
-                    .attr("r", 3 + Math.random() * 3)
-                    .attr("fill", color)
-                    .style("--tx", `${tx}px`)
-                    .style("--ty", `${ty}px`)
+                    .attr("r", 4 + Math.random() * 4)
+                    .attr("fill", invertedColor)
+                    .style("filter", `drop-shadow(0 0 6px ${invertedColor})`)
                     .attr("opacity", 1);
 
                 particle.classed("particle-burst", true);
-                setTimeout(() => particle.remove(), 800);
+                
+                particle.transition()
+                    .duration(1500)
+                    .ease(d3.easeQuadOut)
+                    .attr("cx", x + tx)
+                    .attr("cy", y + ty)
+                    .attr("opacity", 0)
+                    .attr("r", 1)
+                    .remove();
             }
         }
 
-        // Responsive resize
         let resizeTimer;
         window.addEventListener("resize", () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => createVisualization(currentNode, false), 250);
         });
 
-        // Initialize
         createVisualization(data);
     </script>
 <div>
