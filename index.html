@@ -37,24 +37,71 @@
             display: block;
             width: 100%;
             height: 100%;
+            cursor: default;
+        }
+
+        svg.can-go-back {
+            cursor: pointer;
         }
 
         .circle {
             cursor: pointer;
-            transition: filter 0.7s ease;
+            transition: filter 0.3s ease;
         }
 
         .circle:hover {
-            filter: drop-shadow(0 0 45px currentColor) drop-shadow(0 0 45px currentColor) brightness(1.2);
+            filter: brightness(1.2);
+        }
+
+        .circle-bouncing {
+            pointer-events: all;
+        }
+
+        .circle-shop {
+            filter: drop-shadow(0 0 20px #0FF4E6) drop-shadow(0 0 40px #0FF4E6);
+        }
+
+        .circle-shop:hover {
+            filter: drop-shadow(0 0 30px #0FF4E6) drop-shadow(0 0 60px #0FF4E6);
+        }
+
+        .circle-nft {
+            filter: drop-shadow(0 0 15px #FF0040) drop-shadow(0 0 30px #FF0040);
+            animation: nftPulse 2s ease-in-out infinite;
+        }
+
+        .circle-nft:hover {
+            filter: drop-shadow(0 0 25px #FF0040) drop-shadow(0 0 50px #FF0040);
+            animation: none;
+        }
+
+        @keyframes nftPulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 15px #FF0040) drop-shadow(0 0 30px #FF0040);
+            }
+            50% { 
+                filter: drop-shadow(0 0 20px #FF0040) drop-shadow(0 0 40px #FF0040);
+            }
+        }
+
+        .circle-parent {
+            filter: drop-shadow(0 0 8px #404040);
+        }
+
+        .circle-parent:hover {
+            filter: drop-shadow(0 0 15px #B8B8B8);
+        }
+
+        .circle-child {
+            opacity: 0.8;
         }
 
         .circle-text {
             pointer-events: none;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            fill: rgba(0, 217, 255, 0.231);
-            text-shadow: 2px 2px 8px rgba(0, 0, 117, 0.158);
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             transition: opacity 0.5s ease;
         }
 
@@ -75,36 +122,27 @@
             }
         }
 
-        #back-button {
+        #back-hint {
             position: absolute;
             top: 20px;
             left: 20px;
             padding: 12px 24px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 2px solid #00f7ffb2;
-            color: #eaff00;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: cell;
-            border-radius: 8px;
-            font-size: 14px;
+            background: rgba(26, 26, 26, 0.6);
+            border: 2px solid #0FF4E6;
+            color: #B8B8B8;
+            font-size: 12px;
             letter-spacing: 1px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
             z-index: 1000;
             display: none;
-        }
-
-        #back-button:hover {
-            background: rgb(0, 200, 255);
-            box-shadow: 0 0 20px #00f7ff4e;
+            pointer-events: none;
+            transform: skew(-0.5deg);
         }
 
         #signature {
             position: absolute;
             bottom: 20px;
             right: 20px;
-            color: #eeff00;
+            color: #B8B8B8;
             font-size: 12px;
             text-shadow: 0 0 10px #000000;
             font-style: italic;
@@ -117,19 +155,21 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            color: #00fff75e;
+            color: #0FF4E6;
             font-size: 14px;
-            text-shadow: 0 0 10px #000000dd;
+            text-shadow: 0 0 10px #000000;
             pointer-events: none;
             z-index: 1000;
             text-align: center;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
         @media (max-width: 768px) {
             .circle-text {
                 font-size: 12px;
             }
-            #back-button {
+            #back-hint {
                 padding: 8px 16px;
                 font-size: 12px;
             }
@@ -150,8 +190,8 @@
             minWidth: 200.00,
             scale: 1.00,
             scaleMobile: 1.00,
-            color: 0xfeff,
-            backgroundColor: 0x0,
+            color: 0x0FF4E6,
+            backgroundColor: 0x000000,
             points: 9.00,
             maxDistance: 27.00,
             spacing: 16.00,
@@ -159,7 +199,7 @@
         })
     </script>
     <div id="container">
-        <button id="back-button">← BACK</button>
+        <div id="back-hint">Click outside to go back</div>
         <div id="breadcrumb"></div>
         <svg id="canvas"></svg>
         <div id="signature">Forever Unfinished Artworx</div>
@@ -168,71 +208,83 @@
     <script>
         const clickSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBgoOEhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==');
 
+        const COLORS = {
+            SHOP: "#0FF4E6",
+            SHOP_CHILD: "#0FF4E6",
+            NFT: "#FF0040",
+            NFT_CHILD: "#FF0040",
+            DARK_CONCRETE: "#1A1A1A",
+            MEDIUM_CONCRETE: "#2D2D2D",
+            STEEL: "#404040",
+            WHITE: "#FFFFFF",
+            GRAY: "#B8B8B8"
+        };
+
         const data = {
             name: "",
-            color: "#637b9c",
+            color: "#000000",
             children: [
                 { 
                     name: "Gallery", 
-                    color: "#45556c",
+                    color: COLORS.MEDIUM_CONCRETE,
                     children: [
-                        { name: "AI Art", color: "#85929E", url: "https://example.com/ai-art", children: [] },
-                        { name: "Digital Art", color: "#2E4053", url: "https://example.com/digital", children: [] },
-                        { name: "Physical Art", color: "#283747", url: "https://example.com/physical", children: [] }
+                        { name: "AI Art", color: COLORS.STEEL, url: "https://example.com/ai-art", children: [] },
+                        { name: "Digital", color: COLORS.STEEL, url: "https://example.com/digital", children: [] },
+                        { name: "Physical", color: COLORS.STEEL, url: "https://example.com/physical", children: [] }
                     ]
                 },
                 { 
                     name: "Shop", 
-                    color: "#2e3848",
+                    color: COLORS.SHOP,
                     children: [
-                        { name: "Apparel", color: "#482E45", url: "https://example.com/apparel", children: [] },
-                        { name: "Stickers", color: "#2E4831", url: "https://example.com/stickers", children: [] },
-                        { name: "Skateboards", color: "#2E4548", url: "https://example.com/skateboards", children: [] }
+                        { name: "Apparel", color: COLORS.SHOP_CHILD, url: "https://example.com/apparel", children: [] },
+                        { name: "Stickers", color: COLORS.SHOP_CHILD, url: "https://example.com/stickers", children: [] },
+                        { name: "Skateboards", color: COLORS.SHOP_CHILD, url: "https://example.com/skateboards", children: [] }
                     ]
                 },
                 { 
                     name: "NFTs", 
-                    color: "#526580",
+                    color: COLORS.NFT,
                     children: [
-                        { name: "Survival Motion", color: "#528056", url: "https://opensea.io/collection/your-collection", children: [] },
-                        { name: "CyberPugz First Edition", color: "#806D52", url: "https://opensea.io/collection/your-collection-2", children: [] },
-                        { name: "Create A Collection", color: "#80527C", url: "https://example.com/mint", children: [] }
+                        { name: "Collection 1", color: COLORS.NFT_CHILD, url: "https://opensea.io/collection/your-collection", children: [] },
+                        { name: "Collection 2", color: COLORS.NFT_CHILD, url: "https://opensea.io/collection/your-collection-2", children: [] },
+                        { name: "Mint New", color: COLORS.NFT_CHILD, url: "https://example.com/mint", children: [] }
                     ]
                 },
                 { 
-                    name: "Writing", 
-                    color: "#8E628A",
+                    name: "Writing not on the wall", 
+                    color: COLORS.DARK_CONCRETE,
                     children: [
-                        { name: "Have You Herd  about MyCurd", color: "#8E7C62", url: "https://example.com/completed-murals", children: [] },
-                        { name: "Aesthetics of Decay", color: "#628E66", url: "https://example.com/wip-murals", children: [] },
-                        { name: "Commission", color: "#62748E", url: "https://example.com/commission", children: [] }
+                        { name: "Have You Herd About MyCurd", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/have-you-herd-about-mycurd.html", children: [] },
+                        { name: "Ascthetics of Decay", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/aesthetics-of-decay.html", children: [] },
+                        { name: "Monster & the Canvas: Soliloquy in Smoke", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/monster-and-canvas-soliloquy-in-smoke.html", children: [] }
                     ]
                 },
                 { 
                     name: "Music", 
-                    color: "#4F264B",
+                    color: COLORS.MEDIUM_CONCRETE,
                     children: [
-                        { name: "AI Tracks", color: "#26364F", url: "https://soundcloud.com/your-profile", children: [] },
-                        { name: "Lyrics", color: "#4F3F26", url: "https://example.com/lyrics", children: [] },
-                        { name: "Collabs", color: "#264F2A", url: "https://example.com/collabs", children: [] }
+                        { name: "AI Tracks", color: COLORS.STEEL, url: "https://soundcloud.com/your-profile", children: [] },
+                        { name: "Lyrics", color: COLORS.STEEL, url: "https://example.com/lyrics", children: [] },
+                        { name: "Collabs", color: COLORS.STEEL, url: "https://example.com/collabs", children: [] }
                     ]
                 },
                 { 
                     name: "Code", 
-                    color: "#591717",
+                    color: COLORS.DARK_CONCRETE,
                     children: [
-                        { name: "Projects", color: "#175959", url: "https://github.com/your-username", children: [] },
-                        { name: "Tools", color: "#385917", url: "https://example.com/tools", children: [] },
-                        { name: "Open Source", color: "#381759", url: "https://github.com/your-username", children: [] }
+                        { name: "Projects", color: COLORS.STEEL, url: "https://github.com/fuax-art", children: [] },
+                        { name: "Tools", color: COLORS.STEEL, url: "https://example.com/tools", children: [] },
+                        { name: "Open Source", color: COLORS.STEEL, url: "https://github.com/fuax-art", children: [] }
                     ]
                 },
                 { 
                     name: "About", 
-                    color: "#8A0648",
+                    color: COLORS.MEDIUM_CONCRETE,
                     children: [
-                    { name: "Story", color: "#06068A", url: "pages/about.html", children: [] },
-                        { name: "Whitepaper", color: "#8A8A06", url: "pages/whitepaper.html", children: [] },
-                        { name: "Contact", color: "#068A48", url: "pages/contact.html", children: [] }
+                        { name: "Story", color: COLORS.STEEL, url: "pages/about.html", children: [] },
+                        { name: "Whitepaper", color: COLORS.STEEL, url: "pages/whitepaper.html", children: [] },
+                        { name: "Contact", color: COLORS.STEEL, url: "pages/contact.html", children: [] }
                     ]
                 }
             ]
@@ -242,28 +294,67 @@
         let height = window.innerHeight;
         let currentNode = data;
         let navigationStack = [data];
+        let animationFrameId = null;
+        let bouncingCircles = [];
         
         const svg = d3.select("#canvas");
-        const backButton = d3.select("#back-button");
+        const backHint = d3.select("#back-hint");
         const breadcrumb = d3.select("#breadcrumb");
 
-        backButton.on("click", navigateBack);
+        svg.on("click", function(event) {
+            if (event.target.tagName === "svg" && navigationStack.length > 1) {
+                navigateBack();
+            }
+        });
 
         function updateBreadcrumb() {
-            const path = navigationStack.map(n => n.name).join(" > ");
-            breadcrumb.text(path);
+            const path = navigationStack.map(n => n.name).filter(n => n).join(" > ");
+            breadcrumb.text(path || "FOREVER UNFINISHED");
+        }
+
+        function findOriginalNode(parentNode, nodeName) {
+            if (parentNode.name === nodeName) {
+                return parentNode;
+            }
+            if (parentNode.children) {
+                for (let child of parentNode.children) {
+                    if (child.name === nodeName) {
+                        return child;
+                    }
+                }
+            }
+            return null;
         }
 
         function createVisualization(node, animate = true) {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            bouncingCircles = [];
+
             width = window.innerWidth;
             height = window.innerHeight;
             svg.attr("viewBox", `0 0 ${width} ${height}`);
+
+            const isRootLevel = node === data;
 
             const pack = d3.pack()
                 .size([width * 0.85, height * 0.85])
                 .padding(25);
 
-            const root = d3.hierarchy(node)
+            let rootForPacking = node;
+            if (isRootLevel) {
+                rootForPacking = {
+                    ...node,
+                    children: node.children.map(child => ({
+                        ...child,
+                        children: []
+                    }))
+                };
+            }
+
+            const root = d3.hierarchy(rootForPacking)
                 .sum(d => d.children && d.children.length > 0 ? 0 : 1)
                 .sort((a, b) => b.value - a.value);
 
@@ -281,20 +372,42 @@
                 .data(nodes)
                 .enter()
                 .append("circle")
-                .attr("class", "circle")
+                .attr("class", d => {
+                    let classes = "circle";
+                    if (d.data.name === "Shop") classes += " circle-shop";
+                    else if (d.data.name === "NFTs") classes += " circle-nft";
+                    else if (d.depth === 1) classes += " circle-parent";
+                    else if (d.depth === 2) classes += " circle-child";
+                    if (isRootLevel && d.depth === 1) classes += " circle-bouncing";
+                    return classes;
+                })
                 .attr("cx", d => d.x + (centerX - width * 0.425))
                 .attr("cy", d => d.y + (centerY - height * 0.425))
                 .attr("r", animate ? 0 : d => d.r)
-                .attr("fill", d => d.data.color || "#666")
-                .attr("stroke", d => d.depth === 0 ? "#00ff88" : "none")
-                .attr("stroke-width", d => d.depth === 0 ? 4 : 0)
-                .style("filter", d => `drop-shadow(0 0 ${d.depth === 0 ? 25 : 15}px ${d.data.color})`)
+                .attr("fill", d => d.data.color || COLORS.DARK_CONCRETE)
+                .attr("stroke", d => {
+                    if (d.data.name === "Shop") return COLORS.WHITE;
+                    if (d.data.name === "NFTs") return COLORS.SHOP;
+                    if (d.depth === 1) return COLORS.STEEL;
+                    if (d.depth === 2) return COLORS.GRAY;
+                    return "none";
+                })
+                .attr("stroke-width", d => {
+                    if (d.data.name === "Shop") return 4;
+                    if (d.data.name === "NFTs") return 4;
+                    if (d.depth === 1) return 2;
+                    if (d.depth === 2) return 1;
+                    return 0;
+                })
                 .style("opacity", 0)
                 .on("click", function(event, d) {
-                    if (d.data.children && d.data.children.length > 0) {
-                        handleNodeClick(event, d.data);
+                    event.stopPropagation();
+                    // Find original node data with children intact
+                    const originalNodeData = findOriginalNode(node, d.data.name);
+                    
+                    if (originalNodeData && originalNodeData.children && originalNodeData.children.length > 0) {
+                        handleNodeClick(event, originalNodeData);
                     } else if (d.data.url) {
-                        // If it's a leaf node with a URL, open it
                         clickSound.currentTime = 0;
                         clickSound.play().catch(() => {});
                         const circle = event.target;
@@ -317,10 +430,17 @@
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "middle")
                 .style("font-size", d => {
-                    const baseSize = Math.max(d.r / 3.5, 10);
-                    return d.depth === 0 ? baseSize * 1.5 : baseSize;
+                    const baseSize = Math.max(d.r / 5, 8);
+                    return `${baseSize}px`;
+                })
+                .style("fill", d => {
+                    if (d.data.name === "Shop" || d.data.name === "NFTs") return COLORS.WHITE;
+                    if (d.depth === 1) return COLORS.GRAY;
+                    if (d.depth === 2) return COLORS.WHITE;
+                    return COLORS.SHOP;
                 })
                 .style("opacity", 0)
+                .style("display", d => d.depth === 1 ? "block" : "none")
                 .text(d => d.data.name);
 
             if (animate) {
@@ -328,21 +448,51 @@
                     .duration(600)
                     .delay((d, i) => i * 30)
                     .attr("r", d => d.r)
-                    .style("opacity", 1);
+                    .style("opacity", d => d.depth === 2 ? 0.8 : 1);
 
                 labels.transition()
                     .duration(600)
                     .delay((d, i) => i * 30)
                     .style("opacity", 1);
             } else {
-                circles.style("opacity", 1);
+                circles.style("opacity", d => d.depth === 2 ? 0.8 : 1);
                 labels.style("opacity", 1);
             }
 
+            if (isRootLevel) {
+                const mainCircle = nodes[0];
+                const bounceNodes = nodes.filter(d => d.depth === 1);
+                
+                bouncingCircles = bounceNodes.map((d, i) => {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 0.2 + Math.random() * 0.3;
+                    const circleIndex = i + 1;
+                    const labelIndex = i + 1;
+                    
+                    return {
+                        node: d,
+                        x: d.x,
+                        y: d.y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        element: circles.nodes()[circleIndex],
+                        label: labels.nodes()[labelIndex],
+                        radius: d.r,
+                        containerRadius: mainCircle.r,
+                        containerX: mainCircle.x,
+                        containerY: mainCircle.y
+                    };
+                });
+
+                startBounceAnimation();
+            }
+
             if (navigationStack.length > 1) {
-                backButton.style("display", "block");
+                backHint.style("display", "block");
+                svg.classed("can-go-back", true);
             } else {
-                backButton.style("display", "none");
+                backHint.style("display", "none");
+                svg.classed("can-go-back", false);
             }
 
             updateBreadcrumb();
@@ -369,32 +519,97 @@
 
         function navigateBack() {
             if (navigationStack.length > 1) {
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
                 navigationStack.pop();
                 currentNode = navigationStack[navigationStack.length - 1];
                 createVisualization(currentNode);
             }
         }
 
-        function invertColor(hex) {
-            // Remove # if present
-            hex = hex.replace('#', '');
-            
-            // Convert to RGB
-            const r = parseInt(hex.substr(0, 2), 16);
-            const g = parseInt(hex.substr(2, 2), 16);
-            const b = parseInt(hex.substr(4, 2), 16);
-            
-            // Invert
-            const invR = (255 - r).toString(16).padStart(2, '0');
-            const invG = (255 - g).toString(16).padStart(2, '0');
-            const invB = (255 - b).toString(16).padStart(2, '0');
-            
-            return `#${invR}${invG}${invB}`;
+        function startBounceAnimation() {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const offsetX = centerX - width * 0.425;
+            const offsetY = centerY - height * 0.425;
+
+            function animate() {
+                bouncingCircles.forEach(circle => {
+                    circle.x += circle.vx;
+                    circle.y += circle.vy;
+
+                    const dx = circle.x - circle.containerX;
+                    const dy = circle.y - circle.containerY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const maxDistance = circle.containerRadius - circle.radius;
+
+                    if (distance > maxDistance) {
+                        const angle = Math.atan2(dy, dx);
+                        circle.x = circle.containerX + Math.cos(angle) * maxDistance;
+                        circle.y = circle.containerY + Math.sin(angle) * maxDistance;
+
+                        const normalX = dx / distance;
+                        const normalY = dy / distance;
+                        const dotProduct = circle.vx * normalX + circle.vy * normalY;
+                        circle.vx = circle.vx - 2 * dotProduct * normalX;
+                        circle.vy = circle.vy - 2 * dotProduct * normalY;
+
+                        circle.vx += (Math.random() - 0.5) * 0.05;
+                        circle.vy += (Math.random() - 0.5) * 0.05;
+                    }
+
+                    if (circle.element) {
+                        circle.element.setAttribute("cx", circle.x + offsetX);
+                        circle.element.setAttribute("cy", circle.y + offsetY);
+                    }
+                    if (circle.label) {
+                        circle.label.setAttribute("x", circle.x + offsetX);
+                        circle.label.setAttribute("y", circle.y + offsetY);
+                    }
+                });
+
+                for (let i = 0; i < bouncingCircles.length; i++) {
+                    for (let j = i + 1; j < bouncingCircles.length; j++) {
+                        const c1 = bouncingCircles[i];
+                        const c2 = bouncingCircles[j];
+                        
+                        const dx = c2.x - c1.x;
+                        const dy = c2.y - c1.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        const minDistance = c1.radius + c2.radius;
+
+                        if (distance < minDistance) {
+                            const angle = Math.atan2(dy, dx);
+                            const targetX = c1.x + Math.cos(angle) * minDistance;
+                            const targetY = c1.y + Math.sin(angle) * minDistance;
+                            const ax = (targetX - c2.x) * 0.5;
+                            const ay = (targetY - c2.y) * 0.5;
+                            c1.x -= ax;
+                            c1.y -= ay;
+                            c2.x += ax;
+                            c2.y += ay;
+
+                            const tempVx = c1.vx;
+                            const tempVy = c1.vy;
+                            c1.vx = c2.vx;
+                            c1.vy = c2.vy;
+                            c2.vx = tempVx;
+                            c2.vy = tempVy;
+                        }
+                    }
+                }
+
+                animationFrameId = requestAnimationFrame(animate);
+            }
+
+            animate();
         }
 
         function createParticleBurst(x, y, color) {
             const particleCount = 24;
-            const invertedColor = invertColor(color);
+            const particleColor = COLORS.WHITE;
 
             for (let i = 0; i < particleCount; i++) {
                 const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.3;
@@ -407,8 +622,8 @@
                     .attr("cx", x)
                     .attr("cy", y)
                     .attr("r", 4 + Math.random() * 4)
-                    .attr("fill", invertedColor)
-                    .style("filter", `drop-shadow(0 0 6px ${invertedColor})`)
+                    .attr("fill", particleColor)
+                    .style("filter", `drop-shadow(0 0 6px ${color})`)
                     .attr("opacity", 1);
 
                 particle.classed("particle-burst", true);
@@ -432,14 +647,5 @@
 
         createVisualization(data);
     </script>
-<div>
-  <style>.pp-98F4SRH87EXYA{text-align:center;border:none;border-radius:0.25rem;min-width:11.625rem;padding:0 2rem;height:2.625rem;font-weight:bold;background-color:#FFD140;color:#000000;font-family:"Helvetica Neue",Arial,sans-serif;font-size:1rem;line-height:1.25rem;cursor:pointer;}</style>
-  <form action="https://www.paypal.com/ncp/payment/98F4SRH87EXYA" method="post" target="_blank" style="display:inline-grid;justify-items:center;align-content:start;gap:0.5rem;">
-    <input class="pp-98F4SRH87EXYA" type="submit" value="Donate to the chaos" />
-    <img src=https://www.paypalobjects.com/images/Debit_Credit_APM.svg alt="cards" />
-    <section style="font-size: 0.75rem;"> Powered by <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.875rem;vertical-align:middle;"/></section>
-  </form>
-</div>
-
 </body>
 </html>
