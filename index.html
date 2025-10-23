@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+     <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-NBK8TBX2');</script>
+  <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forever Unfinished Artworx</title>
@@ -46,7 +53,7 @@
 
         .circle {
             cursor: pointer;
-            transition: filter 0.3s ease;
+            transition: filter 0.5s ease;
         }
 
         .circle:hover {
@@ -110,7 +117,7 @@
         }
 
         .particle-burst {
-            animation: burstOut 1.5s ease-out forwards;
+            animation: burstOut 3s ease-out forwards;
         }
 
         @keyframes burstOut {
@@ -142,9 +149,9 @@
             position: absolute;
             bottom: 20px;
             right: 20px;
-            color: #B8B8B8;
+            color: #ff5e00;
             font-size: 12px;
-            text-shadow: 0 0 10px #000000;
+            text-shadow: 0 0 10px rgba(255, 94, 0, 0.55);
             font-style: italic;
             pointer-events: none;
             z-index: 1000;
@@ -199,14 +206,178 @@
         })
     </script>
     <div id="container">
-        <div id="back-hint">Click outside to go back</div>
+        <div id="back-hint">Click outside to exit</div>
         <div id="breadcrumb"></div>
         <svg id="canvas"></svg>
-        <div id="signature">Forever Unfinished Artworx</div>
+        <div id="signature">fauxfuax</div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="https://unpkg.com/idb-keyval@6/dist/idb-keyval-iife.min.js"></script>
+
     <script>
-        const clickSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBgoOEhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==');
+        // Prefer local audio assets in /assets/audio/, with remote fallbacks cached to IndexedDB.
+        const LOCAL_SOUNDS = {
+            click: 'assets/audio/click.ogg',
+            hover: 'assets/audio/hover.ogg',
+            back:  'assets/audio/back.ogg'
+        };
+
+        // Remote demo fallbacks (used if local assets missing)
+        const DEMO_SOUNDS = {
+            click: 'https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg',
+            hover: 'https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg',
+            back:  'https://actions.google.com/sounds/v1/alarms/beep_short.ogg'
+        };
+
+        // reuse SOUND_DB_PREFIX and loadAndCacheAudio/ensureHowlForKey implemented below to cache local or remote files
+
+        // helper to play click
+        async function playClick() {
+            try {
+                const local = LOCAL_SOUNDS.click;
+                const h = await ensureHowlForKey('click', local || DEMO_SOUNDS.click);
+                if (h) h.play();
+            } catch (e) {
+                console.warn('playClick failed', e);
+            }
+        }
+
+        // --- Additional sounds: hover and back navigation ---
+        const SOUND_DB_PREFIX = 'sound-';
+
+        let hoverHowl = null;
+        let backHowl = null;
+
+        async function loadAndCacheAudio(key, url) {
+            const dbKey = SOUND_DB_PREFIX + key + '-v1';
+            try {
+                let blob = await idbKeyval.get(dbKey).catch(() => null);
+                if (!blob) {
+                    const resp = await fetch(url, { cache: 'reload' });
+                    if (!resp.ok) throw new Error('fetch failed');
+                    blob = await resp.blob();
+                    await idbKeyval.set(dbKey, blob);
+                }
+                return blob;
+            } catch (e) {
+                console.warn('Failed to load/cache', key, e);
+                return null;
+            }
+        }
+
+        async function ensureHowlForKey(key, url) {
+            if (key === 'hover' && hoverHowl) return hoverHowl;
+            if (key === 'back' && backHowl) return backHowl;
+
+            let blob = await loadAndCacheAudio(key, url);
+            if (blob) {
+                const objUrl = URL.createObjectURL(blob);
+                const h = new Howl({ src: [objUrl], html5: false, volume: 1.0 });
+                h._objectUrl = objUrl;
+                const origUnload = h.unload.bind(h);
+                h.unload = function() {
+                    if (this._objectUrl) {
+                        URL.revokeObjectURL(this._objectUrl);
+                        this._objectUrl = null;
+                    }
+                    origUnload();
+                };
+                if (key === 'hover') hoverHowl = h;
+                if (key === 'back') backHowl = h;
+                return h;
+            }
+
+            // fallback: try to create Howl directly from url (may be CORS-limited)
+            try {
+                const h = new Howl({ src: [url], html5: false, volume: 1.0 });
+                if (key === 'hover') hoverHowl = h;
+                if (key === 'back') backHowl = h;
+                return h;
+            } catch (e) {
+                console.warn('Fallback Howl failed for', key, e);
+                return null;
+            }
+        }
+
+        async function playHover() {
+            if (!isSoundEnabled()) return;
+            try {
+                const h = await ensureHowlForKey('hover', DEMO_SOUNDS.hover);
+                if (h) h.play();
+            } catch (e) {}
+        }
+
+        async function playBack() {
+            if (!isSoundEnabled()) return;
+            try {
+                const h = await ensureHowlForKey('back', DEMO_SOUNDS.back);
+                if (h) h.play();
+            } catch (e) {}
+        }
+
+        // Sound toggle UI (small control)
+        function isSoundEnabled() {
+            const v = localStorage.getItem('ff_sound_enabled');
+            return v === null ? true : v === '1';
+        }
+
+        function toggleSoundEnabled() {
+            // toggle global mute
+            const muted = !isMuted();
+            setMuted(muted);
+        }
+
+        // Inject toggle button
+        (function createSoundToggle() {
+            const btn = document.createElement('button');
+            btn.id = 'sound-toggle';
+            btn.title = 'Toggle sounds';
+            btn.style.position = 'absolute';
+            btn.style.top = '18px';
+            btn.style.right = '18px';
+            btn.style.zIndex = 1001;
+            btn.style.background = 'rgba(26,26,26,0.6)';
+            btn.style.border = '2px solid #0FF4E6';
+            btn.style.color = '#B8B8B8';
+            btn.style.padding = '6px 10px';
+            btn.style.fontSize = '14px';
+            btn.style.cursor = 'pointer';
+            btn.style.borderRadius = '6px';
+            btn.addEventListener('click', () => toggleSoundEnabled());
+            btn.textContent = isMuted() ? '�' : '�';
+            document.getElementById('container').appendChild(btn);
+        })();
+
+        // Warm up demo sounds in background (non-blocking)
+        (async function warmupDemoSounds() {
+            // do not block: fetch but don't await long
+            ensureHowlForKey('hover', DEMO_SOUNDS.hover).catch(()=>{});
+            ensureHowlForKey('back', DEMO_SOUNDS.back).catch(()=>{});
+        })();
+
+        // Global mute helpers (Howler global mute + persisted setting)
+        function isMuted() {
+            const v = localStorage.getItem('ff_muted');
+            return v === '1';
+        }
+
+        function setMuted(val) {
+            localStorage.setItem('ff_muted', val ? '1' : '0');
+            Howler.mute(val);
+            const btn = document.getElementById('sound-toggle');
+            if (btn) btn.textContent = val ? '🔈' : '🔊';
+        }
+
+        // global hotkey: press 'm' to toggle mute
+        window.addEventListener('keydown', (e) => {
+            if (e.key && e.key.toLowerCase() === 'm') {
+                setMuted(!isMuted());
+            }
+        });
+
+        // ensure persisted mute setting applied
+        setTimeout(() => setMuted(isMuted()), 0);
 
         const COLORS = {
             SHOP: "#0FF4E6",
@@ -221,12 +392,13 @@
         };
 
         const data = {
-            name: "",
+            name: "FUAX",
             color: "#000000",
             children: [
                 { 
                     name: "Gallery", 
                     color: COLORS.MEDIUM_CONCRETE,
+                    image: "path/to/gallery.jpg", // ADD YOUR IMAGE HERE
                     children: [
                         { name: "AI Art", color: COLORS.STEEL, url: "https://example.com/ai-art", children: [] },
                         { name: "Digital", color: COLORS.STEEL, url: "https://example.com/digital", children: [] },
@@ -236,6 +408,7 @@
                 { 
                     name: "Shop", 
                     color: COLORS.SHOP,
+                    image: "assets/img/merch.png", // ADD YOUR IMAGE HERE
                     children: [
                         { name: "Prints & More", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/", children: [] },
                         { name: "Bomber", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/product/premium-recycled-bomber-jacket/SFSGD5FM7W6XQWRRGFVMDW2O?cs=true&cst=custom", children: [] },
@@ -246,6 +419,7 @@
                 { 
                     name: "NFTs", 
                     color: COLORS.NFT,
+                    image: "path/to/nft.jpg", // ADD YOUR IMAGE HERE
                     children: [
                         { name: "Survival Motion", color: COLORS.NFT_CHILD, url: "https://opensea.io/collection/survival-motion", children: [] },
                         { name: "Cyber Pugz", color: COLORS.NFT_CHILD, url: "https://opensea.io/collection/cyber-pugz", children: [] },
@@ -274,7 +448,7 @@
                     name: "Code", 
                     color: COLORS.DARK_CONCRETE,
                     children: [
-                        { name: "Proj", color: COLORS.STEEL, url: "https://github.com/fuax-art", children: [] },
+                        { name: "Projects", color: COLORS.STEEL, url: "https://github.com/fuax-art", children: [] },
                         { name: "Tools", color: COLORS.STEEL, url: "https://example.com/tools", children: [] },
                         { name: "Open", color: COLORS.STEEL, url: "https://github.com/fuax-art", children: [] }
                     ]
@@ -368,6 +542,24 @@
             svg.selectAll("*").transition().duration(300).style("opacity", 0).remove();
 
             const g = svg.append("g");
+            const defs = svg.append("defs");
+
+            // Create patterns for images
+            nodes.forEach((d, i) => {
+                if (d.data.image) {
+                    const pattern = defs.append("pattern")
+                        .attr("id", `img-${i}`)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternContentUnits", "objectBoundingBox");
+
+                    pattern.append("image")
+                        .attr("href", d.data.image)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("preserveAspectRatio", "xMidYMid slice");
+                }
+            });
 
             const circles = g.selectAll(".circle")
                 .data(nodes)
@@ -385,7 +577,7 @@
                 .attr("cx", d => d.x + (centerX - width * 0.425))
                 .attr("cy", d => d.y + (centerY - height * 0.425))
                 .attr("r", animate ? 0 : d => d.r)
-                .attr("fill", d => d.data.color || COLORS.DARK_CONCRETE)
+                .attr("fill", (d, i) => d.data.image ? `url(#img-${i})` : (d.data.color || COLORS.DARK_CONCRETE))
                 .attr("stroke", d => {
                     if (d.data.name === "Shop") return COLORS.WHITE;
                     if (d.data.name === "NFTs") return COLORS.SHOP;
@@ -403,14 +595,12 @@
                 .style("opacity", 0)
                 .on("click", function(event, d) {
                     event.stopPropagation();
-                    // Find original node data with children intact
                     const originalNodeData = findOriginalNode(node, d.data.name);
                     
                     if (originalNodeData && originalNodeData.children && originalNodeData.children.length > 0) {
                         handleNodeClick(event, originalNodeData);
                     } else if (d.data.url) {
-                        clickSound.currentTime = 0;
-                        clickSound.play().catch(() => {});
+                        playClick();
                         const circle = event.target;
                         const cx = parseFloat(circle.getAttribute("cx"));
                         const cy = parseFloat(circle.getAttribute("cy"));
@@ -419,6 +609,10 @@
                             window.open(d.data.url, '_blank');
                         }, 300);
                     }
+                })
+                .on("pointerenter", function(event, d) {
+                    // play hover sound when pointer enters an interactive circle
+                    playHover();
                 });
 
             const labels = g.selectAll(".circle-text")
@@ -441,8 +635,45 @@
                     return COLORS.SHOP;
                 })
                 .style("opacity", 0)
-                .style("display", d => d.depth === 1 ? "block" : "none")
-                .text(d => d.data.name);
+                .style("display", d => (d.depth === 1 || d.depth === 2) ? "block" : "none")
+                .each(function(d) {
+                    // support optional multi-line labels per node:
+                    // priority: d.data.labelLines (array) -> d.data.name with '\n' -> d.data.maxWordsPerLine -> auto 1-2 lines
+                    const lineHeight = 1.0; // em
+                    const textEl = d3.select(this);
+                    textEl.selectAll('tspan').remove();
+
+                    let lines = [];
+                    if (d.data && Array.isArray(d.data.labelLines) && d.data.labelLines.length) {
+                        lines = d.data.labelLines.map(x => String(x).trim()).filter(Boolean);
+                    } else if (d.data && typeof d.data.name === 'string' && d.data.name.indexOf('\n') !== -1) {
+                        lines = d.data.name.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+                    } else {
+                        const words = (d.data && d.data.name ? String(d.data.name) : '').split(/\s+/).filter(Boolean);
+                        if (d.data && Number.isInteger(d.data.maxWordsPerLine) && d.data.maxWordsPerLine > 0) {
+                            const n = d.data.maxWordsPerLine;
+                            for (let i = 0; i < words.length; i += n) {
+                                lines.push(words.slice(i, i + n).join(' '));
+                            }
+                        } else {
+                            // default: if short (<=2 words) keep single line, otherwise split into two balanced lines
+                            if (words.length <= 2) lines = [words.join(' ')];
+                            else {
+                                const half = Math.ceil(words.length / 2);
+                                lines = [words.slice(0, half).join(' '), words.slice(half).join(' ')];
+                            }
+                        }
+                    }
+
+                    if (!lines.length) return;
+                    lines.forEach((line, i) => {
+                        const dy = i === 0 ? `${-((lines.length - 1) / 2) * lineHeight}em` : `${lineHeight}em`;
+                        textEl.append('tspan')
+                            .text(line)
+                            .attr('dy', dy)
+                            .attr('x', null);
+                    });
+                });
 
             if (animate) {
                 circles.transition()
@@ -502,8 +733,7 @@
         function handleNodeClick(event, nodeData) {
             event.stopPropagation();
             
-            clickSound.currentTime = 0;
-            clickSound.play().catch(() => {});
+        playClick();
 
             const circle = event.target;
             const cx = parseFloat(circle.getAttribute("cx"));
@@ -520,6 +750,8 @@
 
         function navigateBack() {
             if (navigationStack.length > 1) {
+                // play navigation back sound
+                playBack();
                 if (animationFrameId) {
                     cancelAnimationFrame(animationFrameId);
                     animationFrameId = null;
