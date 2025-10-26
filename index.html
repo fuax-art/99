@@ -819,7 +819,6 @@
                         const dyPx = i === 0 ? firstDyPx : (fontSize * lineHeightEm);
                         textEl.append('tspan')
                             .text(line)
-                            .attr('x', xPos)
                             .attr('dy', dyPx + 'px')
                             .style('font-size', fontSize + 'px')
                             .style('dominant-baseline', 'middle');
