@@ -14,11 +14,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* Local placeholder font-face declarations. Replace the placeholder files in assets/fonts/ with your real .woff2/.woff/.ttf files as needed. */
-        @font-face { font-family: 'ModernA'; src: url('assets/fonts/PLACEHOLDER-ModernA.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'SerifB'; src: url('assets/fonts/PLACEHOLDER-SerifB.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'VCR'; src: url('assets/fonts/PLACEHOLDER-VCR-OSD-Mono.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'DisplayC'; src: url('assets                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  /fonts/PLACEHOLDER-DisplayC.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+        /* Project fonts (installed in assets/fonts/) */
+        @font-face { font-family: 'CirclesUI'; src: url('assets/fonts/circles.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'WelcomeCircle'; src: url('assets/fonts/welcomecircle.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'VCRFallback'; src: url('assets/fonts/fallback-VCR-OSD-Mono.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
 
         * {
             margin: 0;
@@ -115,6 +114,7 @@
         .circle-text {
             pointer-events: none;
             font-weight: bold;
+            font-family: 'CirclesUI', Arial, sans-serif;
             text-transform: uppercase;
             letter-spacing: 1px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -221,6 +221,7 @@
             text-align: center;
             font-weight: 800;
             font-size: min(4vmin, 36px);
+            font-family: 'WelcomeCircle', 'CirclesUI', Arial, sans-serif;
             line-height: 1.05;
             white-space: pre-line;
             padding: 2vmin;
@@ -276,9 +277,10 @@
     <script>
         // Prefer local audio assets in /assets/audio/, with remote fallbacks cached to IndexedDB.
         const LOCAL_SOUNDS = {
-            click: 'assets/audio/click.ogg',
-            hover: 'assets/audio/hover.ogg',
-            back:  'assets/audio/back.ogg'
+            // note: one file was named 'cick.wav' in the assets — we use it if click.wav isn't present
+            click: 'assets/audio/cick.wav',
+            hover: 'assets/audio/hover.wav',
+            back:  'assets/audio/back.wav'
         };
 
         // Remote demo fallbacks (used if local assets missing)
@@ -361,7 +363,7 @@
         async function playHover() {
             if (!isSoundEnabled()) return;
             try {
-                const h = await ensureHowlForKey('hover', DEMO_SOUNDS.hover);
+                const h = await ensureHowlForKey('hover', LOCAL_SOUNDS.hover || DEMO_SOUNDS.hover);
                 if (h) h.play();
             } catch (e) {}
         }
@@ -369,7 +371,7 @@
         async function playBack() {
             if (!isSoundEnabled()) return;
             try {
-                const h = await ensureHowlForKey('back', DEMO_SOUNDS.back);
+                const h = await ensureHowlForKey('back', LOCAL_SOUNDS.back || DEMO_SOUNDS.back);
                 if (h) h.play();
             } catch (e) {}
         }
@@ -409,9 +411,9 @@
 
         // Warm up demo sounds in background (non-blocking)
         (async function warmupDemoSounds() {
-            // do not block: fetch but don't await long
-            ensureHowlForKey('hover', DEMO_SOUNDS.hover).catch(()=>{});
-            ensureHowlForKey('back', DEMO_SOUNDS.back).catch(()=>{});
+            // Warm up local or demo sounds in background (non-blocking)
+            ensureHowlForKey('hover', LOCAL_SOUNDS.hover || DEMO_SOUNDS.hover).catch(()=>{});
+            ensureHowlForKey('back', LOCAL_SOUNDS.back || DEMO_SOUNDS.back).catch(()=>{});
         })();
 
         // Global mute helpers (Howler global mute + persisted setting)
@@ -513,6 +515,7 @@
                     name: "Writing\nOn The\nWall", 
                     color: COLORS.DARK_CONCRETE,
                     children: [
+                        { name: "Have ya Herd\nAbout MyCurd", color: COLORS.STEEL, url: "https://www.blogger.com/profile/14617392804110616005", children: [] },
                         { name: "Have ya Herd\nAbout MyCurd", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/have-you-herd-about-mycurd.html", children: [] },
                         { name: "Ascthetics\nof\nDecay", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/aesthetics-of-decay.html", children: [] },
                         { name: "The Monster\nin The\nSmoke", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/monster-and-canvas-soliloquy-in-smoke.html", children: [] }
@@ -522,7 +525,7 @@
                     name: "Music", 
                     color: COLORS.MEDIUM_CONCRETE,
                     children: [
-                        { name: "AI Tracks", color: COLORS.STEEL, url: "https://soundcloud.com/your-profile", children: [] },
+                        { name: "AI Tracks", color: COLORS.STEEL, url: "https://soundcloud.com/faux-fuax", children: [] },
                         { name: "Lyrics", color: COLORS.STEEL, url: "https://example.com/lyrics", children: [] },
                         { name: "Collabs", color: COLORS.STEEL, url: "https://example.com/collabs", children: [] }
                     ]
@@ -532,7 +535,7 @@
                     color: COLORS.DARK_CONCRETE,
                     children: [
                         { name: "Paradigm\nof\nPeculiar\nParticles", color: COLORS.STEEL, url: "apps/particle1/particle1.html", children: [] },
-                        { name: "Tools", color: COLORS.STEEL, url: "https://example.com/tools", children: [] },
+                        { name: "Tools", color: COLORS.STEEL, url: "https://fuax-portal.vercel.app", children: [] },
                         { name: "Open", color: COLORS.STEEL, url: "https://github.com/fuax-art", children: [] }
                     ]
                 },
@@ -704,7 +707,7 @@
                 .attr('x', -9999)
                 .attr('y', -9999)
                 .style('visibility', 'hidden')
-                .style('font-family', 'Arial, sans-serif');
+                .style('font-family', "'CirclesUI', Arial, sans-serif");
 
             const labels = g.selectAll(".circle-text")
                 .data(nodes)
