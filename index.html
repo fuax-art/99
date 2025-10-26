@@ -9,10 +9,17 @@
   })(window,document,'script','dataLayer','GTM-NBK8TBX2');</script>
   <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="                                                         width=device-width, initial-scale=1.0">
     <title>Forever Unfinished Artworx</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
+        /* Local placeholder font-face declarations. Replace the placeholder files in assets/fonts/ with your real .woff2/.woff/.ttf files as needed. */
+        @font-face { font-family: 'ModernA'; src: url('assets/fonts/PLACEHOLDER-ModernA.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'SerifB'; src: url('assets/fonts/PLACEHOLDER-SerifB.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'VCR'; src: url('assets/fonts/PLACEHOLDER-VCR-OSD-Mono.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'DisplayC'; src: url('assets                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  /fonts/PLACEHOLDER-DisplayC.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+
         * {
             margin: 0;
             padding: 0;
@@ -52,7 +59,7 @@
         }
 
         .circle {
-            cursor: pointer;
+            cursor: crosshair;
             transition: filter 0.5s ease;
         }
 
@@ -66,10 +73,12 @@
 
         .circle-shop {
             filter: drop-shadow(0 0 20px #0FF4E6) drop-shadow(0 0 40px #0FF4E6);
+         animation: nftPulse 2s ease-in-out infinite;
         }
 
         .circle-shop:hover {
             filter: drop-shadow(0 0 30px #0FF4E6) drop-shadow(0 0 60px #0FF4E6);
+         animation: none;
         }
 
         .circle-nft {
@@ -181,6 +190,48 @@
                 font-size: 12px;
             }
         }
+
+        /* Intro overlay styles */
+        #intro-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.0);
+            z-index: 2000;
+            pointer-events: auto;
+        }
+
+        #intro-circle {
+            width: min(60vmin, 800px);
+            height: min(60vmin, 800px);
+            background: #000000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 60px rgba(0,0,0,0.6);
+            transition: transform 420ms ease, opacity 420ms ease;
+            cursor: crosshair;
+        }
+
+        #intro-text {
+            color: #02efc7;
+            text-align: center;
+            font-weight: 800;
+            font-size: min(4vmin, 36px);
+            line-height: 1.05;
+            white-space: pre-line;
+            padding: 2vmin;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #intro-overlay.intro-hide #intro-circle {
+            transform: scale(0.85) translateY(-10px);
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -210,6 +261,13 @@
         <div id="breadcrumb"></div>
         <svg id="canvas"></svg>
         <div id="signature">fauxfuax</div>
+    </div>
+
+    <!-- Intro overlay: large black circle with two-line message -->
+    <div id="intro-overlay" aria-hidden="false">
+        <div id="intro-circle">
+            <div id="intro-text">Welcome to the Foundry<br>Enter The Crucible</div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
@@ -379,6 +437,31 @@
         // ensure persisted mute setting applied
         setTimeout(() => setMuted(isMuted()), 0);
 
+        // Intro overlay control: show a big welcome circle and wait for click to open visualization
+        function showIntro() {
+            const overlay = document.getElementById('intro-overlay');
+            if (!overlay) {
+                createVisualization(data);
+                return;
+            }
+            overlay.style.display = 'flex';
+            overlay.setAttribute('aria-hidden', 'false');
+            const circle = document.getElementById('intro-circle');
+            function onClickIntro(e) {
+                // play click and hide overlay then initialize
+                playClick();
+                overlay.classList.add('intro-hide');
+                overlay.setAttribute('aria-hidden', 'true');
+                // remove after transition
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    circle.removeEventListener('click', onClickIntro);
+                    createVisualization(data);
+                }, 420);
+            }
+            circle.addEventListener('click', onClickIntro);
+        }
+
         const COLORS = {
             SHOP: "#0FF4E6",
             SHOP_CHILD: "#0FF4E6",
@@ -410,10 +493,10 @@
                     color: COLORS.SHOP,
                     image: "assets/img/merch.png", // ADD YOUR IMAGE HERE
                     children: [
-                        { name: "Prints & More", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/", children: [] },
-                        { name: "Bomber", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/product/premium-recycled-bomber-jacket/SFSGD5FM7W6XQWRRGFVMDW2O?cs=true&cst=custom", children: [] },
-                        { name: "BeautifulChaos", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/product/beautiful-chaos-framed-canvas/UHNET5PA4OKHZH3GQDPEZQ5H?cp=true&sa=true&sbp=false&q=false", children: [] },
-                        { name: "1980HD Pack", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/product/1980hd-minimalist-pack/EH7ZR4VWQG2XV5RMAUB2MLD5?cp=true&sa=true&sbp=false&q=false", children: [] }
+                        { name: "Prints\n&\nMore", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/", children: [] },
+                        { name: "Recycled Material Bomber Jacket", maxWordsPerLine: 2, color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/product/premium-recycled-bomber-jacket/SFSGD5FM7W6XQWRRGFVMDW2O?cs=true&cst=custom", children: [] },
+                        { name: "Beautiful Chaos\nPosters & Prints", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/product/beautiful-chaos-framed-canvas/UHNET5PA4OKHZH3GQDPEZQ5H?cp=true&sa=true&sbp=false&q=false", children: [] },
+                        { name: "1980HD\nMinimalist Pack", color: COLORS.SHOP_CHILD, url: "https://foreverunfinishedartworx.square.site/product/1980hd-minimalist-pack/EH7ZR4VWQG2XV5RMAUB2MLD5?cp=true&sa=true&sbp=false&q=false", children: [] }
                     ]
                 },
                 { 
@@ -423,16 +506,16 @@
                     children: [
                         { name: "Survival Motion", color: COLORS.NFT_CHILD, url: "https://opensea.io/collection/survival-motion", children: [] },
                         { name: "Cyber Pugz", color: COLORS.NFT_CHILD, url: "https://opensea.io/collection/cyber-pugz", children: [] },
-                        { name: "Create", color: COLORS.NFT_CHILD, url: "https://fuax-portal.vercel.app", children: [] }
+                        { name: "Create Your\nOwn Collection", color: COLORS.NFT_CHILD, url: "https://fuax-portal.vercel.app", children: [] }
                     ]
                 },
                 { 
-                    name: "TheWall", 
+                    name: "Writing\nOn The\nWall", 
                     color: COLORS.DARK_CONCRETE,
                     children: [
-                        { name: "MyCurd", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/have-you-herd-about-mycurd.html", children: [] },
-                        { name: "AsctheticsofDecay", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/aesthetics-of-decay.html", children: [] },
-                        { name: "Monster", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/monster-and-canvas-soliloquy-in-smoke.html", children: [] }
+                        { name: "Have ya Herd\nAbout MyCurd", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/have-you-herd-about-mycurd.html", children: [] },
+                        { name: "Ascthetics\nof\nDecay", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/aesthetics-of-decay.html", children: [] },
+                        { name: "The Monster\nin The\nSmoke", color: COLORS.STEEL, url: "https://fauxfuax.blogspot.com/2025/10/monster-and-canvas-soliloquy-in-smoke.html", children: [] }
                     ]
                 },
                 { 
@@ -448,7 +531,7 @@
                     name: "Code", 
                     color: COLORS.DARK_CONCRETE,
                     children: [
-                        { name: "Projects", color: COLORS.STEEL, url: "https://github.com/fuax-art", children: [] },
+                        { name: "Paradigm\nof\nPeculiar\nParticles", color: COLORS.STEEL, url: "apps/particle1/particle1.html", children: [] },
                         { name: "Tools", color: COLORS.STEEL, url: "https://example.com/tools", children: [] },
                         { name: "Open", color: COLORS.STEEL, url: "https://github.com/fuax-art", children: [] }
                     ]
@@ -615,6 +698,14 @@
                     playHover();
                 });
 
+            // hidden measurement element used to compute widths for wrapping/truncation
+            const _measure = svg.append('text')
+                .attr('class', '_measure')
+                .attr('x', -9999)
+                .attr('y', -9999)
+                .style('visibility', 'hidden')
+                .style('font-family', 'Arial, sans-serif');
+
             const labels = g.selectAll(".circle-text")
                 .data(nodes)
                 .enter()
@@ -637,41 +728,101 @@
                 .style("opacity", 0)
                 .style("display", d => (d.depth === 1 || d.depth === 2) ? "block" : "none")
                 .each(function(d) {
-                    // support optional multi-line labels per node:
-                    // priority: d.data.labelLines (array) -> d.data.name with '\n' -> d.data.maxWordsPerLine -> auto 1-2 lines
-                    const lineHeight = 1.0; // em
                     const textEl = d3.select(this);
                     textEl.selectAll('tspan').remove();
 
-                    let lines = [];
+                    // Determine available space inside the circle (leave small padding)
+                    const paddingFactor = 0.82; // fraction of diameter usable for text width
+                    const availWidth = Math.max(20, d.r * 2 * paddingFactor);
+                    const availHeight = Math.max(14, d.r * 2 * 0.72); // allow fewer lines vertically
+
+                    // Source text lines priority
+                    let sourceText = '';
                     if (d.data && Array.isArray(d.data.labelLines) && d.data.labelLines.length) {
-                        lines = d.data.labelLines.map(x => String(x).trim()).filter(Boolean);
+                        sourceText = d.data.labelLines.join(' ');
                     } else if (d.data && typeof d.data.name === 'string' && d.data.name.indexOf('\n') !== -1) {
-                        lines = d.data.name.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+                        sourceText = d.data.name.replace(/\r?\n+/g, ' ');
                     } else {
-                        const words = (d.data && d.data.name ? String(d.data.name) : '').split(/\s+/).filter(Boolean);
-                        if (d.data && Number.isInteger(d.data.maxWordsPerLine) && d.data.maxWordsPerLine > 0) {
-                            const n = d.data.maxWordsPerLine;
-                            for (let i = 0; i < words.length; i += n) {
-                                lines.push(words.slice(i, i + n).join(' '));
-                            }
-                        } else {
-                            // default: if short (<=2 words) keep single line, otherwise split into two balanced lines
-                            if (words.length <= 2) lines = [words.join(' ')];
-                            else {
-                                const half = Math.ceil(words.length / 2);
-                                lines = [words.slice(0, half).join(' '), words.slice(half).join(' ')];
-                            }
-                        }
+                        sourceText = d.data && d.data.name ? String(d.data.name) : '';
                     }
 
-                    if (!lines.length) return;
+                    const words = sourceText.split(/\s+/).filter(Boolean);
+                    if (!words.length) return;
+
+                    // Font sizing parameters
+                    const baseFontSize = Math.max(10, Math.round(d.r / 5)); // starting px size
+                    const minFontSize = 8; // absolute minimum px
+                    const lineHeightEm = 1.0;
+
+                    // helper to measure width of a string at a given font size using hidden measurement text
+                    function measureWidth(str, fontSize) {
+                        _measure.style('font-size', fontSize + 'px').style('font-family', textEl.style('font-family') || 'Arial, sans-serif').text(str);
+                        const bbox = _measure.node().getBBox();
+                        return bbox.width;
+                    }
+
+                    // Attempt to fit by shrinking font until fits vertically and horizontally
+                    let fontSize = baseFontSize;
+                    let lines = [];
+                    while (true) {
+                        // Greedy line building
+                        lines = [];
+                        let cur = [];
+                        for (let w of words) {
+                            const test = cur.concat([w]).join(' ');
+                            const wWidth = measureWidth(test, fontSize);
+                            if (wWidth <= availWidth || cur.length === 0) {
+                                cur.push(w);
+                            } else {
+                                lines.push(cur.join(' '));
+                                cur = [w];
+                            }
+                        }
+                        if (cur.length) lines.push(cur.join(' '));
+
+                        const neededHeight = lines.length * fontSize * lineHeightEm;
+                        if (neededHeight <= availHeight || fontSize <= minFontSize) break;
+                        fontSize = Math.max(minFontSize, Math.floor(fontSize * 0.9));
+                    }
+
+                    // If still too big vertically, force truncation with ellipsis on last line
+                    const maxLines = Math.floor(availHeight / (fontSize * lineHeightEm)) || 1;
+                    if (lines.length > maxLines) {
+                        lines = lines.slice(0, maxLines);
+                        // truncate last line
+                        let last = lines[lines.length - 1];
+                        while (measureWidth(last + '…', fontSize) > availWidth && last.length > 0) {
+                            // remove last word; if single word, remove chars
+                            const parts = last.split(/\s+/);
+                            if (parts.length > 1) parts.pop();
+                            else last = last.slice(0, -1);
+                            last = parts.join(' ') || last;
+                        }
+                        // if still too long, truncate characters
+                        if (measureWidth(last + '…', fontSize) > availWidth) {
+                            let truncated = last;
+                            while (measureWidth(truncated + '…', fontSize) > availWidth && truncated.length > 0) {
+                                truncated = truncated.slice(0, -1);
+                            }
+                            last = truncated;
+                        }
+                        lines[lines.length - 1] = last + '…';
+                    }
+
+                    // Append tspans centered and vertically centered using explicit x and pixel dy
+                    const totalLines = lines.length;
+                    const firstDyPx = -((totalLines - 1) / 2) * fontSize * lineHeightEm; // px
+                    // compute the x coordinate for this text (matches circles x calculation)
+                    const offsetX = (centerX - width * 0.425) || 0;
+                    const xPos = d.x + offsetX;
                     lines.forEach((line, i) => {
-                        const dy = i === 0 ? `${-((lines.length - 1) / 2) * lineHeight}em` : `${lineHeight}em`;
+                        const dyPx = i === 0 ? firstDyPx : (fontSize * lineHeightEm);
                         textEl.append('tspan')
                             .text(line)
-                            .attr('dy', dy)
-                            .attr('x', null);
+                            .attr('x', xPos)
+                            .attr('dy', dyPx + 'px')
+                            .style('font-size', fontSize + 'px')
+                            .style('dominant-baseline', 'middle');
                     });
                 });
 
@@ -878,7 +1029,8 @@
             resizeTimer = setTimeout(() => createVisualization(currentNode, false), 250);
         });
 
-        createVisualization(data);
+    // start with intro overlay; clicking it will call createVisualization
+    showIntro();
     </script>
 </body>
 </html>
