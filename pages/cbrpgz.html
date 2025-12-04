@@ -1,324 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Cyber Pugs - FUArtworx</title>
+        <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Cyber Pugs - FUArtworx</title>
                 <style>
                         * {
-                                        margin: 0;
-                                                    padding: 0;
-                                                                box-sizing: border-box;
+                                margin: 0;
+                                padding: 0;
+                                box-sizing: border-box;
                         }
 
-                                body {
-                                                font-family: 'Courier New', monospace;
-                                                            background: #000;
-                                                                        color: #00ffff;
-                                                                                    overflow-x: hidden;
+                        body {
+                                font-family: 'Courier New', monospace;
+                                background: #000;
+                                color: #00ffff;
+                                overflow-x: hidden;
+                        }
+
+                        #vanta-bg {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                z-index: 0;
+                        }
+
+                        .content {
+                                position: relative;
+                                z-index: 1;
+                                min-height: 100vh;
+                        }
+
+                        header {
+                                text-align: center;
+                                padding: 80px 20px 40px;
+                                background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 100%);
+                        }
+
+                        h1 {
+                                font-size: 4rem;
+                                text-transform: uppercase;
+                                letter-spacing: 8px;
+                                text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
+                                animation: glow 2s ease-in-out infinite alternate;
+                                margin-bottom: 20px;
+                        }
+
+                        @keyframes glow {
+                                from {
+                                        text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
+                                }
+                                to {
+                                        text-shadow: 0 0 30px #00ffff, 0 0 60px #00ffff, 0 0 90px #00ffff;
+                                }
+                        }
+
+                        .tagline {
+                                font-size: 1.5rem;
+                                color: #ff00ff;
+                                text-shadow: 0 0 10px #ff00ff;
+                                margin-bottom: 30px;
+                        }
+
+                        .link-preview {
+                                display: inline-block;
+                                margin: 30px auto;
+                                padding: 20px 40px;
+                                background: rgba(0, 255, 255, 0.1);
+                                border: 2px solid #00ffff;
+                                border-radius: 10px;
+                                text-decoration: none;
+                                color: #00ffff;
+                                font-size: 1.2rem;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+                        }
+
+                        .link-preview:hover {
+                                background: rgba(0, 255, 255, 0.2);
+                                box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+                                transform: translateY(-5px);
+                        }
+
+                        .link-preview::before {
+                                content: "🔗 ";
+                        }
+
+                        .gallery {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                                gap: 30px;
+                                padding: 60px 40px;
+                                max-width: 1400px;
+                                margin: 0 auto;
+                        }
+
+                        .image-container {
+                                position: relative;
+                                aspect-ratio: 1;
+                                background: rgba(0, 255, 255, 0.05);
+                                border: 2px solid #00ffff;
+                                border-radius: 15px;
+                                overflow: hidden;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+                        }
+
+                        .image-container:hover {
+                                transform: scale(1.05);
+                                box-shadow: 0 0 40px rgba(0, 255, 255, 0.5);
+                                border-color: #ff00ff;
+                        }
+
+                        .image-placeholder {
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 3rem;
+                                background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+                        }
+
+                        .play-icon {
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                width: 80px;
+                                height: 80px;
+                                background: rgba(0, 255, 255, 0.3);
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                opacity: 0;
+                                transition: opacity 0.3s ease;
+                                pointer-events: none;
+                        }
+
+                        .image-container:hover .play-icon {
+                                opacity: 1;
+                        }
+
+                        .play-icon::after {
+                                content: "▶";
+                                font-size: 2rem;
+                                color: #00ffff;
+                                margin-left: 5px;
+                        }
+
+                        .video-section {
+                                padding: 60px 40px;
+                                max-width: 1200px;
+                                margin: 0 auto;
+                        }
+
+                        .video-container {
+                                position: relative;
+                                aspect-ratio: 16/9;
+                                background: rgba(0, 255, 255, 0.05);
+                                border: 3px solid #00ffff;
+                                border-radius: 15px;
+                                overflow: hidden;
+                                box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+                        }
+
+                        .video-placeholder {
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 4rem;
+                                background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+                        }
+
+                        footer {
+                                text-align: center;
+                                padding: 40px 20px;
+                                background: rgba(0, 0, 0, 0.8);
+                                border-top: 2px solid #00ffff;
+                                margin-top: 60px;
+                        }
+
+                        footer p {
+                                color: #00ffff;
+                                text-shadow: 0 0 10px #00ffff;
+                        }
+
+                        .section-title {
+                                text-align: center;
+                                font-size: 2.5rem;
+                                color: #ff00ff;
+                                text-shadow: 0 0 20px #ff00ff;
+                                margin-bottom: 40px;
+                                text-transform: uppercase;
+                                letter-spacing: 4px;
+                        }
+
+                        @media (max-width: 768px) {
+                                h1 {
+                                        font-size: 2.5rem;
+                                        letter-spacing: 4px;
                                 }
 
-                                        #vanta-bg {
-                                                        position: fixed;
-                                                                    top: 0;
-                                                                                left: 0;
-                                                                                            width: 100%;
-                                                                                                        height: 100%;
-                                                                                                                    z-index: 0;
-                                        }
+                                .tagline {
+                                        font-size: 1.2rem;
+                                }
 
-                                                .content {
-                                                                position: relative;
-                                                                            z-index: 1;
-                                                                                        min-height: 100vh;
-                                                }
+                                .gallery {
+                                        grid-template-columns: 1fr;
+                                        padding: 40px 20px;
+                                }
+                        }
+                </style>
+        </head>
+        <body>
+                <div id="vanta-bg"></div>
 
-                                                        header {
-                                                                        text-align: center;
-                                                                                    padding: 80px 20px 40px;
-                                                                                                background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 100%);
-                                                        }
+                <div class="content">
+                        <header>
+                                <h1>CYBER PUGS</h1>
+                                <p class="tagline">The Future is Adorably Dystopian</p>
+                                <a href="https://fuartworx.unstoppable" class="link-preview" target="_blank" rel="noopener noreferrer">
+                                        Visit FUArtworx Collection
+                                </a>
+                        </header>
 
-                                                                h1 {
-                                                                                font-size: 4rem;
-                                                                                            text-transform: uppercase;
-                                                                                                        letter-spacing: 8px;
-                                                                                                                    text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
-                                                                                                                                animation: glow 2s ease-in-out infinite alternate;
-                                                                                                                                            margin-bottom: 20px;
-                                                                }
+                        <section class="gallery">
+                                <div class="image-container" onclick="playVideo(1)">
+                                        <div class="image-placeholder">🐶</div>
+                                        <div class="play-icon"></div>
+                                </div>
+                                <div class="image-container" onclick="playVideo(2)">
+                                        <div class="image-placeholder">🤖</div>
+                                        <div class="play-icon"></div>
+                                </div>
+                                <div class="image-container" onclick="playVideo(3)">
+                                        <div class="image-placeholder">⚡</div>
+                                        <div class="play-icon"></div>
+                                </div>
+                                <div class="image-container" onclick="playVideo(4)">
+                                        <div class="image-placeholder">🌐</div>
+                                        <div class="play-icon"></div>
+                                </div>
+                                <div class="image-container" onclick="playVideo(5)">
+                                        <div class="image-placeholder">💾</div>
+                                        <div class="play-icon"></div>
+                                </div>
+                                <div class="image-container" onclick="playVideo(6)">
+                                        <div class="image-placeholder">🔮</div>
+                                        <div class="play-icon"></div>
+                                </div>
+                        </section>
 
-                                                                        @keyframes glow {
-                                                                                        from {
-                                                                                                            text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
-                                                                                        }
-                                                                                                    to {
-                                                                                                                        text-shadow: 0 0 30px #00ffff, 0 0 60px #00ffff, 0 0 90px #00ffff;
-                                                                                                    }
-                                                                        }
+                        <section class="video-section">
+                                <h2 class="section-title">Featured Video</h2>
+                                <div class="video-container">
+                                        <div class="video-placeholder">📹</div>
+                                </div>
+                        </section>
 
-                                                                                .tagline {
-                                                                                                font-size: 1.5rem;
-                                                                                                            color: #ff00ff;
-                                                                                                                        text-shadow: 0 0 10px #ff00ff;
-                                                                                                                                    margin-bottom: 30px;
-                                                                                }
+                        <footer>
+                                <p>© 2024 FUArtworx | Cyber Pugs Collection</p>
+                        </footer>
+                </div>
 
-                                                                                        .link-preview {
-                                                                                                        display: inline-block;
-                                                                                                                    margin: 30px auto;
-                                                                                                                                padding: 20px 40px;
-                                                                                                                                            background: rgba(0, 255, 255, 0.1);
-                                                                                                                                                        border: 2px solid #00ffff;
-                                                                                                                                                                    border-radius: 10px;
-                                                                                                                                                                                text-decoration: none;
-                                                                                                                                                                                            color: #00ffff;
-                                                                                                                                                                                                        font-size: 1.2rem;
-                                                                                                                                                                                                                    transition: all 0.3s ease;
-                                                                                                                                                                                                                                box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-                                                                                        }
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
+                <script>
+                        // Initialize Vanta Birds background
+                        VANTA.BIRDS({
+                                el: '#vanta-bg',
+                                mouseControls: true,
+                                touchControls: true,
+                                gyroControls: false,
+                                minHeight: 200.0,
+                                minWidth: 200.0,
+                                scale: 1.0,
+                                scaleMobile: 1.0,
+                                backgroundColor: 0x000000,
+                                color1: 0x00ffff,
+                                color2: 0xff00ff,
+                                colorMode: 'lerp',
+                                birdSize: 1.5,
+                                wingSpan: 20.0,
+                                speedLimit: 5.0,
+                                separation: 50.0,
+                                alignment: 50.0,
+                                cohesion: 30.0,
+                                quantity: 3.0,
+                        });
 
-                                                                                                .link-preview:hover {
-                                                                                                                background: rgba(0, 255, 255, 0.2);
-                                                                                                                            box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
-                                                                                                                                        transform: translateY(-5px);
-                                                                                                }
-
-                                                                                                        .link-preview::before {
-                                                                                                                        content: "🔗 ";
-                                                                                                        }
-
-                                                                                                                .gallery {
-                                                                                                                                display: grid;
-                                                                                                                                            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                                                                                                                                                        gap: 30px;
-                                                                                                                                                                    padding: 60px 40px;
-                                                                                                                                                                                max-width: 1400px;
-                                                                                                                                                                                            margin: 0 auto;
-                                                                                                                }
-
-                                                                                                                        .image-container {
-                                                                                                                                        position: relative;
-                                                                                                                                                    aspect-ratio: 1;
-                                                                                                                                                                background: rgba(0, 255, 255, 0.05);
-                                                                                                                                                                            border: 2px solid #00ffff;
-                                                                                                                                                                                        border-radius: 15px;
-                                                                                                                                                                                                    overflow: hidden;
-                                                                                                                                                                                                                cursor: pointer;
-                                                                                                                                                                                                                            transition: all 0.3s ease;
-                                                                                                                                                                                                                                        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-                                                                                                                        }
-
-                                                                                                                                .image-container:hover {
-                                                                                                                                                transform: scale(1.05);
-                                                                                                                                                            box-shadow: 0 0 40px rgba(0, 255, 255, 0.5);
-                                                                                                                                                                        border-color: #ff00ff;
-                                                                                                                                }
-
-                                                                                                                                        .image-placeholder {
-                                                                                                                                                        width: 100%;
-                                                                                                                                                                    height: 100%;
-                                                                                                                                                                                display: flex;
-                                                                                                                                                                                            align-items: center;
-                                                                                                                                                                                                        justify-content: center;
-                                                                                                                                                                                                                    font-size: 3rem;
-                                                                                                                                                                                                                                background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
-                                                                                                                                        }
-
-                                                                                                                                                .play-icon {
-                                                                                                                                                                position: absolute;
-                                                                                                                                                                            top: 50%;
-                                                                                                                                                                                        left: 50%;
-                                                                                                                                                                                                    transform: translate(-50%, -50%);
-                                                                                                                                                                                                                width: 80px;
-                                                                                                                                                                                                                            height: 80px;
-                                                                                                                                                                                                                                        background: rgba(0, 255, 255, 0.3);
-                                                                                                                                                                                                                                                    border-radius: 50%;
-                                                                                                                                                                                                                                                                display: flex;
-                                                                                                                                                                                                                                                                            align-items: center;
-                                                                                                                                                                                                                                                                                        justify-content: center;
-                                                                                                                                                                                                                                                                                                    opacity: 0;
-                                                                                                                                                                                                                                                                                                                transition: opacity 0.3s ease;
-                                                                                                                                                                                                                                                                                                                            pointer-events: none;
-                                                                                                                                                }
-
-                                                                                                                                                        .image-container:hover .play-icon {
-                                                                                                                                                                        opacity: 1;
-                                                                                                                                                        }
-
-                                                                                                                                                                .play-icon::after {
-                                                                                                                                                                                content: "▶";
-                                                                                                                                                                                            font-size: 2rem;
-                                                                                                                                                                                                        color: #00ffff;
-                                                                                                                                                                                                                    margin-left: 5px;
-                                                                                                                                                                }
-
-                                                                                                                                                                        .video-section {
-                                                                                                                                                                                        padding: 60px 40px;
-                                                                                                                                                                                                    max-width: 1200px;
-                                                                                                                                                                                                                margin: 0 auto;
-                                                                                                                                                                        }
-
-                                                                                                                                                                                .video-container {
-                                                                                                                                                                                                position: relative;
-                                                                                                                                                                                                            aspect-ratio: 16/9;
-                                                                                                                                                                                                                        background: rgba(0, 255, 255, 0.05);
-                                                                                                                                                                                                                                    border: 3px solid #00ffff;
-                                                                                                                                                                                                                                                border-radius: 15px;
-                                                                                                                                                                                                                                                            overflow: hidden;
-                                                                                                                                                                                                                                                                        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-                                                                                                                                                                                }
-
-                                                                                                                                                                                        .video-placeholder {
-                                                                                                                                                                                                        width: 100%;
-                                                                                                                                                                                                                    height: 100%;
-                                                                                                                                                                                                                                display: flex;
-                                                                                                                                                                                                                                            align-items: center;
-                                                                                                                                                                                                                                                        justify-content: center;
-                                                                                                                                                                                                                                                                    font-size: 4rem;
-                                                                                                                                                                                                                                                                                background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
-                                                                                                                                                                                        }
-
-                                                                                                                                                                                                footer {
-                                                                                                                                                                                                                text-align: center;
-                                                                                                                                                                                                                            padding: 40px 20px;
-                                                                                                                                                                                                                                        background: rgba(0, 0, 0, 0.8);
-                                                                                                                                                                                                                                                    border-top: 2px solid #00ffff;
-                                                                                                                                                                                                                                                                margin-top: 60px;
-                                                                                                                                                                                                }
-
-                                                                                                                                                                                                        footer p {
-                                                                                                                                                                                                                        color: #00ffff;
-                                                                                                                                                                                                                                    text-shadow: 0 0 10px #00ffff;
-                                                                                                                                                                                                        }
-
-                                                                                                                                                                                                                .section-title {
-                                                                                                                                                                                                                                text-align: center;
-                                                                                                                                                                                                                                            font-size: 2.5rem;
-                                                                                                                                                                                                                                                        color: #ff00ff;
-                                                                                                                                                                                                                                                                    text-shadow: 0 0 20px #ff00ff;
-                                                                                                                                                                                                                                                                                margin-bottom: 40px;
-                                                                                                                                                                                                                                                                                            text-transform: uppercase;
-                                                                                                                                                                                                                                                                                                        letter-spacing: 4px;
-                                                                                                                                                                                                                }
-
-                                                                                                                                                                                                                        @media (max-width: 768px) {
-                                                                                                                                                                                                                                        h1 {
-                                                                                                                                                                                                                                                            font-size: 2.5rem;
-                                                                                                                                                                                                                                                                            letter-spacing: 4px;
-                                                                                                                                                                                                                                        }
-
-                                                                                                                                                                                                                                                    .tagline {
-                                                                                                                                                                                                                                                                        font-size: 1.2rem;
-                                                                                                                                                                                                                                                    }
-
-                                                                                                                                                                                                                                                                .gallery {
-                                                                                                                                                                                                                                                                                    grid-template-columns: 1fr;
-                                                                                                                                                                                                                                                                                                    padding: 40px 20px;
-                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                            </style>
-                                                                                                                                                                                                                            </head>
-                                                                                                                                                                                                                            <body>
-                                                                                                                                                                                                                                <div id="vanta-bg"></div>
-                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                        <div class="content">
-                                                                                                                                                                                                                                                <header>
-                                                                                                                                                                                                                                                            <h1>CYBER PUGS</h1>
-                                                                                                                                                                                                                                                                        <p class="tagline">The Future is Adorably Dystopian</p>
-                                                                                                                                                                                                                                                                                    <a href="https://fuartworx.unstoppable" class="link-preview" target="_blank">
-                                                                                                                                                                                                                                                                                                    Visit FUArtworx Collection
-                                                                                                                                                                                                                                                                                                                </a>
-                                                                                                                                                                                                                                                                                                                        </header>
-
-                                                                                                                                                                                                                                                                                                                                <section class="gallery">
-                                                                                                                                                                                                                                                                                                                                            <div class="image-container" onclick="playVideo(1)">
-                                                                                                                                                                                                                                                                                                                                                            <div class="image-placeholder">🐶</div>
-                                                                                                                                                                                                                                                                                                                                                                            <div class="play-icon"></div>
-                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                    <div class="image-container" onclick="playVideo(2)">
-                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="image-placeholder">🤖</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="play-icon"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="image-container" onclick="playVideo(3)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="image-placeholder">⚡</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="play-icon"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="image-container" onclick="playVideo(4)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="image-placeholder">🌐</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="play-icon"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="image-container" onclick="playVideo(5)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="image-placeholder">💾</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="play-icon"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="image-container" onclick="playVideo(6)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="image-placeholder">🔮</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="play-icon"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </section>
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <section class="video-section">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <h2 class="section-title">Featured Video</h2>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="video-container">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="video-placeholder">📹</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </section>
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <footer>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <p>© 2024 FUArtworx | Cyber Pugs Collection</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </footer>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // Initialize Vanta Birds background
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        VANTA.BIRDS({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        el: "#vanta-bg",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    mouseControls: true,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                touchControls: true,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            gyroControls: false,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        minHeight: 200.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    minWidth: 200.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                scale: 1.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            scaleMobile: 1.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        backgroundColor: 0x000000,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    color1: 0x00ffff,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                color2: 0xff00ff,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            colorMode: "lerp",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        birdSize: 1.5,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    wingSpan: 20.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                speedLimit: 5.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            separation: 50.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        alignment: 50.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    cohesion: 30.00,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                quantity: 3.00
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        });
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                function playVideo(id) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                alert('Video ' + id + ' would play here. Replace with your video URLs.');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // You can replace this with actual video playback logic:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        // window.location.href = 'your-video-url-' + id + '.mp4';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // or open in a modal, etc.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        })
-                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                }
-                                                                                                                                                                                        }
-                                                                                                                                                                                }
-                                                                                                                                                                        }
-                                                                                                                                                                }
-                                                                                                                                                        }
+                        function playVideo(id) {
+                                alert('Video ' + id + ' would play here. Replace with your video URLs.');
+                                // Replace with real video logic (open modal, load src, etc.)
+                        }
+                </script>
+        </body>
+</html>
                                                                                                                                                 }
                                                                                                                                         }
                                                                                                                                 }
