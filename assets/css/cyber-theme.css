@@ -2,7 +2,7 @@
 
 /* --- GLOBAL RESETS & FONTS --- */
 body {
-    background: transparent !important; /* Forces Vanta to show */
+    /* Don't override background - let local styles handle it */
     color: #e0e0e0;
     font-family: 'Arial', sans-serif;
     overflow-x: hidden;
@@ -79,7 +79,57 @@ p {
     box-shadow: 0 0 20px #00f7ff4e;
     color: #000;
 }
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 12px 24px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #00f7ffb2;
+    color: #eaff00;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    z-index: 1000;
+}
 
+.back-btn:hover {
+    background: rgb(0, 200, 255);
+    box-shadow: 0 0 20px #00f7ff4e;
+    color: #000;
+}
+
+.support-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 12px 24px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #00f7ffb2;
+    color: #eaff00;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    z-index: 1000;
+}
+
+.support-btn:hover {
+    background: rgb(0, 200, 255);
+    box-shadow: 0 0 20px #00f7ff4e;
+    color: #000;
+}
 /* --- SPECIAL FX: GLITCH --- */
 /* Note: You must add title="Your Text" to h1 tags for this to work */
 h1:hover { animation: glitch 1s linear infinite; }

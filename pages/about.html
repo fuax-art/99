@@ -4,63 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Forever Unfinished Artworx</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <link rel="stylesheet" href="../assets/css/cyber-theme.css">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #050505; /* Deep black */
+    font-family: 'Courier New', monospace;
+    color: white;
+  }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: transparent;
-            color: #e0e0e0;
-            line-height: 1.8;
-            overflow-x: hidden;
-        }
+  /* --- THE BACKGROUND LAYER (Glitch Text) --- */
+  .bg-layer {
+    position: fixed; /* Freezes it in place */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Pushes it BEHIND everything else */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
 
-        /* Background Canvas */
-        #vanta-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -10;
-        }
+  .cyber-text {
+    font-size: 15vw; /* Massive size */
+    font-weight: bold;
+    color: #00f3ff;
+    text-transform: uppercase;
+    position: relative;
+    transform: rotate(-33deg); /* The 33 degree angle */
+    white-space: nowrap; /* Keeps it on one line */
+    opacity: 0.6; /* Slight fade so it doesn't kill readability of main text */
+    text-shadow: 0 0 20px #00f3ff, 0 0 40px #00f3ff;
+    animation: glitch 3s infinite;
+  }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 60px 20px;
-            position: relative;
-            z-index: 1;
-        }
+  /* --- THE FOREGROUND LAYER (Your Content) --- */
+  .content-layer {
+    position: relative;
+    z-index: 1; /* Puts this ON TOP */
+    padding: 50px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
 
-        /* --- Navigation --- */
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            padding: 12px 24px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid #00f7ffb2;
-            color: #eaff00;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 14px;
-            letter-spacing: 1px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            z-index: 1000;
-        }
+  .card {
+    background: rgba(0, 0, 0, 0.85); /* 85% opacity black to let neon shine through */
+    border: 1px solid #333;
+    padding: 40px;
+    margin-bottom: 500px; /* Big gaps to show off the background */
+    border-left: 5px solid #ff00c1; /* Pink accent */
+    box-shadow: 0 0 15px rgba(0,0,0,0.9);
+  }
 
-        .back-btn:hover {
-            background: rgb(0, 200, 255);
-            box-shadow: 0 0 20px #00f7ff4e;
-            color: #000;
-        }
+  /* --- GLITCH ANIMATION KEYFRAMES --- */
+  .cyber-text::before, .cyber-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #050505; 
+  }
 
+  .cyber-text::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff00c1;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+  }
+
+  .cyber-text::after {
+    left: -2px;
+    text-shadow: -2px 0 #00f3ff;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 1s infinite linear alternate-reverse;
+  }
+
+  @keyframes glitch-anim {
+    0% { clip: rect(12px, 9999px, 5px, 0); }
+    5% { clip: rect(65px, 9999px, 80px, 0); }
+    10% { clip: rect(2px, 9999px, 100px, 0); }
+    100% { clip: rect(40px, 9999px, 10px, 0); }
+  }
+
+  @keyframes glitch-anim2 {
+    0% { clip: rect(60px, 9999px, 10px, 0); }
+    50% { clip: rect(2px, 9999px, 80px, 0); }
+    100% { clip: rect(90px, 9999px, 20px, 0); }
+  }
         /* --- Glitch Header Effect --- */
         h1 {
             font-size: 3em;
@@ -128,109 +163,21 @@
             4%, 60% { transform: translate(-2px,0); }
             62% { transform: translate(-22px,5px) skew(21deg); }
         }
-
-        /* --- Standard Text Styles --- */
-        h2 {
-            font-size: 2em;
-            color: #eaff00;
-            text-shadow: 0 0 15px rgba(234, 255, 0, 0.4);
-            margin: 40px 0 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        p {
-            margin-bottom: 20px;
-            font-size: 1.1em;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 20px;
-            border-radius: 8px;
-            backdrop-filter: blur(5px);
-            border-left: 4px solid #00f7ff;
-        }
-
-        .highlight {
-            background: rgba(234, 255, 0, 0.1);
-            border-left: 4px solid #eaff00;
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-        }
-
-        .highlight strong {
-            color: #eaff00;
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        .signature {
-            text-align: center;
-            margin-top: 60px;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            border: 2px solid #00f7ff;
-        }
-
-        .signature p {
-            color: #00fff7;
-            font-style: italic;
-            font-size: 1.2em;
-            border: none;
-            background: none;
-            padding: 10px;
-            text-shadow: 0 0 10px #000000, 0 0 20px rgba(0, 255, 247, 0.5);
-        }
-
-        .tagline {
-            color: #eaff00;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin-top: 10px;
-            text-shadow: 0 0 5px #000;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.5em; }
-            .container { padding: 40px 15px; }
-        }
-    </style>
+</style>
 </head>
 <body>
-    <div id="vanta-bg"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-    <script>
-        // Switched to VANTA.NET to match the Cyber/Tech aesthetic better than Birds
-        // If you prefer birds, change VANTA.NET to VANTA.BIRDS and the script src above
-        VANTA.NET({
-            el: "#vanta-bg",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0xfeff, // Cyan
-            backgroundColor: 0x0, // Black
-            points: 9.00,
-            maxDistance: 27.00,
-            spacing: 16.00,
-            showDots: false
-        })
-    </script>
-
-    <a href="../index.html" class="back-btn">← BACK</a>
-
-    <div class="container">
-        <h1 title="About">About</h1>
-
-        <p>Two years ago I was living the best days of my life: a third-floor apartment overlooking a park. My daughter and I. Endless possibilities.</p>
+  <div class="bg-layer">
+    <div class="cyber-text" data-text="kgüitchyerbitchën">
+      kgüitchyerbitchën
+    </div>
+  </div>
+   <a href="../index.html" class="back-btn">← BACK</a>
+  <div class="container content-layer">
+    
+    <div class="card">
+      <h1>FOREVER UNFINISHED</h1>
+      <p>Two years ago I was living the best days of my life: a third-floor apartment overlooking a park. My daughter and I. Endless possibilities.</p>
 
         <p>Then I got fired. Five years of dedication, gone over a phone call. Everyone involved knows it was bullshit.</p>
 
@@ -238,16 +185,159 @@
 
         <p>I fell back into the old ways: forgery, laundering, trap work. The whole thing.</p>
 
-        <h2>Fast Forward</h2>
+       
+    </div>
+
+    <div class="card">
+     <h2>Fast Forward</h2>
 
         <p>I'm squatting for a year. Officially wanted. Cops light me up nine times—punch it every time.</p>
 
         <p>Never got me.</p>
-
-        <h2>Prison's coming</h2>
-
-        <p>My road dog gets hemmed up. Homelessness is coming. I'm watching it all crumble.</p>
+    </div>
+    <div class="card">
+     <h2>Prison's coming</h2>
+      <p>My road dog gets hemmed up. Homelessness is coming. I'm watching it all crumble.</p>
 
         <p>But my daughter still looks at me like I'm unstoppable. Like she's the luckiest girl alive.</p>
 
-        <p>All I see in the mirror is me
+        <p>All I see in the mirror is me letting her down.</p>
+       
+     <p>One night she walks into my room - past the dirty laundry, torn electronics, debris of a canvas I'd destroyed because I hated the man in the mirror.</p>
+       
+        <p>She lights up with joy. So do I.</p>
+        
+        <p>We're on OpenSea, browsing collections. I'm trying to explain NFTs with my limited knowledge. We come across CryptoPunks.She asks: "Dad, what are Cyber Pugs?"</p>
+              <p>She loves pugs. I thought it was hilarious.</p>
+    <h2>For the first time in months,felt hope.</h2>
+        
+       <p>A little Light in my world that, at the time seemed forever dark, the shadow had consumed me</p>
+       
+       <p>Or so I thought.</p>
+       
+       <p>She said she wanted a Cyber Pug.</p>
+       
+       <p>She asked me to make her a Cyber Pug. I told her suer and didnt think much of it</p>
+    <h2>Fast Forward</h2>
+       
+       <p>I've been on the run and homeless for a year. Salem, Oregon. Surviving the fentanyl epidemic as a non-user (different story for a different time).</p>
+    
+       <p>My daughter's with her mom full-time now. Her birthday's coming. I'm gonna make it there. One way or another.</p>
+    
+       <p>I fix the car's misfire. I make it. Told em I would. What now?</p>
+    
+       <p>World's okayest dad.</p>
+    
+       
+     <h2>Driving to a job interview.</h2>
+
+        <p>Car dies.</p>
+        
+        <p>Fuck.</p>
+        
+       <p>I'm working on it in the heat. Hottest day of the year </p>
+
+       <h2>Heat stroke</h2>
+        
+       <p>Hospital.</p>
+       
+       <p>FUCK</p>
+       
+       <p>Hallucinating, dehydrated, delusions.</p>
+
+    <h2>Now I'm laid up in my broken down SUV outside the ex's house. </h2>
+
+        <p>At least I'm near my kid.</p>
+        
+        <p>I know it's only a matter of time before they get me.</p>
+        
+        <p>I can't watch her grow up from behind glass.</p>
+        
+        <p>I'm in tears daily. Hyper-emotional.</p>
+        
+        <p>I gotta leave her something. Something to rem-btember me by.</p>
+        
+        <p>Cyber Pugs</p>
+        
+        <p>back of my broken SUV a busted laptop I had to Frankenstein to a  monitor:</p>
+        
+        <p>Sketch. GIMP. Krita. Crumpled paper. Sketchbo-btoks.</p>
+        
+        <p>I made her a sketchbook. It explained everything:</p>
+        
+        <p>My process</p>
+        
+        <p>How I feel inside</p>
+        
+        <p>Why I had to go away</p>
+        
+        <p>What I did</p>
+        
+        <p>Blunt raw honesty is kinda my thing.</p>
+        
+        <h2>The attorney calls. Time to turn myself in. Court date set.</h2>
+        
+        <h2>Originally cited for:</h2>
+        
+       <ul> 
+        <li>5 counts felony forgery</li>
+        <li>7 counts felony eluding</li>
+        <li>I thought I was done for.</li>
+    </ul> 
+         <p>I had a few months before court.</p>
+         
+         <p>I spent that time grinding out 50 animated NFTs on my phone.</p>
+         
+         <p>Not to get rich.</p>
+         
+         <p>To leave her something.</p>
+         
+         <p>To prove that even when you're fucked, you can still CREATE.</p>
+
+            <p>A final form of rebellion.</p>
+                    
+            <p>I turned myself in.</p>
+
+            <p>Didn't go back to prison.</p>
+            
+            <p>Lost everything anyway - ended up homeless in my car.</p>
+            
+            <p>But I still had the pugs.</p>
+            
+            <p>50 1/1 animated NFTs. Each one a reminder: you're not done until you decide you're done.
+            <h1 title="Cyber Pugz. Coming to Ethereum. January 1st, 2026."></h1>
+            This is what it looks like to build when you have nothing left to lose.
+
+
+    </div>
+    <div class="card">
+      <h2>NEON DREAMS</h2>
+      <p>As for those other stories. For other times..</p>
+      
+      <p>Theyre just that, Stories. We can leave it at that or if you are a curious little Gato, you can ask.</p>
+      
+      <p>But I warn you, I'm not in the mood for it.</p>
+      
+      <p>You can read them here <href="https://fauxfuax.blogspot.com/">FAUX.FUAX</href></p>
+      
+      <p>If you feel like you should ask, if the story is true or not, well,I thank you. I worked long and hard to develop that skill.</p> 
+      
+      <p>I do it on purpose. no-one ever knows if im bullshittin em or not.</p>
+      
+      <p>So on that note I dont know? maybe they're true, maybe I Dream talked them up.</p>
+      
+      <p>More than likely, The Latter.</p>
+      
+      <p>They are after all, just my</p>
+      
+      <h1 title="NEON DREAMS"></h1> 
+    </div>
+<div class="card">
+  <h1 title="Help Support our Dreams">Help Support our Dreams</h1>
+  <h1><a href="https://app.squareup.com/gift/MLXV01QHX4Q0G/order" class="supprt-btn">e-giftcards here!</a></h1>
+</div>
+</div>
+  </div>
+
+</body>
+</html>
