@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The New Faux Fuax</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #000; color: #fff; }
+        .container { max-width: 600px; margin: 0 auto; }
+        img { max-width: 100%; border-radius: 8px; margin-top: 20px; }
+        #manual-link { color: #00ffcc; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="ad-container">
+            <h1>We're moving to a bigger gallery!</h1>
+            <p>Check out the latest from <strong>Forever Unfinished Artworx</strong></p>
+            
+            <img src="new-product-preview.jpg" alt="Latest Artwork">
+
+            <p>Redirecting you in <span id="count">7</span> seconds...</p>
+        </div>
+
+        <div id="joke-container" style="display: none;">
+            <img src="bang-image.jpg" alt="BANG!">
+            <h1 style="font-size: 3rem; color: #ff0055;">I peed in your pool! Yaaaaaaayy!</h1>
+        </div>
+
+        <p style="margin-top: 40px; font-size: 0.8rem;">
+            If you aren't redirected, <a id="manual-link" href="https://fuax-art.github.io/">click here</a>.
+        </p>
+    </div>
+
+    <script>
+        const newSite = "https://fuax-art.github.io/"; // Change this to your new URL
+        let timeLeft = 7;
+        const timerDisplay = document.getElementById('count');
+
+        // 1. The Countdown Loop
+        const countdown = setInterval(function() {
+            timeLeft--;
+            timerDisplay.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                revealJoke();
+            }
+        }, 1000);
+
+        // 2. The Reveal and Final Redirect
+        function revealJoke() {
+            document.getElementById('ad-container').style.display = 'none';
+            document.getElementById('joke-container').style.display = 'block';
+
+            // Wait 3 seconds then jump
+            setTimeout(function() {
+                window.location.href = newSite;
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>
